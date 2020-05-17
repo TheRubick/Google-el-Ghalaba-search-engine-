@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
     else
       type[0] = "Web";
     String url = getUrl(queryText, CountryDomain, type[0]);
-
+    /************************send request******************************************/
     JsonArrayRequest jsonArrayRequest =
         new JsonArrayRequest(
             Request.Method.GET,
