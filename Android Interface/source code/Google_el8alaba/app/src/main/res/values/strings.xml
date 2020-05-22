@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Google El Ghalaba</string>
+    <string name="search_by_voice">search by voice</string>
+    <string name="hint">Search Google el Ghalaba</string>
+    <string name="search_results">Search Results:</string>
+    <string name="voice_btn_hold_text">Release to Stop</string>
+    <string name="radio_web_text">Web Links</string>
+    <string name="radio_imgs_text">Images</string>
+    <string name="addition">El Ghalaba</string>
+</resources>
