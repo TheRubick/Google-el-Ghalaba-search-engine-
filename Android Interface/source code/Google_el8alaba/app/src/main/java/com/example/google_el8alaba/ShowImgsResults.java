@@ -52,7 +52,7 @@ public class ShowImgsResults extends AppCompatActivity {
 
   /** show previous "pageCapacity" images */
   public void backIMGS(View view) {
-    // TODO:: put in recycler view past 10 images
+    // DONE :: put in recycler view past 10 images
     currentStart = Math.max(currentStart - pageCapacity, 0);
     currentEnd = Math.min(currentStart + pageCapacity, length);
     showDataBetweenIndex12(currentStart, currentEnd);
@@ -60,7 +60,7 @@ public class ShowImgsResults extends AppCompatActivity {
 
   /** show next "pageCapacity" images */
   public void nextIMGS(View view) {
-    // TODO:: put in recycler view next 10 images
+    // DONE:: put in recycler view next 10 images
     currentStart = Math.min(currentStart + pageCapacity, length - 1);
     currentEnd = Math.min(currentEnd + pageCapacity, length);
     showDataBetweenIndex12(currentStart, currentEnd);

@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
               voice_btn.setBackgroundColor(getResources().getColor(R.color.googleBlue));
               sr.stopListening();
               voice_result.setVisibility(View.GONE);
-              //voice_result.setText("");
+              // voice_result.setText("");
             }
             return false;
           }
@@ -161,7 +161,8 @@ public class MainActivity extends AppCompatActivity {
     String url = getUrl(queryText, CountryDomain, type[0]);
     /** **********************test************************************************* */
     try {
-      sendTestJSONArray();
+      if (type[0].equals("Web")) sendTestwebJSONArray();
+      else sendTestimageJSONArray();
     } catch (JSONException e) {
       e.printStackTrace();
     }
@@ -205,9 +206,46 @@ public class MainActivity extends AppCompatActivity {
     queue.add(jsonArrayRequest); // no need for singleton as there is no continuous use for network in different activities
      */
   }
+  /** test web results showing */
+  private void sendTestwebJSONArray() throws JSONException {
+    final int dataMaxSize = 500;
+    JSONObject[] Data = new JSONObject[dataMaxSize];
+    Data[0] = new JSONObject();
+    Data[0].put("title", "wikipedia");
+    Data[0].put("link", "https://wikipedia.com");
+    Data[0].put(
+        "snippet",
+        "Wikipedia is hosted by the Wikimedia Foundation, a non-profit organization that also hosts a range of other projects.");
+
+    Data[1] = new JSONObject();
+    Data[1].put("title", "google");
+    Data[1].put("link", "https://google.com");
+    Data[1].put(
+        "snippet",
+        "Google LLC is an American multinational technology company that specializes in Internet-related services and products, which include online advertising technologies, a search engine, cloud computing, software, and hardware. It is considered one of the Big Four technology companies alongside Amazon, Apple, and Facebook");
+
+    for (int i = 2; i < dataMaxSize; i++) {
+      Data[i] = new JSONObject();
+      Data[i].put("title", "facebook" + (i + 1));
+      Data[i].put("link", "https://facebook.com");
+      Data[i].put(
+          "snippet",
+          "Facebook is an American online social media and social networking service based in Menlo Park,Facebook is an American online social media and social networking service based in Menlo Park,Facebook is an American online social media and social networking service based in Menlo Park California and a flagship service of the namesake company Facebook, Inc.");
+    }
+
+    JSONArray array = new JSONArray();
+    for (JSONObject datum : Data) {
+      array.put(datum);
+    }
+
+    Intent passResult;
+    passResult = new Intent(getApplicationContext(), ShowResults.class);
+    passResult.putExtra("jsonArray", array.toString());
+    startActivity(passResult);
+  }
 
   /** test image results showing */
-  private void sendTestJSONArray() throws JSONException {
+  private void sendTestimageJSONArray() throws JSONException {
     final int dataMaxSize = 500;
     // Creating  JSONObject objects
     JSONObject[] Data = new JSONObject[dataMaxSize];
@@ -326,9 +364,8 @@ public class MainActivity extends AppCompatActivity {
       String str = "";
       ArrayList data1 = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
       if (data1 != null) {
-        for (int i = 0; i < data1.size(); i++)
-        {
-          str += data1.get(i)+"/";
+        for (int i = 0; i < data1.size(); i++) {
+          str += data1.get(i) + "/";
         }
       }
       voice_result.setText(str);
@@ -350,9 +387,8 @@ public class MainActivity extends AppCompatActivity {
       if (data != null) {
         word = (String) data.get(data.size() - 1);
       }
-      String text=voice_result.getText().toString()+" "+word;
+      String text = voice_result.getText().toString() + " " + word;
       voice_result.setText(text);
-
     }
 
     @Override
