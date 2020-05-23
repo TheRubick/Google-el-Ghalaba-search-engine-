@@ -98,7 +98,7 @@ public class MySQLAccess {
     }
   }
   */
-  public void writeResultSet(String link , String text , String image_sources, String publish_date) throws SQLException {
+  public void writeResultSet(String link , String text , String image_sources, String publish_date, String refererLink) throws SQLException {
 	  Connection connect = null;
 	  PreparedStatement preparedStatement = null;
 	  try {
@@ -114,11 +114,12 @@ public class MySQLAccess {
 	      } finally {
 	        close();
 	      }
-	  preparedStatement = connect.prepareStatement("INSERT INTO crawler_database.crawler_table VALUES (?,?,?,?)");
+	  preparedStatement = connect.prepareStatement("INSERT INTO crawler_database.crawler_table VALUES (?,?,?,?,?,DEFAULT)");
       preparedStatement.setString(1, link);
       preparedStatement.setString(2, text);
       preparedStatement.setString(3, image_sources);
       preparedStatement.setDate(4, new java.sql.Date(2020-11-27)); // should be fixed
+      preparedStatement.setString(5, refererLink);
       preparedStatement.executeUpdate();
       preparedStatement.close();
       connect.close();
