@@ -36,6 +36,8 @@ import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 
 import java.util.ArrayList;
@@ -46,12 +48,14 @@ public class MainActivity extends AppCompatActivity {
   private SpeechRecognizer sr;
   EditText query;
   TextView countryDisp;
+  TextView voice_result;
   Button voice_btn;
   RequestQueue queue;
   Thread thread;
   String CountryDomain;
   RadioButton WebLinksRadio;
   RadioButton ImgsRadio;
+
   @SuppressLint("ClickableViewAccessibility")
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +64,9 @@ public class MainActivity extends AppCompatActivity {
     query = findViewById(R.id.query_et);
     voice_btn = findViewById(R.id.search_voice_btn);
     countryDisp = findViewById(R.id.CountryCode);
-    WebLinksRadio =findViewById(R.id.radioWeb);
-    ImgsRadio =findViewById(R.id.radioImgs);
+    WebLinksRadio = findViewById(R.id.radioWeb);
+    ImgsRadio = findViewById(R.id.radioImgs);
+    voice_result = findViewById(R.id.sound_result);
     /** **********************************get country code*************************************** */
     thread =
         new Thread(
@@ -103,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
               if (check_mic_permission() || mic_approved) {
                 RecordAudio();
+                voice_result.setVisibility(View.VISIBLE);
                 voice_btn.setText(R.string.voice_btn_hold_text);
                 voice_btn.setBackgroundColor(getResources().getColor(R.color.googleRed));
                 sr.startListening(intent);
@@ -117,11 +123,15 @@ public class MainActivity extends AppCompatActivity {
               voice_btn.setText(R.string.search_by_voice);
               voice_btn.setBackgroundColor(getResources().getColor(R.color.googleBlue));
               sr.stopListening();
+              voice_result.setVisibility(View.GONE);
+              // voice_result.setText("");
             }
             return false;
           }
         });
-    /** *********************************queue setup********************************************** */
+    /**
+     * *********************************queue setup**********************************************
+     */
     // Instantiate the cache
     Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
 
@@ -146,13 +156,18 @@ public class MainActivity extends AppCompatActivity {
     progress.show();
 
     final String[] type = new String[1];
-    if(ImgsRadio.isChecked())
-      type[0] = "Imgs";
-    else
-      type[0] = "Web";
+    if (ImgsRadio.isChecked()) type[0] = "Imgs";
+    else type[0] = "Web";
     String url = getUrl(queryText, CountryDomain, type[0]);
-    /************************send request******************************************/
-    JsonArrayRequest jsonArrayRequest =
+    /** **********************test************************************************* */
+    try {
+      if (type[0].equals("Web")) sendTestwebJSONArray();
+      else sendTestimageJSONArray();
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    /** **********************send real request************************************ */
+    /*JsonArrayRequest jsonArrayRequest =
         new JsonArrayRequest(
             Request.Method.GET,
             url,
@@ -189,20 +204,100 @@ public class MainActivity extends AppCompatActivity {
 
     // Add the request to the RequestQueue.
     queue.add(jsonArrayRequest); // no need for singleton as there is no continuous use for network in different activities
+     */
+  }
+  /** test web results showing */
+  private void sendTestwebJSONArray() throws JSONException {
+    final int dataMaxSize = 500;
+    JSONObject[] Data = new JSONObject[dataMaxSize];
+    Data[0] = new JSONObject();
+    Data[0].put("title", "wikipedia");
+    Data[0].put("link", "https://wikipedia.com");
+    Data[0].put(
+        "snippet",
+        "Wikipedia is hosted by the Wikimedia Foundation, a non-profit organization that also hosts a range of other projects.");
+
+    Data[1] = new JSONObject();
+    Data[1].put("title", "google");
+    Data[1].put("link", "https://google.com");
+    Data[1].put(
+        "snippet",
+        "Google LLC is an American multinational technology company that specializes in Internet-related services and products, which include online advertising technologies, a search engine, cloud computing, software, and hardware. It is considered one of the Big Four technology companies alongside Amazon, Apple, and Facebook");
+
+    for (int i = 2; i < dataMaxSize; i++) {
+      Data[i] = new JSONObject();
+      Data[i].put("title", "facebook" + (i + 1));
+      Data[i].put("link", "https://facebook.com");
+      Data[i].put(
+          "snippet",
+          "Facebook is an American online social media and social networking service based in Menlo Park,Facebook is an American online social media and social networking service based in Menlo Park,Facebook is an American online social media and social networking service based in Menlo Park California and a flagship service of the namesake company Facebook, Inc.");
+    }
+
+    JSONArray array = new JSONArray();
+    for (JSONObject datum : Data) {
+      array.put(datum);
+    }
+
+    Intent passResult;
+    passResult = new Intent(getApplicationContext(), ShowResults.class);
+    passResult.putExtra("jsonArray", array.toString());
+    startActivity(passResult);
+  }
+
+  /** test image results showing */
+  private void sendTestimageJSONArray() throws JSONException {
+    final int dataMaxSize = 500;
+    // Creating  JSONObject objects
+    JSONObject[] Data = new JSONObject[dataMaxSize];
+    Data[0] = new JSONObject();
+    Data[0].put("title", "img1");
+    Data[0].put("link", "https://i.imgur.com/tGbaZCY.jpg");
+
+    Data[1] = new JSONObject();
+    Data[1].put("title", "img2");
+    Data[1].put(
+        "link",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mohamed_Salah_2018.jpg/200px-Mohamed_Salah_2018.jpg");
+
+    Data[2] = new JSONObject();
+    Data[2].put("title", "img3");
+    Data[2].put("link", "https://i.imgur.com/k0aIIHx.png");
+
+    Data[3] = new JSONObject();
+    Data[3].put("title", "img4");
+    Data[3].put("link", "https://i.imgur.com/F9dYGWA.png");
+
+    for (int i = 4; i < dataMaxSize; i++) {
+      Data[i] = new JSONObject();
+      Data[i].put("title", "img" + (i + 1));
+      Data[i].put(
+          "link",
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mohamed_Salah_2018.jpg/200px-Mohamed_Salah_2018.jpg");
+    }
+
+    JSONArray array = new JSONArray();
+    for (JSONObject datum : Data) {
+      array.put(datum);
+    }
+
+    Intent passResult;
+    passResult = new Intent(getApplicationContext(), ShowImgsResults.class);
+    passResult.putExtra("jsonArray", array.toString());
+    startActivity(passResult);
   }
 
   /**
    * build url containing all parameters needed to be sent to the host
+   *
    * @param query : text to be searched on
    * @param CountryDomain : two letters code representing the internet service provider of user
    * @param type : type of requested search (web / images)
    * @return : String containing all parameters needed to be sent to the host all concatenated
    */
-  private String getUrl(String query, String CountryDomain,String type) {
-    String[] words=query.split(" ");
-    StringBuilder URL= new StringBuilder("localhost://" + "&text=");
-    for (String word : words)
-      URL.append(word).append("%");
+  private String getUrl(String query, String CountryDomain, String type) {
+    String[] words = query.split(" ");
+    StringBuilder URL = new StringBuilder("localhost://" + "&text=");
+    for (String word : words) URL.append(word).append("%");
 
     URL.append("&CountryCode=").append(CountryDomain);
     URL.append("&type=").append(type);
@@ -265,21 +360,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onResults(Bundle results) {
-      /*
+
       String str = "";
-      ArrayList data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-      if (data != null) {
-        for (int i = 0; i < data.size(); i++)
-        {
-          str += data.get(i)+"/";
+      ArrayList data1 = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+      if (data1 != null) {
+        for (int i = 0; i < data1.size(); i++) {
+          str += data1.get(i) + "/";
         }
       }
-      query.setText(str);
-      */
+      voice_result.setText(str);
+
       ArrayList data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
       String word = "null";
       if (data != null) {
-        word = (String) data.get(data.size() - 1);
+        word = (String) data.get(0);
       }
       String text = query.getText().toString() + " " + word;
       query.setText(text);
@@ -287,15 +381,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onPartialResults(Bundle partialResults) {
-      /*
+
       ArrayList data = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
       String word = "null";
       if (data != null) {
         word = (String) data.get(data.size() - 1);
       }
-      String text=query.getText().toString()+" "+word;
-      query.setText(text);
-      */
+      String text = voice_result.getText().toString() + " " + word;
+      voice_result.setText(text);
     }
 
     @Override

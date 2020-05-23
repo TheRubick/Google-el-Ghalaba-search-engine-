@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.google_el8alaba">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:allowBackup="true"
@@ -9,7 +11,7 @@
         android:roundIcon="@mipmap/my_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".ShowImgsResults"></activity>
+        <activity android:name=".ShowImgsResults" />
         <activity android:name=".ShowResults" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -19,8 +21,6 @@
             </intent-filter>
         </activity>
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
 
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
 </manifest>
