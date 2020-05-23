@@ -178,7 +178,7 @@ public class crawler {
 								{
 									pageIter++;
 									seedSet.add(webPageLinks.get(k));
-									refererSet.add(currentHost);
+									refererSet.add(currentWebPageURL);
 								}
 								imagesOfSeedSet.add(imageSources);
 								System.out.println("seedSet after i = "+pageIter);
