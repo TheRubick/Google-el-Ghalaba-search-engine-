@@ -26,13 +26,24 @@ public class crawler {
 	
 	final int numOfPages = 12;
 	public static List<String> seedSet = new ArrayList<String>();
+	public static List<String> refererSet = new ArrayList<String>();
 	public static List<String> imagesOfSeedSet = new ArrayList<String>();
 	int pageIter = 0, visitorPointer = 0,webPageLinksThreshold = 4;
+	public static int operationType = 0;
 	
 	
 
 	public static void main(String[] args) {
-		initializeSeed();
+		if(operationType == 0)
+		{
+			initializeSeed();
+		}
+		else if(operationType == 1)
+		{
+			//fetch links from the database then initialize the seed with it
+			
+		}
+		
 		crawler c = new crawler();
 		final Object lockObj = new Object();
 		Thread th1 = new Thread (c.new crawlerThread(lockObj));
@@ -55,8 +66,11 @@ public class crawler {
 	private static void initializeSeed()
 	{
 		seedSet.add("https://en.wikipedia.org/wiki/Mohamed_Salah");
+		refererSet.add("--");
 		seedSet.add("https://en.wikipedia.org/wiki/Lionel_Messi");
+		refererSet.add("--");
 		seedSet.add("https://edition.cnn.com/world/live-news/coronavirus-pandemic-05-13-20-intl/index.html");
+		refererSet.add("--");
 		//seedSet.add("https://wikipedia.org");
 		//seedSet.add("https://goal.com");
 	}
@@ -69,119 +83,132 @@ public class crawler {
 			this.lock = lock;
 		}
 		public void run () {
-			while(pageIter < numOfPages || visitorPointer < numOfPages)
+			if(operationType != 2) //not recrawel
 			{
-				String currentWebPageURL = "";
-				try {
-					
-					synchronized(lock)
-					{
-						System.out.println("current seed = "+seedSet.get(visitorPointer));
-						currentWebPageURL = normalizeSiteURL(seedSet.get(visitorPointer));
-						visitorPointer++;
-					}
-					
-					String currentPath =  URI.create(currentWebPageURL).getPath();
-					String currentHost = URI.create(currentWebPageURL).getScheme()+"://"+
-								URI.create(currentWebPageURL).getHost();
-					//System.out.println(currentPath);
-					//System.out.println(currentHost);
-					boolean isValidWebPage = checkRobots(currentHost,currentPath);
-					if(isValidWebPage)
-					{
-						Document doc = Jsoup.connect(currentWebPageURL).get();
-						Elements links = doc.body().getElementsByTag("a");
-						Elements images = doc.body().getElementsByTag("img");
+				
+				while(pageIter < numOfPages || visitorPointer < numOfPages)
+				{
+					String currentWebPageURL = "";
+					int refererIndex = 0;
+					try {
 						
-						Elements headingElements = doc.body().getElementsByTag("h1");
-						Elements paragraphElements = doc.body().getElementsByTag("p");
-						//Elements headOneText = doc.body().getElementsByTag("h1");
-						//Elements headTwoText = doc.body().getElementsByTag("h2");
-						
-						
-						String imageSources = "";
-						String headingText = "";
-						String paragraphText = "";
-						List<String> webPageLinks = new ArrayList<String>();
-						for(Element link : links)
-						{
-							if(webPageLinks.size() >= webPageLinksThreshold)
-								break;
-							String href = link.attr("href");
-							if(href.startsWith("/"))
-							{
-								if(href.indexOf("http") != 0 || href.indexOf("https") != 0)
-									href = currentHost + href;
-								if(uniqueLink(seedSet, href) && uniqueLink(webPageLinks, href))
-								{
-									//check if the web page is found or not
-									boolean checkExistance = urlExist(href);
-									if(checkExistance)
-									{
-										//check if this webpage exists or not
-										//seedSet.add(href);
-										webPageLinks.add(href);
-										System.out.println("href = "+href);
-									}
-									
-								}
-							}
-						
-						}
-						for(Element image : images)
-						{
-							String imgSrc = image.attr("src");
-							System.out.println("ImgSrc = "+imgSrc);
-							if(imageExist(imgSrc))
-							{
-								imageSources += imgSrc + " ";
-							}
-							else if(imageExist("https:"+imgSrc))
-							{
-								imageSources += "https:" + imgSrc + " ";
-							}
-							else if(imageExist(currentHost+imgSrc))
-							{
-								imageSources += currentHost + imgSrc + " ";
-							}
-						}
-						for(Element hElement : headingElements)
-						{
-							headingText += hElement.text() + "^h1^";
-						}
-						for(Element pElement : paragraphElements)
-						{
-							paragraphText += pElement.text() + "^p^";
-						}
 						synchronized(lock)
 						{
-							for(int k = 0;k < webPageLinks.size() && pageIter < numOfPages;k++)
-							{
-								pageIter++;
-								seedSet.add(webPageLinks.get(k));
-							}
-							imagesOfSeedSet.add(imageSources);
-							System.out.println("seedSet after i = "+pageIter);
-							System.out.println("site host = "+currentWebPageURL);
-							System.out.println(imageSources);
-							System.out.println(headingText+paragraphText);
-							System.out.println(""); // publish date
-							MySQLAccess db = new MySQLAccess();
-							try {
-								db.writeResultSet(currentWebPageURL, headingText+paragraphText, imageSources, "");
-							} catch (SQLException e) {
-								System.out.println("problem occured on writing in the database");
-							}
-							
+							System.out.println("current seed = "+seedSet.get(visitorPointer));
+							currentWebPageURL = normalizeSiteURL(seedSet.get(visitorPointer));
+							refererIndex = visitorPointer;
+							visitorPointer++;
 						}
-					
+						
+						String currentPath =  URI.create(currentWebPageURL).getPath();
+						String currentHost = URI.create(currentWebPageURL).getScheme()+"://"+
+									URI.create(currentWebPageURL).getHost();
+						//System.out.println(currentPath);
+						//System.out.println(currentHost);
+						boolean isValidWebPage = checkRobots(currentHost,currentPath);
+						if(isValidWebPage)
+						{
+							Document doc = Jsoup.connect(currentWebPageURL).get();
+							Elements links = doc.body().getElementsByTag("a");
+							Elements images = doc.body().getElementsByTag("img");
+							
+							Elements headingElements = doc.body().getElementsByTag("h1");
+							Elements paragraphElements = doc.body().getElementsByTag("p");
+							//Elements headOneText = doc.body().getElementsByTag("h1");
+							//Elements headTwoText = doc.body().getElementsByTag("h2");
+							
+							
+							String imageSources = "";
+							String headingText = "";
+							String paragraphText = "";
+							List<String> webPageLinks = new ArrayList<String>();
+							for(Element link : links)
+							{
+								if(webPageLinks.size() >= webPageLinksThreshold)
+									break;
+								String href = link.attr("href");
+								if(href.startsWith("/"))
+								{
+									if(href.indexOf("http") != 0 || href.indexOf("https") != 0)
+										href = currentHost + href;
+									if(uniqueLink(seedSet, href) && uniqueLink(webPageLinks, href))
+									{
+										//check if the web page is found or not
+										boolean checkExistance = urlExist(href);
+										if(checkExistance)
+										{
+											//check if this webpage exists or not
+											//seedSet.add(href);
+											webPageLinks.add(href);
+											System.out.println("href = "+href);
+										}
+										
+									}
+								}
+							
+							}
+							for(Element image : images)
+							{
+								String imgSrc = image.attr("src");
+								System.out.println("ImgSrc = "+imgSrc);
+								if(imageExist(imgSrc))
+								{
+									imageSources += imgSrc + " ";
+								}
+								else if(imageExist("https:"+imgSrc))
+								{
+									imageSources += "https:" + imgSrc + " ";
+								}
+								else if(imageExist(currentHost+imgSrc))
+								{
+									imageSources += currentHost + imgSrc + " ";
+								}
+							}
+							for(Element hElement : headingElements)
+							{
+								headingText += hElement.text() + "^h1^";
+							}
+							for(Element pElement : paragraphElements)
+							{
+								paragraphText += pElement.text() + "^p^";
+							}
+							synchronized(lock)
+							{
+								for(int k = 0;k < webPageLinks.size() && pageIter < numOfPages;k++)
+								{
+									pageIter++;
+									seedSet.add(webPageLinks.get(k));
+									refererSet.add(currentHost);
+								}
+								imagesOfSeedSet.add(imageSources);
+								System.out.println("seedSet after i = "+pageIter);
+								System.out.println("site host = "+currentWebPageURL);
+								System.out.println(imageSources);
+								System.out.println(headingText+paragraphText);
+								System.out.println(""); // publish date
+								MySQLAccess db = new MySQLAccess();
+								String refererLink = refererSet.get(refererIndex);
+								try {
+									db.writeResultSet(currentWebPageURL, headingText+paragraphText, imageSources, "", refererLink);
+								} catch (SQLException e) {
+									System.out.println("problem occured on writing in the database");
+								}
+								
+							}
+						
+						}
+						
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-					
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
 			}
+			//operationType == 2 i.e. recrawel dynamic pages
+			else {
+				
+			}
+		
 
 		}
 	}
@@ -194,7 +221,7 @@ public class crawler {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
-			//System.out.println("Page isn't found");
+			//System.out.println("Page isn't found"); 
 			exists = false;
 		}
 		return exists;
