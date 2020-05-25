@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        style="@style/CardView.Light"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="8dp">
+
+
+        <TextView
+            android:id="@+id/titleLINK"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Wikipedia"
+            android:textStyle="bold"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/googleRed"
+            android:gravity="top"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/urlLINK"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="https://wikipedia.com"
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/googleBlue"
+            android:gravity="bottom"
+            android:textStyle="italic"
+            android:paddingVertical="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="28sp"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/snippetLINK"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="4"
+            android:text="Google LLC is an American multinational technology company that specializes in Internet-related services and products, which include online advertising technologies, a search engine, cloud computing, software, and hardware. It is considered one of the Big Four technology companies alongside Amazon, Apple, and Facebook"
+            android:textColor="@android:color/darker_gray"
+            android:textAlignment="textStart"
+            android:paddingVertical="3dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="56sp"
+            android:textSize="15sp" />
+
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

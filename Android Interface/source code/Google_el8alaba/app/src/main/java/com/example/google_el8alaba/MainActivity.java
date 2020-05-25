@@ -5,13 +5,19 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -44,29 +50,64 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
   boolean mic_approved = false;
+  public static final boolean TEST_MODE = false;
   public static final int REQUEST_MICROPHONE = 200;
   private SpeechRecognizer sr;
-  EditText query;
+  AutoCompleteTextView query;
   TextView countryDisp;
   TextView voice_result;
+  EditText ip;
   Button voice_btn;
   RequestQueue queue;
   Thread thread;
   String CountryDomain;
+  final String[] type = new String[1];
   RadioButton WebLinksRadio;
   RadioButton ImgsRadio;
+  final String SearchLinksRoute = "searchLinks";
+  final String SearchImagesRoute = "searchImages";
+  final String AutoCompleteRoute = "complete";
+  final String[] searchParams = {"query", "&CountryDomain"};
+  final String[] completeParams = {"part"};
+  private ProgressDialog progress;
+  private final int AutoCompleteMaxSuggestions = 7;
+  final String[] mydata = new String[AutoCompleteMaxSuggestions];
 
   @SuppressLint("ClickableViewAccessibility")
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    ip = findViewById(R.id.ip);
     query = findViewById(R.id.query_et);
     voice_btn = findViewById(R.id.search_voice_btn);
     countryDisp = findViewById(R.id.CountryCode);
     WebLinksRadio = findViewById(R.id.radioWeb);
     ImgsRadio = findViewById(R.id.radioImgs);
     voice_result = findViewById(R.id.sound_result);
+
+    /** ***********************************auto complete process********************************* */
+    addDummySuggestions(); // initially
+    final ArrayAdapter<String> adapter =
+            new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, mydata);
+    // populate the list to the AutoCompleteTextView controls
+    query.setAdapter(adapter);
+    query.addTextChangedListener(
+            new TextWatcher() {
+              @Override
+              public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+              }
+
+              @Override
+              public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (TEST_MODE) addDummySuggestions();
+                else changeSuggestions(adapter);
+              }
+
+              @Override
+              public void afterTextChanged(Editable editable) {
+              }
+            });
     /** **********************************get country code*************************************** */
     thread =
         new Thread(
@@ -145,29 +186,112 @@ public class MainActivity extends AppCompatActivity {
     queue.start();
   }
 
+  private void addDummySuggestions() {
+    mydata[0] = "facebook";
+    mydata[1] = "google";
+    mydata[2] = "wikipedia";
+    mydata[3] = "china";
+    mydata[4] = "egypt";
+    mydata[5] = "mohamad salah";
+    for (int i = 6; i < AutoCompleteMaxSuggestions; i++) {
+      mydata[i] = " ";
+    }
+  }
+
+  /**
+   * refresh suggestions on every change of query text
+   *
+   * @param adapter : array adapter of edittext view to update it
+   */
+  private void changeSuggestions(final ArrayAdapter<String> adapter) {
+    String url = getUrl(AutoCompleteRoute);
+    JsonArrayRequest jsonArrayRequest =
+            new JsonArrayRequest(
+                    Request.Method.GET,
+                    url,
+                    null,
+                    new Response.Listener<JSONArray>() {
+                      @Override
+                      public void onResponse(JSONArray response) {
+                        adapter.clear();
+
+                        int loopLength = Math.min(AutoCompleteMaxSuggestions, response.length());
+                        for (int i = 0; i < loopLength; i++) {
+                          try {
+                            //mydata[i] = response.getString(i);
+                            adapter.insert(response.getString(i), i);
+                            Log.d("Suggestions : ", response.getString(i));
+                            query.showDropDown();
+
+                          } catch (JSONException e) {
+                            e.printStackTrace();
+                          }
+                          //adapter.addAll(mydata);
+                          adapter.notifyDataSetChanged();
+                        }
+                      }
+                    },
+                    new Response.ErrorListener() {
+                      @Override
+                      public void onErrorResponse(VolleyError error) {
+                        // To dismiss the dialog
+                        progress.dismiss();
+                        Toast.makeText(getApplicationContext(), "This didn't work .. ", Toast.LENGTH_LONG)
+                                .show();
+                        Log.e("Volley Error", error.toString());
+
+                        NetworkResponse networkResponse = error.networkResponse;
+                        if (networkResponse != null) {
+                          Log.e("Status code", String.valueOf(networkResponse.statusCode));
+                        }
+                      }
+                    });
+
+    // Add the request to the RequestQueue.
+    queue.add(jsonArrayRequest);
+    // no need for singleton as there is no continuous use for network in
+    // different activities
+  }
+
   /** on clicking search button */
   public void searchQuery(View view) {
-
-    String queryText = query.getText().toString();
-    final ProgressDialog progress = new ProgressDialog(this);
+    // String queryText = query.getText().toString();
+    // mydbAdapter.addNewQuery(queryText);
+    progress = new ProgressDialog(this);
     progress.setTitle("Loading");
     progress.setMessage("Wait while loading...");
     progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
     progress.show();
-
-    final String[] type = new String[1];
     if (ImgsRadio.isChecked()) type[0] = "Imgs";
     else type[0] = "Web";
-    String url = getUrl(queryText, CountryDomain, type[0]);
-    /** **********************test************************************************* */
+    String url = type[0].equals("Web") ? getUrl(SearchLinksRoute) : getUrl(SearchImagesRoute);
+    /** *******************************get search results to display***************************** */
+    if (TEST_MODE) {
+      TestJSON();
+    } else {
+      sendRealRequest(url);
+    }
+  }
+
+  /**
+   * send dummy json array to display to test interface
+   */
+  private void TestJSON() {
     try {
       if (type[0].equals("Web")) sendTestwebJSONArray();
       else sendTestimageJSONArray();
     } catch (JSONException e) {
       e.printStackTrace();
     }
-    /** **********************send real request************************************ */
-    /*JsonArrayRequest jsonArrayRequest =
+  }
+
+  /**
+   * send request to host asking for results (links/images)
+   *
+   * @param url : url to send the request to .. contains the route and parameters
+   */
+  private void sendRealRequest(String url) {
+    JsonArrayRequest jsonArrayRequest =
         new JsonArrayRequest(
             Request.Method.GET,
             url,
@@ -177,11 +301,10 @@ public class MainActivity extends AppCompatActivity {
               public void onResponse(JSONArray response) {
                 // To dismiss the dialog
                 progress.dismiss();
-                Intent passResult ;
-                 if(type[0].equals("Web"))
-                   passResult= new Intent(getApplicationContext(), ShowResults.class);
-                 else
-                   passResult= new Intent(getApplicationContext(), ShowImgsResults.class);
+                Intent passResult;
+                if (type[0].equals("Web"))
+                  passResult = new Intent(getApplicationContext(), ShowResults.class);
+                else passResult = new Intent(getApplicationContext(), ShowImgsResults.class);
                 passResult.putExtra("jsonArray", response.toString());
                 startActivity(passResult);
               }
@@ -203,9 +326,11 @@ public class MainActivity extends AppCompatActivity {
             });
 
     // Add the request to the RequestQueue.
-    queue.add(jsonArrayRequest); // no need for singleton as there is no continuous use for network in different activities
-     */
+    queue.add(jsonArrayRequest);
+    // no need for singleton as there is no continuous use for network in
+    // different activities
   }
+
   /** test web results showing */
   private void sendTestwebJSONArray() throws JSONException {
     final int dataMaxSize = 500;
@@ -289,18 +414,30 @@ public class MainActivity extends AppCompatActivity {
   /**
    * build url containing all parameters needed to be sent to the host
    *
-   * @param query : text to be searched on
-   * @param CountryDomain : two letters code representing the internet service provider of user
-   * @param type : type of requested search (web / images)
+   * @param Route : specification for request type to modify parameters sent with request
    * @return : String containing all parameters needed to be sent to the host all concatenated
    */
-  private String getUrl(String query, String CountryDomain, String type) {
-    String[] words = query.split(" ");
-    StringBuilder URL = new StringBuilder("localhost://" + "&text=");
-    for (String word : words) URL.append(word).append("%");
-
-    URL.append("&CountryCode=").append(CountryDomain);
-    URL.append("&type=").append(type);
+  private String getUrl(String Route) {
+    String host = "http://" + ip.getText().toString() + ":8080/";
+    StringBuilder URL = new StringBuilder(host + Route + "?");
+    if (Route.equals(SearchLinksRoute) || Route.equals(SearchImagesRoute)) {
+      String queryText = query.getText().toString();
+      URL.append(searchParams[0]).append("=");
+      String[] words = queryText.split(" ");
+      for (int i = 0; i < words.length; i++) {
+        if (i == words.length - 1) {
+          URL.append(words[i]); // last word
+        } else {
+          URL.append(words[i]).append("+");
+        }
+      }
+      URL.append(searchParams[1]).append("=").append(CountryDomain);
+    } else if (Route.equals(AutoCompleteRoute)) {
+      String queryText = query.getText().toString();
+      URL.append(completeParams[0]).append("=");
+      String[] words = queryText.split(" ");
+      for (String word : words) URL.append(word).append("+");
+    }
     return URL.toString();
   }
 
@@ -361,14 +498,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResults(Bundle results) {
 
-      String str = "";
+      StringBuilder str = new StringBuilder();
       ArrayList data1 = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
       if (data1 != null) {
         for (int i = 0; i < data1.size(); i++) {
-          str += data1.get(i) + "/";
+          str.append(data1.get(i)).append("/");
         }
       }
-      voice_result.setText(str);
+      voice_result.setText(str.toString());
 
       ArrayList data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
       String word = "null";
@@ -394,4 +531,5 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onEvent(int i, Bundle bundle) {}
   }
+
 }

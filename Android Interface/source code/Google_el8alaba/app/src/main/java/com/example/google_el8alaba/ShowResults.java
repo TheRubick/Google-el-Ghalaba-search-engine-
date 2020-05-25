@@ -25,6 +25,7 @@ public class ShowResults extends AppCompatActivity {
   private int currentStart = 0;
   private int currentEnd = length - 1;
   private JSONArray array;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -50,13 +51,11 @@ public class ShowResults extends AppCompatActivity {
     showDataBetweenIndex12(currentStart, currentEnd); // initially
   }
 
-
   public void nextLinks(View view) {
     // TODO:: put in recycler view next 10 links
     currentStart = Math.min(currentStart + pageCapacity, length - 1);
     currentEnd = Math.min(currentEnd + pageCapacity, length);
     showDataBetweenIndex12(currentStart, currentEnd);
-
   }
 
   public void backLinks(View view) {
@@ -68,7 +67,7 @@ public class ShowResults extends AppCompatActivity {
 
   private void showDataBetweenIndex12(int from, int to) {
     try {
-      String counterText = "displaying from result \n " + from + " to "+to+" out of " + length;
+      String counterText = "displaying from result \n " + from + " to " + to + " out of " + length;
       counter.setText(counterText);
       JSONObject[] linksData = new JSONObject[length];
       linkItems.clear();
@@ -77,7 +76,7 @@ public class ShowResults extends AppCompatActivity {
         String title = linksData[i].getString("title");
         String link = linksData[i].getString("link");
         String snippet = linksData[i].getString("snippet");
-        linkItems.add(new LinkItem(title, link,snippet));
+        linkItems.add(new LinkItem(title, link, snippet));
       }
       adapter.notifyDataSetChanged();
 
