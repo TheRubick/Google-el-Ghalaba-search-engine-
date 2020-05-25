@@ -19,6 +19,7 @@ import org.jsoup.select.*;
 public class crawler {
 		
 	final int numOfPages = 12;
+	final String imageLinksDelimiter = "@@::;;@@;";
 	public static List<String> seedSet = new ArrayList<String>();
 	public static List<String> refererSet = new ArrayList<String>();
 	public static List<String> imagesOfSeedSet = new ArrayList<String>();
@@ -145,28 +146,36 @@ public class crawler {
 							{
 								String imgSrc = image.attr("src");
 								System.out.println("ImgSrc = "+imgSrc);
+								String caption = image.attr("alt");
+								if(caption.isEmpty())
+									caption = " ";
 								if(imageExist(imgSrc))
 								{
-									imageSources += imgSrc + " ";
+									
+									imageSources += imgSrc + imageLinksDelimiter + caption + imageLinksDelimiter;
 								}
 								else if(imageExist("https:"+imgSrc))
 								{
-									imageSources += "https:" + imgSrc + " ";
+									imageSources += "https:" + imgSrc + imageLinksDelimiter + caption + imageLinksDelimiter;
 								}
 								else if(imageExist(currentHost+imgSrc))
 								{
-									imageSources += currentHost + imgSrc + " ";
+									imageSources += currentHost + imgSrc + imageLinksDelimiter + caption + imageLinksDelimiter;
 								}
 							}
 							for(Element hElement : headingElements)
 							{
 								headingText += hElement.text();
 							}
+							if(headingText.isEmpty())
+								headingText = " ";
 							headingText += "^h1^";
 							for(Element pElement : paragraphElements)
 							{
 								paragraphText += pElement.text();
 							}
+							if(paragraphText.isEmpty())
+								paragraphText = " ";
 							paragraphText += "^p^";
 							synchronized(lock)
 							{
