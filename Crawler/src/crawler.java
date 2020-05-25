@@ -16,14 +16,8 @@ import org.jsoup.select.*;
 
 
 
-
-
-
 public class crawler {
-	
-	
-	
-	
+		
 	final int numOfPages = 12;
 	public static List<String> seedSet = new ArrayList<String>();
 	public static List<String> refererSet = new ArrayList<String>();
@@ -166,12 +160,14 @@ public class crawler {
 							}
 							for(Element hElement : headingElements)
 							{
-								headingText += hElement.text() + "^h1^";
+								headingText += hElement.text();
 							}
+							headingText += "^h1^";
 							for(Element pElement : paragraphElements)
 							{
-								paragraphText += pElement.text() + "^p^";
+								paragraphText += pElement.text();
 							}
+							paragraphText += "^p^";
 							synchronized(lock)
 							{
 								for(int k = 0;k < webPageLinks.size() && pageIter < numOfPages;k++)

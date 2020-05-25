@@ -18,7 +18,7 @@ public class MySQLAccess {
 
   final private String host = "127.0.0.1";
   final private String user = "root";
-  final private String passwd = "123456789";
+  final private String passwd = "";
   
   public ResultSet readDataBase(String s) throws Exception {
     try {
@@ -27,7 +27,7 @@ public class MySQLAccess {
       
       // Setup the connection with the DB
       connect = DriverManager
-          .getConnection("jdbc:mysql://" + host + "/Crawler_database?"
+          .getConnection("jdbc:mysql://" + host + "/crawler_database?"
               + "user=" + user + "&password=" + passwd );
       
       //reading from the crawler database
@@ -110,7 +110,7 @@ public class MySQLAccess {
 	      
 	      // Setup the connection with the DB
 	      connect = DriverManager
-	          .getConnection("jdbc:mysql://" + host + "/Crawler_database?"
+	          .getConnection("jdbc:mysql://" + host + "/crawler_database?"
 	              + "user=" + user + "&password=" + passwd );
 	    } catch (Exception e) {
 	        System.out.println("database error");
