@@ -10,8 +10,8 @@
 	<classpathentry kind="src" path="Android Interface/source code/Google_el8alaba/app/src/test/java"/>
 	<classpathentry kind="src" path="Crawler/src"/>
 	<classpathentry kind="src" path="queryProcessor/src"/>
-	<classpathentry kind="src" path="Ranker/Popularity/src"/>
-	<classpathentry excluding="Popularity/src/" kind="src" path="Ranker"/>
+	<classpathentry kind="src" path="Ranker/Relevance/src"/>
+	<classpathentry kind="src" path="Ranker/Relevancy/src"/>
 	<classpathentry kind="lib" path="Android Interface/source code/Google_el8alaba/app/libs/jsoup-1.13.1.jar"/>
 	<classpathentry kind="lib" path="Android Interface/source code/Google_el8alaba/gradle/wrapper/gradle-wrapper.jar"/>
 	<classpathentry kind="lib" path="Crawler/WebContent/WEB-INF/lib/jsoup-1.13.1.jar"/>
