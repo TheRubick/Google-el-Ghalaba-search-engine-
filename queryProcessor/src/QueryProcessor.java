@@ -3,30 +3,26 @@ import org.tartarus.snowball.ext.PorterStemmer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.io.*;
+
 
 public class QueryProcessor {
     String query;
-    String type;
     ArrayList<String> parts;
 
-    public QueryProcessor() {
+    public QueryProcessor(String query) {
+        this.query = query;
     }
 
     public void setQuery(String query) {
         this.query = query;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public ArrayList<String> startProcessing() {
-        parts = new ArrayList<>(Arrays.asList(query.split("%")));
+    public ArrayList<String> startProcessing() throws IOException {
+        parts = new ArrayList<>(Arrays.asList(query.split("\\+")));
         printQueryWordsCount();
+        removeWhiteSpaces();
+        lowerCaseWords();
         removeStopWords();
         System.out.println("after removal");
         printQueryWordsCount();
@@ -34,17 +30,21 @@ public class QueryProcessor {
         return parts;
     }
 
-    public void getRequest() {
-        String query = "how%to%send%a%travelling%in%get%and%travel%in%android%OR%traveler";
-        String type = "web";
-        //TODO :: get request from server
-        setType(type);
-        setQuery(query);
-    }
-
     public void printOutputToConsole() {
         for (String part : parts) {
-            System.out.println("received : " + part);
+            System.out.println("received : " + part + "     " + part.length());
+        }
+    }
+
+    private void removeWhiteSpaces() {
+        for (int i = 0; i < parts.size(); i++) {
+            parts.set(i, parts.get(i).replaceAll("\\s+", ""));
+        }
+    }
+
+    private void lowerCaseWords() {
+        for (int i = 0; i < parts.size(); i++) {
+            parts.set(i, parts.get(i).toLowerCase());
         }
     }
 
@@ -52,13 +52,26 @@ public class QueryProcessor {
         System.out.println(parts.size());
     }
 
-    private void removeStopWords() {
-        String[] stopWords = {"a", "and", "or", "is"}; //to be continued
+    private void removeStopWords() throws IOException {
+        //String[] stopWords = {"a", "and", "or", "is"}; //to be continued
+        ArrayList<String> stopWords = new ArrayList<>();
+        File file = new File(".\\stopping_words.txt");
+
+        BufferedReader br = new BufferedReader(new FileReader(file));
+
+        String st;
+        while ((st = br.readLine()) != null) {
+            //System.out.println(st);
+            stopWords.add(st);
+        }
         for (Iterator<String> iterator = parts.iterator(); iterator.hasNext(); ) {
             String part = iterator.next();
+            //System.out.println("word:" + part);
             for (String stopWord : stopWords) {
                 if (part.equalsIgnoreCase(stopWord)) {
+                    //System.out.println("removed:" + part);
                     iterator.remove();
+                    break;
                 }
             }
         }
