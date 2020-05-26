@@ -7,15 +7,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicLong;
 
 @SpringBootApplication
 @RestController
-public class DemoApplication {
+public class ServerAPI {
 
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
+        SpringApplication.run(ServerAPI.class, args);
     }
 
     /*********************************dummy endpoint*****************************************************/
@@ -40,6 +42,7 @@ public class DemoApplication {
             return content;
         }
     }
+
     @GetMapping("/greeting")
     public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
         //return String.format("Hello %s!", name);
@@ -75,7 +78,9 @@ public class DemoApplication {
     @GetMapping("/searchLinks")
     public Link[] getLinks(
             @RequestParam(value = "query", defaultValue = "World") String query,
-            @RequestParam(value = "CountryDomain", defaultValue = "EG") String CountryDomain) {
+            @RequestParam(value = "CountryDomain", defaultValue = "EG") String CountryDomain) throws IOException {
+        QueryProcessor queryProcessor = new QueryProcessor(query);
+        ArrayList<String> queryWords = queryProcessor.startProcessing();
         final int dataMaxSize = 100;
         Link[] links = new Link[dataMaxSize];
         links[0] = new Link("wikipedia", "https://wikipedia.com",
@@ -110,30 +115,62 @@ public class DemoApplication {
     @GetMapping("/searchImages")
     public Img[] getImages(
             @RequestParam(value = "query", defaultValue = "World") String query,
-            @RequestParam(value = "CountryDomain", defaultValue = "EG") String CountryDomain) {
+            @RequestParam(value = "CountryDomain", defaultValue = "EG") String CountryDomain) throws IOException {
+        QueryProcessor queryProcessor = new QueryProcessor(query);
+        ArrayList<String> queryWords = queryProcessor.startProcessing();
         final int dataMaxSize = 500;
         Img[] imgs = new Img[dataMaxSize];
-        imgs[0]=new Img("img1","https://i.imgur.com/tGbaZCY.jpg");
-        imgs[1]=new Img("img2","https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mohamed_Salah_2018.jpg/200px-Mohamed_Salah_2018.jpg");
-        imgs[2]=new Img("img3","https://i.imgur.com/k0aIIHx.png");
-        imgs[3]=new Img("img4","https://i.imgur.com/F9dYGWA.png");
+        imgs[0] = new Img("img1", "https://i.imgur.com/tGbaZCY.jpg");
+        imgs[1] = new Img("img2", "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mohamed_Salah_2018.jpg/200px-Mohamed_Salah_2018.jpg");
+        imgs[2] = new Img("img3", "https://i.imgur.com/k0aIIHx.png");
+        imgs[3] = new Img("img4", "https://i.imgur.com/F9dYGWA.png");
 
         for (int i = 4; i < dataMaxSize; i++)
-            imgs[i]=new Img(query + (i + 1),"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mohamed_Salah_2018.jpg/200px-Mohamed_Salah_2018.jpg");
+            imgs[i] = new Img(query + (i + 1), "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mohamed_Salah_2018.jpg/200px-Mohamed_Salah_2018.jpg");
 
         return imgs;
     }
+
     /*************************************end point 3*******************************************************/
     @GetMapping("/complete")
     public String[] getSuggestions(
             @RequestParam(value = "part", defaultValue = " ") String part) {
         int randomNum = 50;
-        String [] suggestions = new String[randomNum];
-        for (int i=0;i<randomNum;i++)
-        {
-         suggestions[i]= part+ "suggestion "+i;
-        }
+        String[] suggestions = new String[randomNum];
+        for (int i = 0; i < randomNum; i++)
+            suggestions[i] = part + "suggestion " + i;
+
         return suggestions;
+    }
+
+    /*************************************end point 4*******************************************************/
+    public static class Trend {
+        String name;
+        int count;
+
+        public Trend(String name, int count) {
+            this.name = name;
+            this.count = count;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getCount() {
+            return count;
+        }
+    }
+
+    @GetMapping("/trends")
+    public Trend[] getTrends(
+            @RequestParam(value = "CountryDomain", defaultValue = "EG") String CountryDomain) {
+        int trendsCount = 10;
+        Trend[] trends = new Trend[trendsCount];
+        for (int i = 0; i < trendsCount; i++)
+            trends[i] = new Trend("mohamad salah", i + 5);
+
+        return trends;
     }
 }
             
