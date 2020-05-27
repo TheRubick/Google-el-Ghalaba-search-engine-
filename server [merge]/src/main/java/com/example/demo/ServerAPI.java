@@ -190,6 +190,7 @@ public class ServerAPI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
         return trends;
     }
 }

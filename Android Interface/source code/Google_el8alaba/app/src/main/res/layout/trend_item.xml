@@ -6,37 +6,37 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="40dp"
         style="@style/CardView.Light"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="8dp">
 
-        <ImageView
-            android:id="@+id/imageViewIMG_Res"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="#88888888" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_gravity="bottom"
-            android:src="@drawable/gradient" />
-
         <TextView
-            android:id="@+id/textViewIMG_Res"
+            android:id="@+id/trendName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/title"
-            style="@style/TextAppearance.AppCompat.Medium"
-            android:layout_gravity="bottom"
-            android:layout_margin="12dp"
+            android:text="@string/trends"
             android:textStyle="bold"
-            android:textColor="@android:color/white" />
+            android:layout_margin="8dp"
+            android:fontFamily="casual"
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/googleBlue"
+            android:gravity="start"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/trendCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/random_num"
+            android:textStyle="bold"
+            android:layout_margin="8dp"
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/googleBlue"
+            android:gravity="end"
+            android:textSize="22sp" />
 
     </androidx.cardview.widget.CardView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

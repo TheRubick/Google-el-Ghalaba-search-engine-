@@ -170,7 +170,32 @@ public class MySQLAccess {
 //      connect.close();
     }
   
- 
+  public void saveRankRelevance(String values) throws SQLException {
+	  Connection connect = null;
+	  PreparedStatement preparedStatement = null;
+	  try {
+	      // This will load the MySQL driver, each DB has its own driver
+	      Class.forName("com.mysql.cj.jdbc.Driver");
+	      
+	      // Setup the connection with the DB
+	      connect = DriverManager
+	          .getConnection("jdbc:mysql://" + host + "/Crawler_database?"
+	              + "user=" + user + "&password=" + passwd );
+	    } catch (Exception e) {
+	        System.out.println("database error");
+	      } finally {
+	        close();
+	      }
+	  statement = connect.createStatement();
+	  statement.executeUpdate("DROP TABLE IF EXISTS RELEVANCE_RANK;");
+	  statement.executeUpdate("CREATE TABLE RELEVANCE_RANK(LINK VARCHAR(256) NOT NULL PRIMARY KEY, RELEVANCE_SCORE DOUBLE NOT NULL);");
+	  
+	  preparedStatement = connect.prepareStatement("INSERT INTO RELEVANCE_RANK(LINK,RELEVANCE_SCORE) VALUES "+values);
+      preparedStatement.executeUpdate();
+
+    }
+  
+  
   // You need to close the resultSet
   private void close() {
     try {

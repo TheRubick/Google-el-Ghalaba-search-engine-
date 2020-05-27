@@ -13,4 +13,11 @@
     <string name="backBtn">Back ..</string>
     <string name="mostafa_ip">192.168.43.96</string>
     <string name="host_ip">host_ip</string>
+    <string name="search">Search</string>
+    <string name="trends">Trends</string>
+    <string name="select_country">Select Country :</string>
+    <string name="egypt">Egypt</string>
+    <string name="random_num">5</string>
+    <string name="title">Title</string>
+    <string name="display_result">Displaying from results \n 0 to 0 out of 0</string>
 </resources>

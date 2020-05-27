@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:layout_marginBottom="16dp"
-        android:text="displaying from image \n 0 to 0 out of 0"
+        android:text="@string/display_result"
         android:textAlignment="center"
         android:textColor="@color/googleBlue"
         android:textSize="16sp"

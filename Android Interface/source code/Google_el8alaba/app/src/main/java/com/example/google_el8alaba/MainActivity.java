@@ -48,6 +48,8 @@ import org.jsoup.Jsoup;
 
 import java.util.ArrayList;
 
+import static com.example.google_el8alaba.Starter.serverIP;
+
 public class MainActivity extends AppCompatActivity {
   boolean mic_approved = false;
   public static final boolean TEST_MODE = false;
@@ -56,19 +58,17 @@ public class MainActivity extends AppCompatActivity {
   AutoCompleteTextView query;
   TextView countryDisp;
   TextView voice_result;
-  EditText ip;
   Button voice_btn;
-  RequestQueue queue;
   Thread thread;
   String CountryDomain;
   final String[] type = new String[1];
   RadioButton WebLinksRadio;
   RadioButton ImgsRadio;
-  final String SearchLinksRoute = "searchLinks";
-  final String SearchImagesRoute = "searchImages";
-  final String AutoCompleteRoute = "complete";
-  final String[] searchParams = {"query", "&CountryDomain"};
-  final String[] completeParams = {"part"};
+    final static String SearchLinksRoute = "searchLinks";
+    final static String SearchImagesRoute = "searchImages";
+    final static String AutoCompleteRoute = "complete";
+    final static String[] searchParams = {"query", "&CountryDomain"};
+    final static String[] completeParams = {"part"};
   private ProgressDialog progress;
   private final int AutoCompleteMaxSuggestions = 7;
   final String[] mydata = new String[AutoCompleteMaxSuggestions];
@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    ip = findViewById(R.id.ip);
     query = findViewById(R.id.query_et);
     voice_btn = findViewById(R.id.search_voice_btn);
     countryDisp = findViewById(R.id.CountryCode);
@@ -170,20 +169,6 @@ public class MainActivity extends AppCompatActivity {
             return false;
           }
         });
-    /**
-     * *********************************queue setup**********************************************
-     */
-    // Instantiate the cache
-    Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
-
-    // Set up the network to use HttpURLConnection as the HTTP client.
-    Network network = new BasicNetwork(new HurlStack());
-
-    // Instantiate the RequestQueue with the cache and network.
-    queue = new RequestQueue(cache, network);
-
-    // Start the queue
-    queue.start();
   }
 
   private void addDummySuggestions() {
@@ -235,7 +220,6 @@ public class MainActivity extends AppCompatActivity {
                       @Override
                       public void onErrorResponse(VolleyError error) {
                         // To dismiss the dialog
-                        progress.dismiss();
                         Toast.makeText(getApplicationContext(), "This didn't work .. ", Toast.LENGTH_LONG)
                                 .show();
                         Log.e("Volley Error", error.toString());
@@ -248,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
                     });
 
     // Add the request to the RequestQueue.
-    queue.add(jsonArrayRequest);
+      VolleySingelton.getInstance(this).addToRequestQueue(jsonArrayRequest);
     // no need for singleton as there is no continuous use for network in
     // different activities
   }
@@ -326,9 +310,7 @@ public class MainActivity extends AppCompatActivity {
             });
 
     // Add the request to the RequestQueue.
-    queue.add(jsonArrayRequest);
-    // no need for singleton as there is no continuous use for network in
-    // different activities
+      VolleySingelton.getInstance(this).addToRequestQueue(jsonArrayRequest);
   }
 
   /** test web results showing */
@@ -418,7 +400,7 @@ public class MainActivity extends AppCompatActivity {
    * @return : String containing all parameters needed to be sent to the host all concatenated
    */
   private String getUrl(String Route) {
-    String host = "http://" + ip.getText().toString() + ":8080/";
+      String host = "http://" + serverIP + ":8080/";
     StringBuilder URL = new StringBuilder(host + Route + "?");
     if (Route.equals(SearchLinksRoute) || Route.equals(SearchImagesRoute)) {
       String queryText = query.getText().toString();

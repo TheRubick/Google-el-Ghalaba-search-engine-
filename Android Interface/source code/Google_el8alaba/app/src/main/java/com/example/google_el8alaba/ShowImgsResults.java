@@ -74,7 +74,7 @@ public class ShowImgsResults extends AppCompatActivity {
    */
   public void showDataBetweenIndex12(int from, int to) {
     try {
-      String counterText = "displaying from image \n " + from + " to "+to+" out of " + length;
+        String counterText = "Displaying from image \n " + from + " to " + to + " out of " + length;
       counter.setText(counterText);
       JSONObject[] imagesData = new JSONObject[length];
       imgItems.clear();

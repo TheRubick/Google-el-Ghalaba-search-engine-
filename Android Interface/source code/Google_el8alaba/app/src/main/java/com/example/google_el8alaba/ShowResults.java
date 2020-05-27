@@ -67,7 +67,7 @@ public class ShowResults extends AppCompatActivity {
 
   private void showDataBetweenIndex12(int from, int to) {
     try {
-      String counterText = "displaying from result \n " + from + " to " + to + " out of " + length;
+        String counterText = "Displaying from result \n " + from + " to " + to + " out of " + length;
       counter.setText(counterText);
       JSONObject[] linksData = new JSONObject[length];
       linkItems.clear();
