@@ -2,6 +2,8 @@ import java.lang.Math;
 import java.sql.ResultSet;
 import java.util.*;
 
+import jdk.jfr.internal.PrivateAccess;
+
 
 public class Relevance {
 
@@ -16,8 +18,10 @@ public class Relevance {
 	
 	private HashMap<String, Integer> hashTableURLs;
 	private HashMap<String, Integer> hashTableWords;
+	private double RelevanceScore[];
 	
-	public Relevance() throws Exception {
+	public Relevance(ArrayList<String> qp) throws Exception {
+		queryProcessed = qp; 
 		numTerms = queryProcessed.size();
 		db = new MySQLAccess();
 		words ="(";
@@ -81,7 +85,7 @@ public class Relevance {
 			tfIdf[hashTableURLs.get(url)][hashTableWords.get(word)] = tf.getInt(3);
 		}
 		
-//		// fill the matrix with IDF	
+		// fill the matrix with IDF	
 		while(df.next())
 		{
 			String word = df.getString(1);
@@ -90,7 +94,26 @@ public class Relevance {
 				tfIdf[i][hashTableWords.get(word)] *= (1 + Math.log10(totalDocs/df.getInt(2)));
 			}
 		}
+	}
+	private void saveInDB() throws Exception
+	{
+		RelevanceScore = new double[numDocs];
+			hashTableURLs.forEach((key, value) -> {
+			RelevanceScore[numDocs] =0;
+			for(int j=0;j<numTerms;j++)
+			{
+				RelevanceScore[value] += tfIdf[value][j];
+			}
+		});
 		
+		db = new MySQLAccess();
+		StringBuilder data = new StringBuilder();
 		
+		hashTableURLs.forEach((key, value) -> {
+			data.append("('"+key+"',"+RelevanceScore[value]+"),");
+			});
+			String dString = data.toString();
+			dString = dString.substring(0, dString.length() - 1);
+			db.saveRankRelevance(dString);
 	}
 }
