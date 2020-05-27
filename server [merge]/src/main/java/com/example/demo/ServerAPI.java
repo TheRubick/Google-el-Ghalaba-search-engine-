@@ -168,7 +168,7 @@ public class ServerAPI {
         int trendsCount = 10;
         Trend[] trends = new Trend[trendsCount];
         for (int i = 0; i < trendsCount; i++)
-            trends[i] = new Trend("mohamad salah", i + 5);
+            trends[i] = new Trend("mohamad salah "+CountryDomain, i + 5);
 
         return trends;
     }
