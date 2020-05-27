@@ -25,9 +25,9 @@ public class Relevance {
 		words ="(";
 		for(int i=0;i<queryProcessed.size()-1;i++)
 		{
-			words += queryProcessed.get(i)+",";
+			words += "'"+queryProcessed.get(i)+"',";
 		}
-		words += queryProcessed.get(queryProcessed.size()-1)+")";
+		words += "'"+queryProcessed.get(queryProcessed.size()-1)+"')";
 		setTotalDocs();
 		setNumDocs();
 	}
@@ -35,22 +35,25 @@ public class Relevance {
 	{
 		String query = "SELECT COUNT(DISTINCT(url)) FROM `words_url`";
 		ResultSet resultSet = db.readDataBase(query);
+		resultSet.next();
+
 		totalDocs = resultSet.getInt(1);
 	}
 	private void setNumDocs() throws Exception
 	{
-		String query = "SELECT COUNT(DISTINCT(url)) FROM `words_url` where word IN" + words;
+		String query = "SELECT COUNT(DISTINCT(url)) FROM `words_url` where word IN " + words;
 		ResultSet resultSet = db.readDataBase(query);
+		resultSet.next();
 		numDocs = resultSet.getInt(1);
 	}
 	private ResultSet queryTermFreq() throws Exception
 	{
-		String query = "SELECT URL,word,score FROM `words_url` where word IN" + words;
+		String query = "SELECT URL,word,score FROM `words_url` where word IN " + words;
 		return db.readDataBase(query);
 	}
 	private ResultSet queryDocFreq() throws Exception
 	{
-		String query = "SELECT word,COUNT(DISTINCT(url)) FROM `words_url` where word IN" + words + "GROUP by word";
+		String query = "SELECT word,COUNT(DISTINCT(url)) FROM `words_url` where word IN " + words + " GROUP by word";
 		return db.readDataBase(query);
 	}
 	
@@ -69,18 +72,18 @@ public class Relevance {
 		{
 			// check if url is in the hashTable to give it a new index if not.
 			String url = tf.getString(1);
-			if(hashTableURLs.containsKey(url))
+			if(!hashTableURLs.containsKey(url))
 			{
 				hashTableURLs.put(url,indURL);
 				indURL++;
 			}
 			String word = tf.getString(2);
-			if(hashTableWords.containsKey(word))
+			if(!hashTableWords.containsKey(word))
 			{
-				hashTableWords.put(url,indWord);
+				hashTableWords.put(word,indWord);
 				indWord++;
 			}
-			tfIdf[hashTableURLs.get(url)][hashTableWords.get(word)] = tf.getInt(3);
+			tfIdf[hashTableWords.get(word)][hashTableURLs.get(url)] = tf.getDouble(3);
 		}
 		
 		// fill the matrix with IDF	
@@ -89,18 +92,19 @@ public class Relevance {
 			String word = df.getString(1);
 			for(int i=0;i<numDocs;i++)
 			{
-				tfIdf[i][hashTableWords.get(word)] *= (1 + Math.log10(totalDocs/df.getInt(2)));
+				tfIdf[hashTableWords.get(word)][i] *= (1 + Math.log10( (double)(totalDocs)/df.getInt(2)));
 			}
 		}
+		saveInDB();
 	}
 	private void saveInDB() throws Exception
 	{
 		RelevanceScore = new double[numDocs];
 			hashTableURLs.forEach((key, value) -> {
-			RelevanceScore[numDocs] =0;
+			RelevanceScore[value] =0;
 			for(int j=0;j<numTerms;j++)
 			{
-				RelevanceScore[value] += tfIdf[value][j];
+				RelevanceScore[value] += tfIdf[j][value];
 			}
 		});
 		
@@ -111,7 +115,11 @@ public class Relevance {
 			data.append("('"+key+"',"+RelevanceScore[value]+"),");
 			});
 			String dString = data.toString();
-			dString = dString.substring(0, dString.length() - 1);
+			System.out.println(dString);
+			if(!dString.isEmpty())
+				dString = dString.substring(0, dString.length() - 1);
+			else
+				dString = "('',0)";
 			db.saveRankRelevance(dString);
 	}
 }
