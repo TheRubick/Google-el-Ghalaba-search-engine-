@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ch.qos.logback.core.db.dialect.MySQLDialect;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicLong;
-
+import java.sql.ResultSet;
 @SpringBootApplication
 @RestController
 public class ServerAPI {
@@ -165,11 +167,29 @@ public class ServerAPI {
     @GetMapping("/trends")
     public Trend[] getTrends(
             @RequestParam(value = "CountryDomain", defaultValue = "EG") String CountryDomain) {
-        int trendsCount = 10;
+        final int trendsCount = 10;
         Trend[] trends = new Trend[trendsCount];
-        for (int i = 0; i < trendsCount; i++)
-            trends[i] = new Trend("mohamad salah", i + 5);
-
+        MySQLAccess dbManager = new MySQLAccess();
+        ResultSet trendsData = null;
+        try {
+			trendsData = dbManager.readDataBase(
+					"SELECT person_name,count(person_name) as person_occurrence from trends_table WHERE country = \"EG\" "
+					+ "GROUP by person_name order by person_name DESC"
+					);
+			for (int row = 1; row <= trendsCount; row++)
+	        {
+	        	if(trendsData.absolute(row))
+	        	{
+	        		int personCount = trendsData.getInt(2);
+	        		trends[row-1] = new Trend(trendsData.getString(1), personCount);
+	        	}
+	        	else
+	        		trends[row-1] = new Trend("N/A", 0);
+	        }
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         return trends;
     }
 }

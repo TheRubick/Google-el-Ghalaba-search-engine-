@@ -1,5 +1,5 @@
 // Adapted from http://www.vogella.com/tutorials/MySQLJava/article.html
-
+package com.example.demo;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -115,7 +115,10 @@ public class MySQLAccess {
       //reading from the crawler database
       statement = connect.createStatement();
       ResultSet resultSet = statement.executeQuery("select * from crawler_table");
-      return !(resultSet.absolute(1));
+      if(resultSet.absolute(1))
+    	  return true;
+      else
+    	  return false;
   }
   public void writeResultSet(String link , String text , String image_sources, String publish_date, String refererLink) throws SQLException {
 	  Connection connect = null;

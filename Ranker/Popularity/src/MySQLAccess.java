@@ -1,5 +1,4 @@
 // Adapted from http://www.vogella.com/tutorials/MySQLJava/article.html
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -102,21 +101,6 @@ public class MySQLAccess {
     }
   }
   */
-  public boolean isEmptyCrawler() throws ClassNotFoundException, SQLException
-  {
-	// This will load the MySQL driver, each DB has its own driver
-      Class.forName("com.mysql.cj.jdbc.Driver");
-      
-      // Setup the connection with the DB
-      connect = DriverManager
-          .getConnection("jdbc:mysql://" + host + "/crawler_database?"
-              + "user=" + user + "&password=" + passwd );
-      
-      //reading from the crawler database
-      statement = connect.createStatement();
-      ResultSet resultSet = statement.executeQuery("select * from crawler_table");
-      return !(resultSet.absolute(1));
-  }
   public void writeResultSet(String link , String text , String image_sources, String publish_date, String refererLink) throws SQLException {
 	  Connection connect = null;
 	  PreparedStatement preparedStatement = null;
