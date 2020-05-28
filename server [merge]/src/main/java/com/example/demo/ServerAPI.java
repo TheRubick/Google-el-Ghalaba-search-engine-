@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.qos.logback.core.db.dialect.MySQLDialect;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -80,11 +79,16 @@ public class ServerAPI {
     @GetMapping("/searchLinks")
     public Link[] getLinks(
             @RequestParam(value = "query", defaultValue = "World") String query,
-            @RequestParam(value = "CountryDomain", defaultValue = "EG") String CountryDomain) throws IOException {
+            @RequestParam(value = "CountryDomain", defaultValue = "EG") String CountryDomain) throws Exception {
         QueryProcessor queryProcessor = new QueryProcessor(query);
         ArrayList<String> queryWords = queryProcessor.startProcessing();
+        Relevance rel = new Relevance(queryWords);
+        //Link[] links= rel.getLinksOrdered();
+        //return links;
+
         final int dataMaxSize = 100;
         Link[] links = new Link[dataMaxSize];
+
         links[0] = new Link("wikipedia", "https://wikipedia.com",
                 "Wikipedia is hosted by the Wikimedia Foundation, a non-profit organization that also hosts a range of other projects.");
         links[1] = new Link("google", "https://google.com", "Google LLC is an American multinational technology company that specializes in Internet-related services and products, which include online advertising technologies, a search engine, cloud computing, software, and hardware. It is considered one of the Big Four technology companies alongside Amazon, Apple, and Facebook");
@@ -93,6 +97,7 @@ public class ServerAPI {
             links[i] = new Link(query + (i + 1), "https://facebook.com", "Facebook is an American online social media and social networking service based in Menlo Park,Facebook is an American online social media and social networking service based in Menlo Park,Facebook is an American online social media and social networking service based in Menlo Park California and a flagship service of the namesake company Facebook, Inc.");
 
         return links;
+
     }
 
     /****************************************end point 2*********************************************************/
@@ -117,9 +122,12 @@ public class ServerAPI {
     @GetMapping("/searchImages")
     public Img[] getImages(
             @RequestParam(value = "query", defaultValue = "World") String query,
-            @RequestParam(value = "CountryDomain", defaultValue = "EG") String CountryDomain) throws IOException {
+            @RequestParam(value = "CountryDomain", defaultValue = "EG") String CountryDomain) throws Exception {
         QueryProcessor queryProcessor = new QueryProcessor(query);
         ArrayList<String> queryWords = queryProcessor.startProcessing();
+        Relevance rel = new Relevance(queryWords);
+        //Img[] imgs= rel.getImgsOrdered();
+        //return imgs;
         final int dataMaxSize = 500;
         Img[] imgs = new Img[dataMaxSize];
         imgs[0] = new Img("img1", "https://i.imgur.com/tGbaZCY.jpg");
