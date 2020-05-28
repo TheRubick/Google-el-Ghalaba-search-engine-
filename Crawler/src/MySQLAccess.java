@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -17,9 +19,9 @@ public class MySQLAccess {
   private PreparedStatement preparedStatement = null;
   private ResultSet resultSet = null;
 
-  final private String host = "127.0.0.1";
-  final private String user = "root";
-  final private String passwd = "123456789";
+  final private String host = config.host;
+  final private String user = config.user;
+  final private String passwd = config.passwd;
   
   public ResultSet readDataBase(String s) throws Exception {
     try {
@@ -100,6 +102,76 @@ public class MySQLAccess {
     }
   }
   */
+
+
+  public ArrayList<String>[] getbylastupdate(Timestamp ts) {
+
+	  ArrayList<String> [] arr = new ArrayList[3];
+	  try {
+	      Class.forName("com.mysql.cj.jdbc.Driver");
+	      
+	      connect = DriverManager
+	          .getConnection("jdbc:mysql://" + host + "/crawler_database?"
+	              + "user=" + user + "&password=" + passwd );
+	      
+	      String s = "select * from crawler_table where last_update >= '" + ts +"';";
+	      statement = connect.createStatement();
+	      resultSet = statement.executeQuery(s);
+	      System.out.println(resultSet);
+		    resultSet.beforeFirst();
+		    arr[0] = new ArrayList<String>();
+		    arr[1] = new ArrayList<String>();
+		    arr[2] = new ArrayList<String>();
+		    while(resultSet.next()) {
+		    	arr[0].add(resultSet.getString("Link"));
+		    	arr[1].add(resultSet.getString("Text"));
+		    	arr[2].add(resultSet.getString("Image_links"));
+		    }
+	      
+	    } catch (Exception e) {
+	      } finally {
+	        close();
+	      }
+	return arr;
+  }
+  
+  public void delbyUrl(String url) {
+	  try {
+	      Class.forName("com.mysql.cj.jdbc.Driver");
+	      
+	      connect = DriverManager
+	          .getConnection("jdbc:mysql://" + host + "/crawler_database?"
+	              + "user=" + user + "&password=" + passwd );
+	      
+	      String s = "delete from word_url where url = '" + url +"';";
+	      statement = connect.createStatement();
+	      statement.executeUpdate(s);
+	      
+	    } catch (Exception e) {
+	      } finally {
+	        close();
+	      }
+  }
+  
+
+  public void insertWordUrl(String url, String word, Double score) {
+	  try {
+	      Class.forName("com.mysql.cj.jdbc.Driver");
+	      
+	      connect = DriverManager
+	          .getConnection("jdbc:mysql://" + host + "/crawler_database?"
+	              + "user=" + user + "&password=" + passwd );
+	      
+	      String s = "INSERT INTO word_url VALUES ('" + word +"','" + url +"'," + score +");";
+	      statement = connect.createStatement();
+	      statement.executeUpdate(s);
+	      
+	    } catch (Exception e) {
+	      } finally {
+	        close();
+	      }
+  }
+  
   public boolean isEmptyCrawler() throws ClassNotFoundException, SQLException
   {
 	// This will load the MySQL driver, each DB has its own driver
