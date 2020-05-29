@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Relevance {
 
-	private ArrayList<String> queryProcessed;
+//	private ArrayList<String> queryProcessed;
 	private double[][] tfIdf;  //  dimension : (terms,doc)
 	private int numTerms;
 	private int numDocs;
@@ -20,15 +20,17 @@ public class Relevance {
 	private HashMap<String, Integer> hashTableWords;
 	private double RelevanceScore[];
 
-	public Relevance(ArrayList<String> qp) throws Exception {
-		queryProcessed = qp;
-		numTerms = queryProcessed.size();
+	public Relevance(String Words,int num) throws Exception {
+		numTerms = num;
+		words = Words;
+//		queryProcessed = qp;
+//		numTerms = queryProcessed.size();
 		db = new MySQLAccess();
-		words = "(";
-		for (int i = 0; i < queryProcessed.size() - 1; i++) {
-			words += "'" + queryProcessed.get(i) + "',";
-		}
-		words += "'" + queryProcessed.get(queryProcessed.size() - 1) + "')";
+//		words = "(";
+//		for (int i = 0; i < queryProcessed.size() - 1; i++) {
+//			words += "'" + queryProcessed.get(i) + "',";
+//		}
+//		words += "'" + queryProcessed.get(queryProcessed.size() - 1) + "')";
 		setTotalDocs();
 		setNumDocs();
 
@@ -59,7 +61,8 @@ public class Relevance {
 		return db.readDataBase(query);
 	}
 
-	public void calcTfIdf() throws Exception {
+	// calculates tf_idf and return a hashmap of links withs its score
+	public HashMap<String,Double> startRelevance() throws Exception {
 		tfIdf = new double[numTerms][numDocs];
 		hashTableURLs = new HashMap<String, Integer>();
 		hashTableWords = new HashMap<String, Integer>();
@@ -91,10 +94,7 @@ public class Relevance {
 				tfIdf[hashTableWords.get(word)][i] *= (1 + Math.log10((double) (totalDocs) / df.getInt(2)));
 			}
 		}
-		saveInDB();
-	}
 
-	private void saveInDB() throws Exception {
 		RelevanceScore = new double[numDocs];
 		hashTableURLs.forEach((key, value) -> {
 			RelevanceScore[value] = 0;
@@ -104,16 +104,10 @@ public class Relevance {
 		});
 
 		db = new MySQLAccess();
-		StringBuilder data = new StringBuilder();
-
+		HashMap<String,Double> retRelevance = new HashMap<String,Double>();
 		hashTableURLs.forEach((key, value) -> {
-			data.append("('" + key + "'," + RelevanceScore[value] + "),");
+			retRelevance.put(key,RelevanceScore[value]);
 		});
-		String dString = data.toString();
-		System.out.println(dString);
-		if (!dString.isEmpty())
-			dString = dString.substring(0, dString.length() - 1);
-		else
-			dString = "('',0)";
+		return retRelevance;
 	}
 }

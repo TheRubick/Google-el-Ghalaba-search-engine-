@@ -1,6 +1,6 @@
 package com.example.demo;
 
-import org.tartarus.snowball.ext.PorterStemmer;
+//import org.tartarus.snowball.ext.PorterStemmer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +28,7 @@ public class QueryProcessor {
         removeStopWords();
         System.out.println("after removal");
         printQueryWordsCount();
-        stemQuery();
+//        stemQuery();
         return parts;
     }
 
@@ -79,13 +79,13 @@ public class QueryProcessor {
         }
     }
 
-    private void stemQuery() {
-        for (int i = 0; i < parts.size(); i++) {
-            PorterStemmer stemmer = new PorterStemmer();
-            stemmer.setCurrent(parts.get(i)); //set string you need to stem
-            stemmer.stem();  //stem the word
-            parts.set(i, stemmer.getCurrent());
-        }
-    }
+//    private void stemQuery() {
+//        for (int i = 0; i < parts.size(); i++) {
+//            PorterStemmer stemmer = new PorterStemmer();
+//            stemmer.setCurrent(parts.get(i)); //set string you need to stem
+//            stemmer.stem();  //stem the word
+//            parts.set(i, stemmer.getCurrent());
+//        }
+//    }
 
 }

@@ -82,7 +82,8 @@ public class ServerAPI {
             @RequestParam(value = "CountryDomain", defaultValue = "EG") String CountryDomain) throws Exception {
         QueryProcessor queryProcessor = new QueryProcessor(query);
         ArrayList<String> queryWords = queryProcessor.startProcessing();
-        Relevance rel = new Relevance(queryWords);
+        OverAllRank ranker = new OverAllRank();
+        ranker.startRank(queryWords,CountryDomain);
         //Link[] links= rel.getLinksOrdered();
         //return links;
 
@@ -125,7 +126,8 @@ public class ServerAPI {
             @RequestParam(value = "CountryDomain", defaultValue = "EG") String CountryDomain) throws Exception {
         QueryProcessor queryProcessor = new QueryProcessor(query);
         ArrayList<String> queryWords = queryProcessor.startProcessing();
-        Relevance rel = new Relevance(queryWords);
+        OverAllRank ranker = new OverAllRank();
+        ranker.startRank(queryWords,CountryDomain);
         //Img[] imgs= rel.getImgsOrdered();
         //return imgs;
         final int dataMaxSize = 500;
