@@ -54,6 +54,7 @@ public class Indexer {
 	    
 	    for(int i = 0; i < arr[0].size(); ++i) {
 	    	HashMap<String, Integer[] > mp = new HashMap<String, Integer[] >();
+	    	HashMap<String, Double > mpscore = new HashMap<String, Double >();
 	    	Double totScore = 0.0, sum = 0.0;
 	    	int [] freq = {0,0};
 	    	String txts = arr[1].get(i), url = arr[0].get(i), imgs = arr[2].get(i);
@@ -82,12 +83,14 @@ public class Indexer {
 	    		Double score = (it[0]*freq[1])/(freq[0]*totScore) + it[2]/totScore;
 	    		if(freq[0] == 0) score = it[2]*1.0/freq[1];
 	    		if(freq[1] == 0) score = it[0]*1.0/freq[0];
-			    System.out.println(entry.getKey() + " = " + it[0] + " " + it[1] + " " + it[2] + " " + score);
+			    //System.out.println(entry.getKey() + " = " + it[0] + " " + it[1] + " " + it[2] + " " + score);
 			    sum += score;
-			    //dao.insertWordUrl(url, entry.getKey(), score);
+			    mpscore.put(entry.getKey(), score);
 			}
+		    dao.insertWordUrl(url, mpscore);
 	    	System.out.println(sum);
 	    	System.out.println("-------------------------------------");
 	    }
+	    dao.close();
 	  }
 }
