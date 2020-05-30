@@ -183,7 +183,8 @@ public class ServerAPI {
         ResultSet trendsData = null;
         try {
 			trendsData = dbManager.readDataBase(
-					"SELECT person_name,count(person_name) as person_occurrence from trends_table WHERE country = \"EG\" "
+					"SELECT person_name,count(person_name) as person_occurrence from trends_table WHERE country = \"+" +
+                           CountryDomain +"+\" "
 					+ "GROUP by person_name order by person_name DESC"
 					);
 			for (int row = 1; row <= trendsCount; row++)
