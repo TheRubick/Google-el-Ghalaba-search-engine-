@@ -155,7 +155,7 @@ public class MySQLAccess {
 	      
 	      // Setup the connection with the DB
 	      connect = DriverManager
-	          .getConnection("jdbc:mysql://" + host + "/Crawler_database?"
+	          .getConnection("jdbc:mysql://" + host + "/crawler_database?"
 	              + "user=" + user + "&password=" + passwd );
 	    } catch (Exception e) {
 	        System.out.println("database error");

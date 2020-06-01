@@ -126,8 +126,8 @@ public class ServerAPI {
             @RequestParam(value = "CountryDomain", defaultValue = "EG") String CountryDomain) throws Exception {
         QueryProcessor queryProcessor = new QueryProcessor(query);
         ArrayList<String> queryWords = queryProcessor.startProcessing();
-        OverAllRank ranker = new OverAllRank();
-        ranker.startRank(queryWords,CountryDomain);
+        ImageRank ranker = new ImageRank();
+        ranker.startRank(queryWords);
         //Img[] imgs= rel.getImgsOrdered();
         //return imgs;
         final int dataMaxSize = 500;
