@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class MySQLAccess {
@@ -23,14 +24,20 @@ public class MySQLAccess {
   final private String user = config.user;
   final private String passwd = config.passwd;
   
+  public MySQLAccess() {
+	  try {
+	      // This will load the MySQL driver, each DB has its own driver
+	      Class.forName("com.mysql.cj.jdbc.Driver");
+	      
+	      // Setup the connection with the DB
+	      connect = DriverManager.getConnection("jdbc:mysql://" + host + "/crawler_database?" + "user=" + user + "&password=" + passwd );
+	      
+	  }
+	  catch (Exception e) {} 
+  }
+  
   public ResultSet readDataBase(String s) throws Exception {
     try {
-      // This will load the MySQL driver, each DB has its own driver
-      Class.forName("com.mysql.cj.jdbc.Driver");
-      
-      // Setup the connection with the DB
-      connect = DriverManager.getConnection("jdbc:mysql://" + host + "/Crawler_database?" + "user=" + user + "&password=" + passwd );
-      
       //reading from the crawler database
       statement = connect.createStatement();
       ResultSet resultSet = statement.executeQuery(s);
@@ -51,8 +58,6 @@ public class MySQLAccess {
       
     } catch (Exception e) {
         throw e;
-      } finally {
-//        close();
       }
   } 
       //writeResultSet(resultSet);
@@ -108,12 +113,6 @@ public class MySQLAccess {
 
 	  ArrayList<String> [] arr = new ArrayList[3];
 	  try {
-	      Class.forName("com.mysql.cj.jdbc.Driver");
-	      
-	      connect = DriverManager
-	          .getConnection("jdbc:mysql://" + host + "/crawler_database?"
-	              + "user=" + user + "&password=" + passwd );
-	      
 	      String s = "select * from crawler_table where last_update >= '" + ts +"';";
 	      statement = connect.createStatement();
 	      resultSet = statement.executeQuery(s);
@@ -129,59 +128,38 @@ public class MySQLAccess {
 		    }
 	      
 	    } catch (Exception e) {
-	      } finally {
-	        close();
 	      }
 	return arr;
   }
   
   public void delbyUrl(String url) {
 	  try {
-	      Class.forName("com.mysql.cj.jdbc.Driver");
-	      
-	      connect = DriverManager
-	          .getConnection("jdbc:mysql://" + host + "/crawler_database?"
-	              + "user=" + user + "&password=" + passwd );
-	      
 	      String s = "delete from word_url where url = '" + url +"';";
 	      statement = connect.createStatement();
 	      statement.executeUpdate(s);
 	      
 	    } catch (Exception e) {
-	      } finally {
-	        close();
 	      }
   }
   
 
-  public void insertWordUrl(String url, String word, Double score) {
+  public void insertWordUrl(String url, HashMap<String, Double > wordScore) {
 	  try {
-	      Class.forName("com.mysql.cj.jdbc.Driver");
-	      
-	      connect = DriverManager
-	          .getConnection("jdbc:mysql://" + host + "/crawler_database?"
-	              + "user=" + user + "&password=" + passwd );
-	      
-	      String s = "INSERT INTO word_url VALUES ('" + word +"','" + url +"'," + score +");";
+	      String s = "INSERT INTO word_url VALUES " ;
+	      for (HashMap.Entry<String, Double> entry : wordScore.entrySet()) {
+	    		 s = s.concat("( '" + entry.getKey() +"','" + url +"'," + entry.getValue() +"),");
+	      }
+	      s = s.substring(0,s.length()-1);
+	      s = s.concat(";"); 
 	      statement = connect.createStatement();
 	      statement.executeUpdate(s);
 	      
 	    } catch (Exception e) {
-	      } finally {
-	        close();
 	      }
   }
   
   public boolean isEmptyCrawler() throws ClassNotFoundException, SQLException
   {
-	// This will load the MySQL driver, each DB has its own driver
-      Class.forName("com.mysql.cj.jdbc.Driver");
-      
-      // Setup the connection with the DB
-      connect = DriverManager
-          .getConnection("jdbc:mysql://" + host + "/Crawler_database?"
-              + "user=" + user + "&password=" + passwd );
-      
       //reading from the crawler database
       statement = connect.createStatement();
       ResultSet resultSet = statement.executeQuery("select * from crawler_table");
@@ -267,7 +245,7 @@ public class MySQLAccess {
   
   
   // You need to close the resultSet
-  private void close() {
+  public void close() {
     try {
     	
       if (resultSet != null) {
