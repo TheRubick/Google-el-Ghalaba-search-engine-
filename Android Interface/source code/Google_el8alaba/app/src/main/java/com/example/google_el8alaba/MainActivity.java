@@ -394,7 +394,7 @@ public class MainActivity extends AppCompatActivity {
    * @return : String containing all parameters needed to be sent to the host all concatenated
    */
   private String getUrl(String Route) {
-      String host = "http://" + serverIP + ":8080/";
+    String host = "http://" + serverIP + ":/";
     StringBuilder URL = new StringBuilder(host + Route + "?");
     if (Route.equals(SearchLinksRoute) || Route.equals(SearchImagesRoute)) {
       String queryText = query.getText().toString();

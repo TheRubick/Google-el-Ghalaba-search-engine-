@@ -147,7 +147,7 @@ public class ShowTrends extends AppCompatActivity implements AdapterView.OnItemS
      * @return : String containing all parameters needed to be sent to the host all concatenated
      */
     private String getUrl(String Route) {
-        String host = "http://" + serverIP + ":8080/";
+        String host = "http://" + serverIP + "/";
         StringBuilder URL = new StringBuilder(host + Route + "?");
         if (Route.equals(TrendsRoute)) {
             URL.append(trendsParams[0]).append("=").append(chosenCountry);
