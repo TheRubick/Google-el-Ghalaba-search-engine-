@@ -40,6 +40,8 @@ public class OverAllRank{
 
     public ServerAPI.Link[] startRank(ArrayList<String> queryProcessed ,String Loc) throws Exception
     {
+        db = new MySQLAccess();
+        finalScore = new HashMap<String, Double>();
         relvWeight = 1.0;
         popWeight = 0.5;
         LocWeight = 0.8;
@@ -66,7 +68,7 @@ public class OverAllRank{
         // used in querying database
         String concernedLinks = concernedLink.toString();
         if(concernedLinks.equals("("))
-            concernedLinks = "''";
+            concernedLinks += "null";
         else
             concernedLinks = concernedLinks.substring(0, concernedLinks.length() - 1);
         concernedLinks += ")";
@@ -98,7 +100,7 @@ public class OverAllRank{
         }
         ////////////////////////////////////////////////////////////////
         // We get geographic rank
-        query = "SELECT LINK FROM `crawler_table` where Country = " + Loc;
+        query = "SELECT LINK FROM `crawler_table` where Country = '" + Loc + "'";
         queryResult = db.readDataBase(query);
 
         //add LocWeight to over all rank
@@ -109,6 +111,7 @@ public class OverAllRank{
         }
         ////////////////////////////////////////////////////////////////
         // sort the final score
+
         finalScore = sortByValue(finalScore);
 
         StringBuilder sortedLinks = new StringBuilder();
@@ -121,7 +124,7 @@ public class OverAllRank{
         });
         String dString = sortedLinks.toString();
         if(dString.equals("("))
-            dString = "'')";
+            dString += "null";
         else
             dString = dString.substring(0, dString.length() - 1);
         dString += ")";
@@ -137,9 +140,8 @@ public class OverAllRank{
             String title = queryResult.getString(1);
             String link= queryResult.getString(2);
             String snippet = queryResult.getString(3);
-            toFrontEnd[i].link = link;
-            toFrontEnd[i].title = title;
-            toFrontEnd[i].snippet =snippet;
+            ServerAPI.Link element = new ServerAPI.Link(title, link, snippet);
+            toFrontEnd[i] = element;
             i++;
         }
         return toFrontEnd;
