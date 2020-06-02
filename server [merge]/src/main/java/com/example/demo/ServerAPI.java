@@ -4,6 +4,7 @@ package com.example.demo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -193,16 +194,22 @@ public class ServerAPI {
 	        	{
 	        		int personCount = trendsData.getInt(2);
 	        		trends[row-1] = new Trend(trendsData.getString(1), personCount);
-	        	}
-	        	else
-	        		trends[row-1] = new Trend("N/A", 0);
-	        }
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	        	} else
+                    trends[row - 1] = new Trend("N/A", 0);
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
         return trends;
+    }
+
+    /*************************************end point 5*******************************************************/
+    @PutMapping("/personalized")
+    public void updatePersonalized(@RequestParam(value = "link", defaultValue = "World") String link) {
+        //TODO :: add link to data base or increase its count 
+
     }
 }
             
