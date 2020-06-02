@@ -67,7 +67,9 @@ public class ImageResultsAdapter extends RecyclerView.Adapter<ImageResultsAdapte
     public void onBindViewHolder(@NonNull ImageResultsAdapter.ViewHolder holder, int position) {
         ImageItem item = imageItems.get(position);
         holder.textView.setText(item.getTitle());
-        Picasso.get().load(item.getImgUrl()).into(holder.imageView);
+        String url = item.getImgUrl();
+        if (!url.startsWith("http://") && !url.startsWith("https://")) url = "https://" + url;
+        Picasso.get().load(url).into(holder.imageView);
     }
 
     /**
@@ -81,7 +83,7 @@ public class ImageResultsAdapter extends RecyclerView.Adapter<ImageResultsAdapte
     }
 
     /**
-     * ******************************************************************************
+     * *****************************************************************************
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView imageView;

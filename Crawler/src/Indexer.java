@@ -36,18 +36,19 @@ public class Indexer {
 		      }
 		      myReader.close();
 		    } catch (FileNotFoundException e) {
-		      System.out.println("An error occurred.");
+
 		      e.printStackTrace();
 		    }
 	}
 	
 	public static void main(String[] args) throws Exception {
+		System.out.println(java.time.LocalTime.now());
 		Indexer id  = new Indexer();
 	    MySQLAccess dao = new MySQLAccess();
 	    id.loadStoppingWords();
 	    String dateString = "2020-05-25 20:34:41";
 	    Timestamp tdate = java.sql.Timestamp.valueOf(dateString);
-	    System.out.println(tdate);
+
 	    ArrayList<String> [] arr = dao.getbylastupdate(tdate);
 
 	    
@@ -88,9 +89,9 @@ public class Indexer {
 			    mpscore.put(entry.getKey(), score);
 			}
 		    dao.insertWordUrl(url, mpscore);
-	    	System.out.println(sum);
-	    	System.out.println("-------------------------------------");
+
 	    }
 	    dao.close();
-	  }
+		System.out.println(java.time.LocalTime.now());
+	}
 }

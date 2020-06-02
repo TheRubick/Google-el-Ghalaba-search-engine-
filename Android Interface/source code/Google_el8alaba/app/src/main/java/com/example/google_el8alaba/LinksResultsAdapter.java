@@ -3,7 +3,7 @@ package com.example.google_el8alaba;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +14,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+
+import org.json.JSONArray;
+
 import java.util.ArrayList;
+
+import static com.example.google_el8alaba.Starter.serverIP;
 
 public class LinksResultsAdapter extends RecyclerView.Adapter<LinksResultsAdapter.ViewHolder> {
     private ArrayList<LinkItem> linkItems;
     private Context context;
+    private static final String PersonalizedRoute = "personalized";
+    private static final String[] PersonalizedParams = {"link"};
 
     public LinksResultsAdapter(ArrayList<LinkItem> linkItems, Context context) {
         this.linkItems = linkItems;
@@ -102,10 +113,59 @@ public class LinksResultsAdapter extends RecyclerView.Adapter<LinksResultsAdapte
             int position = getAdapterPosition();
             LinkItem itemClicked = linkItems.get(position);
             String url = itemClicked.getLink();
+            //TODO :: send put request
+            sendPersonalized(url);
             if (!url.startsWith("http://") && !url.startsWith("https://")) url = "http://" + url;
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             context.startActivity(browserIntent);
             Toast.makeText(context, "opening link in browser", Toast.LENGTH_SHORT).show();
+        }
+
+        /**
+         * build url containing all parameters needed to be sent to the host
+         *
+         * @param link  : link to add to parameters
+         * @param Route : specification for request type to modify parameters sent with request
+         * @return : String containing all parameters needed to be sent to the host all concatenated
+         */
+        private String getUrl(String link, String Route) {
+            String host = "http://" + serverIP + "/";
+            StringBuilder URL = new StringBuilder(host + Route + "?");
+            if (Route.equals(PersonalizedRoute)) {
+                URL.append(PersonalizedParams[0]).append("=").append(link);
+            }
+            return URL.toString();
+        }
+
+        /**
+         * send request to add link as favoured to get better priority next time
+         *
+         * @param link : link pressed
+         */
+        private void sendPersonalized(String link) {
+            String url = getUrl(link, PersonalizedRoute);
+            JsonArrayRequest jsonArrayRequest =
+                    new JsonArrayRequest(
+                            Request.Method.PUT,
+                            url,
+                            null,
+                            new Response.Listener<JSONArray>() {
+                                @Override
+                                public void onResponse(JSONArray response) {
+                                    // response
+                                    Log.d("personalized Response :", response.toString());
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // error
+                                    Log.d("personalized Error:", error.toString());
+                                }
+                            });
+
+            // Add the request to the RequestQueue.
+            VolleySingelton.getInstance(context).addToRequestQueue(jsonArrayRequest);
         }
     }
 }

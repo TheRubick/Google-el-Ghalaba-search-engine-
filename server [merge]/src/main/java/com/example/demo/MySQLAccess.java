@@ -155,7 +155,7 @@ public class MySQLAccess {
 	      
 	      // Setup the connection with the DB
 	      connect = DriverManager
-	          .getConnection("jdbc:mysql://" + host + "/Crawler_database?"
+	          .getConnection("jdbc:mysql://" + host + "/crawler_database?"
 	              + "user=" + user + "&password=" + passwd );
 	    } catch (Exception e) {
 	        System.out.println("database error");
@@ -172,7 +172,30 @@ public class MySQLAccess {
 //      preparedStatement.close();
 //      connect.close();
     }
-  
+
+    public void writePersonName(String countryName,String personName) throws SQLException {
+        Connection connect = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            // This will load the MySQL driver, each DB has its own driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Setup the connection with the DB
+            connect = DriverManager
+                    .getConnection("jdbc:mysql://" + host + "/crawler_database?"
+                            + "user=" + user + "&password=" + passwd );
+        } catch (Exception e) {
+            System.out.println("database error");
+        }
+        preparedStatement = connect.prepareStatement("INSERT INTO `trends_table`(`country`, `person_name`)" +
+                " VALUES (?,?)");
+        preparedStatement.setString(1, countryName);
+        preparedStatement.setString(2, personName);
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
+        connect.close();
+    }
+
  
   // You need to close the resultSet
   private void close() {
