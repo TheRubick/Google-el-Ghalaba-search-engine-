@@ -64,11 +64,11 @@ public class MainActivity extends AppCompatActivity {
   final String[] type = new String[1];
   RadioButton WebLinksRadio;
   RadioButton ImgsRadio;
-    final static String SearchLinksRoute = "searchLinks";
-    final static String SearchImagesRoute = "searchImages";
-    final static String AutoCompleteRoute = "complete";
-    final static String[] searchParams = {"query", "&CountryDomain"};
-    final static String[] completeParams = {"part"};
+    static final String SearchLinksRoute = "searchLinks";
+    static final String SearchImagesRoute = "searchImages";
+    static final String AutoCompleteRoute = "complete";
+    static final String[] searchParams = {"query", "&CountryDomain"};
+    static final String[] completeParams = {"part"};
   private ProgressDialog progress;
   private final int AutoCompleteMaxSuggestions = 7;
   final String[] mydata = new String[AutoCompleteMaxSuggestions];
@@ -93,18 +93,20 @@ public class MainActivity extends AppCompatActivity {
     query.setAdapter(adapter);
     query.addTextChangedListener(
             new TextWatcher() {
-              @Override
-              public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-              }
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    //changeSuggestions(adapter);
+                }
 
-              @Override
-              public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                  changeSuggestions(adapter);
-              }
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-              @Override
-              public void afterTextChanged(Editable editable) {
-              }
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    changeSuggestions(adapter);
+                }
             });
     /** **********************************get country code*************************************** */
     thread =
@@ -195,39 +197,39 @@ public class MainActivity extends AppCompatActivity {
                     url,
                     null,
                     new Response.Listener<JSONArray>() {
-                      @Override
-                      public void onResponse(JSONArray response) {
-                        adapter.clear();
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            adapter.clear();
 
-                        int loopLength = Math.min(AutoCompleteMaxSuggestions, response.length());
-                        for (int i = 0; i < loopLength; i++) {
-                          try {
-                            //mydata[i] = response.getString(i);
-                            adapter.insert(response.getString(i), i);
-                            Log.d("Suggestions : ", response.getString(i));
-                            query.showDropDown();
+                            int loopLength = Math.min(AutoCompleteMaxSuggestions, response.length());
+                            for (int i = 0; i < loopLength; i++) {
+                                try {
+                                    // mydata[i] = response.getString(i);
+                                    adapter.insert(response.getString(i), i);
+                                    Log.d("Suggestions : ", response.getString(i));
+                                    query.showDropDown();
 
-                          } catch (JSONException e) {
-                            e.printStackTrace();
-                          }
-                          //adapter.addAll(mydata);
-                          adapter.notifyDataSetChanged();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                // adapter.addAll(mydata);
+                                adapter.notifyDataSetChanged();
+                            }
                         }
-                      }
                     },
                     new Response.ErrorListener() {
-                      @Override
-                      public void onErrorResponse(VolleyError error) {
-                          addDummySuggestions();
-                        Toast.makeText(getApplicationContext(), "This didn't work .. ", Toast.LENGTH_LONG)
-                                .show();
-                        Log.e("Volley Error", error.toString());
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            addDummySuggestions();
+                            Toast.makeText(getApplicationContext(), "This didn't work .. ", Toast.LENGTH_LONG)
+                                    .show();
+                            Log.e("Volley Error", error.toString());
 
-                        NetworkResponse networkResponse = error.networkResponse;
-                        if (networkResponse != null) {
-                          Log.e("Status code", String.valueOf(networkResponse.statusCode));
+                            NetworkResponse networkResponse = error.networkResponse;
+                            if (networkResponse != null) {
+                                Log.e("Status code", String.valueOf(networkResponse.statusCode));
+                            }
                         }
-                      }
                     });
 
     // Add the request to the RequestQueue.
@@ -250,9 +252,9 @@ public class MainActivity extends AppCompatActivity {
       sendRealRequest(url);
   }
 
-  /**
-   * send dummy json array to display to test interface
-   */
+    /**
+     * send dummy json array to display to test interface
+     */
   private void TestJSON() {
     try {
       if (type[0].equals("Web")) sendTestwebJSONArray();
@@ -357,7 +359,7 @@ public class MainActivity extends AppCompatActivity {
     Data[1] = new JSONObject();
       Data[1].put("title", "try");
     Data[1].put(
-        "link",
+            "link",
             "upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mohamed_Salah_2018.jpg/200px-Mohamed_Salah_2018.jpg");
 
     Data[2] = new JSONObject();
@@ -394,7 +396,7 @@ public class MainActivity extends AppCompatActivity {
    * @return : String containing all parameters needed to be sent to the host all concatenated
    */
   private String getUrl(String Route) {
-    String host = "http://" + serverIP + ":/";
+      String host = "http://" + serverIP + "/";
     StringBuilder URL = new StringBuilder(host + Route + "?");
     if (Route.equals(SearchLinksRoute) || Route.equals(SearchImagesRoute)) {
       String queryText = query.getText().toString();
@@ -507,5 +509,4 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onEvent(int i, Bundle bundle) {}
   }
-
 }

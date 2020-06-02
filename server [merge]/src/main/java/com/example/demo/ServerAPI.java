@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicLong;
 import java.sql.ResultSet;
+
 @SpringBootApplication
 @RestController
 public class ServerAPI {
@@ -81,7 +82,7 @@ public class ServerAPI {
         QueryProcessor queryProcessor = new QueryProcessor(query);
         ArrayList<String> queryWords = queryProcessor.startProcessing();
         OverAllRank ranker = new OverAllRank();
-        ranker.startRank(queryWords,CountryDomain);
+        ranker.startRank(queryWords, CountryDomain);
         //TODO :: check ranker work
         //Link[] links= rel.getLinksOrdered();
         //return links;
@@ -153,7 +154,7 @@ public class ServerAPI {
         //TODO:: get data from data base
         for (int i = 0; i < randomNum; i++)
             suggestions[i] = part + "suggestion " + i;
-
+        System.out.println(suggestions[1]);
         return suggestions;
     }
 
