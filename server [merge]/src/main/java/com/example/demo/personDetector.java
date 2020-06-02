@@ -71,6 +71,7 @@ public class personDetector {
                 personName += tokens[s.getStart()+i] + " ";
 
             System.out.println("person name is "+personName);
+            //writing in the database
             dbManager.writePersonName(countryName,personName);
         }
 

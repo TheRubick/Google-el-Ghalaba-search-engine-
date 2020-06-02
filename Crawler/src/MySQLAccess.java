@@ -165,8 +165,8 @@ public class MySQLAccess {
       ResultSet resultSet = statement.executeQuery("select * from crawler_table");
       return !(resultSet.absolute(1));
   }
-  public void writeResultSet(String link , String text , String image_sources, String publish_date, String refererLink) throws SQLException {
-	  Connection connect = null;
+  public void writeResultSet(String link , String text , String image_sources, String title, String refererLink, String URLLocation) throws SQLException {
+	  //Connection connect = null;
 	  PreparedStatement preparedStatement = null;
 	  try {
 	      // This will load the MySQL driver, each DB has its own driver
@@ -177,19 +177,20 @@ public class MySQLAccess {
 	          .getConnection("jdbc:mysql://" + host + "/Crawler_database?"
 	              + "user=" + user + "&password=" + passwd );
 	    } catch (Exception e) {
+	  		e.printStackTrace();
 	        System.out.println("database error");
 	      } finally {
-	        close();
+	        //close();
 	      }
-	  preparedStatement = connect.prepareStatement("INSERT INTO crawler_database.crawler_table VALUES (?,?,?,?,?,DEFAULT)");
+	  preparedStatement = connect.prepareStatement("INSERT INTO crawler_database.crawler_table VALUES (?,?,?,?,?,?,DEFAULT)");
       preparedStatement.setString(1, link);
       preparedStatement.setString(2, text);
       preparedStatement.setString(3, image_sources);
-      preparedStatement.setDate(4, new java.sql.Date(2020-11-27)); // should be fixed
+      preparedStatement.setString(4, title); // should be fixed
       preparedStatement.setString(5, refererLink);
+	  preparedStatement.setString(6, URLLocation);
       preparedStatement.executeUpdate();
       preparedStatement.close();
-      connect.close();
     }
   public void saveRank(String values) throws SQLException {
 	  Connection connect = null;
