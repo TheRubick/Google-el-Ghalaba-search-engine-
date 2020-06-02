@@ -99,8 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
               @Override
               public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (TEST_MODE) addDummySuggestions();
-                else changeSuggestions(adapter);
+                  changeSuggestions(adapter);
               }
 
               @Override
@@ -219,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
                     new Response.ErrorListener() {
                       @Override
                       public void onErrorResponse(VolleyError error) {
-                        // To dismiss the dialog
+                          addDummySuggestions();
                         Toast.makeText(getApplicationContext(), "This didn't work .. ", Toast.LENGTH_LONG)
                                 .show();
                         Log.e("Volley Error", error.toString());
@@ -233,8 +232,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Add the request to the RequestQueue.
       VolleySingelton.getInstance(this).addToRequestQueue(jsonArrayRequest);
-    // no need for singleton as there is no continuous use for network in
-    // different activities
   }
 
   /** on clicking search button */
@@ -250,11 +247,7 @@ public class MainActivity extends AppCompatActivity {
     else type[0] = "Web";
     String url = type[0].equals("Web") ? getUrl(SearchLinksRoute) : getUrl(SearchImagesRoute);
     /** *******************************get search results to display***************************** */
-    if (TEST_MODE) {
-      TestJSON();
-    } else {
       sendRealRequest(url);
-    }
   }
 
   /**
@@ -306,6 +299,7 @@ public class MainActivity extends AppCompatActivity {
                 if (networkResponse != null) {
                   Log.e("Status code", String.valueOf(networkResponse.statusCode));
                 }
+                  TestJSON();
               }
             });
 
@@ -361,10 +355,10 @@ public class MainActivity extends AppCompatActivity {
     Data[0].put("link", "https://i.imgur.com/tGbaZCY.jpg");
 
     Data[1] = new JSONObject();
-    Data[1].put("title", "img2");
+      Data[1].put("title", "try");
     Data[1].put(
         "link",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mohamed_Salah_2018.jpg/200px-Mohamed_Salah_2018.jpg");
+            "upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mohamed_Salah_2018.jpg/200px-Mohamed_Salah_2018.jpg");
 
     Data[2] = new JSONObject();
     Data[2].put("title", "img3");
