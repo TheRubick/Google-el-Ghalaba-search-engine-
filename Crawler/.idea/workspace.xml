@@ -1,16 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="6f424b09-2cb6-410e-b1d4-83130f2b232c" name="Default Changelist" comment="" />
+    <list default="true" id="ba56a4d4-758d-47c7-ba2a-08889c72add7" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/mysql_connector_java_8_0_13.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Crawler.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/internetCountryDomain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/.jsdtscope" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.wst.common.component" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.wst.common.project.facet.core.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.wst.jsdt.ui.superType.container" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.wst.jsdt.ui.superType.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MySQLTest1.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebContent/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebContent/NewFile.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebContent/NewFile2.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebContent/NewFile3.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebContent/NewFile4.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebContent/WEB-INF/lib/jsoup-1.13.1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/WebContent/WEB-INF/lib/mysql-connector-java-8.0.13.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/AccessStudentsCalls.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/Indexer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/MainCrawler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/MainRanker.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/MainRelevance.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/MySQLAccess.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/Node.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/PageRanker.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/QueryProcessor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/Relevance.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/ExampleInstrumentedTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/ExampleUnitTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/ImageItem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/ImageResultsAdapter$ViewHolder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/ImageResultsAdapter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/LinkItem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/LinksResultsAdapter$ViewHolder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/LinksResultsAdapter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/MainActivity$Listener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/MainActivity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/ShowImgsResults.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/ShowResults.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/ShowTrends.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/Starter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/TrendItem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/TrendsAdapter$ViewHolder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/TrendsAdapter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/VolleySingelton.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/config.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/crawler$crawlerThread.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/crawler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/location.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/mulitthreads$CounterRunnable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/mulitthreads$MyCounter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/mulitthreads.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/stopping_words.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Indexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MainCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MainCrawler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MySQLAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MySQLAccess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/crawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/crawler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server [merge]/src/main/java/com/example/demo/personDetector.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server [merge]/src/main/java/com/example/demo/personDetector.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectId" id="1cUjElC0YFIqKTTeF5Kv399B4N6" />
+  <component name="ProjectId" id="1ceN8ERsWj6a2CSdk5VVMDJPU6M" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -19,28 +112,96 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../jar files [utility]/lucene-snowball-3.0.2.jar!/" />
+    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\College\3rd Year\2nd Term\APT\Project\Search_Engine\Crawler\src" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.crawler">
+    <configuration name="Indexer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Indexer" />
+      <module name="Crawler" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MainCrawler" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="MainCrawler" />
+      <module name="Crawler" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="crawler" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="crawler" />
+      <module name="Crawler" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.crawler" />
+        <item itemvalue="Application.MainCrawler" />
+        <item itemvalue="Application.Indexer" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="6f424b09-2cb6-410e-b1d4-83130f2b232c" name="Default Changelist" comment="" />
-      <created>1590589956164</created>
+      <changelist id="ba56a4d4-758d-47c7-ba2a-08889c72add7" name="Default Changelist" comment="" />
+      <created>1590884937906</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1590589956164</updated>
+      <updated>1590884937906</updated>
     </task>
     <servers />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
   <component name="WindowStateProjectService">
-    <state width="498" height="446" key="SwitcherDM" timestamp="1590590022818">
-      <screen x="70" y="27" width="1210" height="997" />
+    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1590885231691">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="498" height="446" key="SwitcherDM/70.27.1210.997@70.27.1210.997" timestamp="1590590022818" />
-    <state x="70" y="113" width="1210" height="825" key="new project wizard" timestamp="1590590152552">
-      <screen x="70" y="27" width="1210" height="997" />
+    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1590885231691" />
+    <state width="1493" height="210" key="GridCell.Tab.0.bottom" timestamp="1591072319719">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="70" y="113" width="1210" height="825" key="new project wizard/70.27.1210.997@70.27.1210.997" timestamp="1590590152552" />
+    <state width="1493" height="210" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591072319719" />
+    <state width="1493" height="210" key="GridCell.Tab.0.center" timestamp="1591072319719">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="210" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1591072319719" />
+    <state width="1493" height="210" key="GridCell.Tab.0.left" timestamp="1591072319719">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="210" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1591072319719" />
+    <state width="1493" height="210" key="GridCell.Tab.0.right" timestamp="1591072319719">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="210" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1591072319719" />
+    <state x="249" y="0" key="SettingsEditor" timestamp="1590885232511">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="249" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1590885232511" />
   </component>
 </project>
