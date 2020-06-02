@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicLong;
 import java.sql.ResultSet;
@@ -49,7 +47,6 @@ public class ServerAPI {
     public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
         //return String.format("Hello %s!", name);
         return new Greeting(counter.incrementAndGet(), String.format(template, name));
-
     }
 
     /*********************************end point 1*********************************************************/
@@ -85,6 +82,7 @@ public class ServerAPI {
         ArrayList<String> queryWords = queryProcessor.startProcessing();
         OverAllRank ranker = new OverAllRank();
         ranker.startRank(queryWords,CountryDomain);
+        //TODO :: check ranker work
         //Link[] links= rel.getLinksOrdered();
         //return links;
 
@@ -129,6 +127,7 @@ public class ServerAPI {
         ArrayList<String> queryWords = queryProcessor.startProcessing();
         ImageRank ranker = new ImageRank();
         ranker.startRank(queryWords);
+        //TODO :: check ranker work
         //Img[] imgs= rel.getImgsOrdered();
         //return imgs;
         final int dataMaxSize = 500;
@@ -148,8 +147,10 @@ public class ServerAPI {
     @GetMapping("/complete")
     public String[] getSuggestions(
             @RequestParam(value = "part", defaultValue = " ") String part) {
-        int randomNum = 50;
+        int randomNum = 10;
         String[] suggestions = new String[randomNum];
+        MySQLAccess dbManager = new MySQLAccess();
+        //TODO:: get data from data base
         for (int i = 0; i < randomNum; i++)
             suggestions[i] = part + "suggestion " + i;
 
@@ -183,18 +184,15 @@ public class ServerAPI {
         MySQLAccess dbManager = new MySQLAccess();
         ResultSet trendsData = null;
         try {
-			trendsData = dbManager.readDataBase(
-					"SELECT person_name,count(person_name) as person_occurrence from trends_table WHERE country = \"+" +
-                           CountryDomain +"+\" "
-					+ "GROUP by person_name order by person_name DESC"
-					);
-			for (int row = 1; row <= trendsCount; row++)
-	        {
-	        	if(trendsData.absolute(row))
-	        	{
-	        		int personCount = trendsData.getInt(2);
-	        		trends[row-1] = new Trend(trendsData.getString(1), personCount);
-	        	} else
+            trendsData = dbManager.readDataBase(
+                    "SELECT person_name,count(person_name) as person_occurrence from trends_table WHERE country = \"+" +
+                            CountryDomain + "+\" "
+                            + "GROUP by person_name order by person_name DESC"
+            );
+            for (int row = 1; row <= trendsCount + 1; row++) {
+                if (trendsData.absolute(row)) {
+                    trends[row - 1] = new Trend(trendsData.getString(1), trendsData.getInt(2));
+                } else
                     trends[row - 1] = new Trend("N/A", 0);
             }
         } catch (Exception e) {
@@ -207,9 +205,9 @@ public class ServerAPI {
 
     /*************************************end point 5*******************************************************/
     @PutMapping("/personalized")
-    public void updatePersonalized(@RequestParam(value = "link", defaultValue = "World") String link) {
+    public void updatePersonalized(@RequestParam(value = "link", defaultValue = " ") String link) {
         //TODO :: add link to data base or increase its count 
-
+        System.out.println("personalized request received");
     }
 }
             
