@@ -13,7 +13,9 @@ public class MainCrawler {
       long startTime = System.nanoTime();
       int code = 0;
 
+      /*
       try{
+
           URL url = new URL("https://www.tutorialspoint.com/java/index.htm");
           HttpURLConnection connection = (HttpURLConnection)url.openConnection();
           connection.setRequestMethod("HEAD");
@@ -34,7 +36,11 @@ public class MainCrawler {
       long endTime = System.nanoTime();
       long duration = endTime - startTime;
       System.out.println(duration*Math.pow(10,-9));
+      */
       //Document doc = Jsoup.connect("https://dynaimage.cdn.cnn.com/cnn/digital-images/org/ef10cfad-99be-4dd4-9123-068ef562bd62.jpg").get();
+      Document doc = Jsoup.connect("https://www.google.com/robots.txt").get();
+      Elements links = doc.body().getElementsByTag("a");
+      links.get(0);
       //String title = doc.getElementsByTag("title").text();
       //System.out.println(title);
       /*

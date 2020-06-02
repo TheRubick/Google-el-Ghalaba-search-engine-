@@ -20,73 +20,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ba56a4d4-758d-47c7-ba2a-08889c72add7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/mysql_connector_java_8_0_13.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Crawler.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/internetCountryDomain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/mysql_connector_java_8_0_13.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/mysql_connector_java_8_0_13.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.settings/.jsdtscope" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.wst.common.component" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.wst.common.project.facet.core.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.wst.jsdt.ui.superType.container" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.wst.jsdt.ui.superType.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MySQLTest1.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebContent/META-INF/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebContent/NewFile.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebContent/NewFile2.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebContent/NewFile3.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebContent/NewFile4.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebContent/WEB-INF/lib/jsoup-1.13.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/WebContent/WEB-INF/lib/mysql-connector-java-8.0.13.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/AccessStudentsCalls.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/Indexer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/MainCrawler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/MainRanker.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/MainRelevance.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/MySQLAccess.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/Node.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/PageRanker.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/QueryProcessor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/Relevance.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/ExampleInstrumentedTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/ExampleUnitTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/ImageItem.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/ImageResultsAdapter$ViewHolder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/ImageResultsAdapter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/LinkItem.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/LinksResultsAdapter$ViewHolder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/LinksResultsAdapter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/MainActivity$Listener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/MainActivity.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/ShowImgsResults.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/ShowResults.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/ShowTrends.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/Starter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/TrendItem.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/TrendsAdapter$ViewHolder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/TrendsAdapter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/com/example/google_el8alaba/VolleySingelton.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/config.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/crawler$crawlerThread.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/crawler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/location.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/mulitthreads$CounterRunnable.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/mulitthreads$MyCounter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/mulitthreads.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/stopping_words.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Indexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Crawler/MainCrawler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Crawler/MainCrawler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Crawler/crawler$crawlerThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Crawler/crawler$crawlerThread.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Crawler/crawler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Crawler/crawler.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MainCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MainCrawler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MySQLAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MySQLAccess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/crawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/crawler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server [merge]/src/main/java/com/example/demo/personDetector.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server [merge]/src/main/java/com/example/demo/personDetector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Crawler2/MySQLTest1.iml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +54,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../jar files [utility]/lucene-snowball-3.0.2.jar!/" />
+    <property name="last_opened_file_path" value="$USER_HOME$/eclipse-workspace/MySQLTest1/Search_Engine/Crawler/WebContent/WEB-INF/lib/mysql-connector-java-8.0.13.jar!/" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -179,29 +120,29 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1590885231691">
+    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1591108108775">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1590885231691" />
-    <state width="1493" height="210" key="GridCell.Tab.0.bottom" timestamp="1591072319719">
+    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1591108108775" />
+    <state width="1493" height="210" key="GridCell.Tab.0.bottom" timestamp="1591125505274">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="210" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591072319719" />
-    <state width="1493" height="210" key="GridCell.Tab.0.center" timestamp="1591072319719">
+    <state width="1493" height="210" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591125505274" />
+    <state width="1493" height="210" key="GridCell.Tab.0.center" timestamp="1591125505274">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="210" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1591072319719" />
-    <state width="1493" height="210" key="GridCell.Tab.0.left" timestamp="1591072319719">
+    <state width="1493" height="210" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1591125505274" />
+    <state width="1493" height="210" key="GridCell.Tab.0.left" timestamp="1591125505274">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="210" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1591072319719" />
-    <state width="1493" height="210" key="GridCell.Tab.0.right" timestamp="1591072319719">
+    <state width="1493" height="210" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1591125505274" />
+    <state width="1493" height="210" key="GridCell.Tab.0.right" timestamp="1591125505274">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="210" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1591072319719" />
-    <state x="249" y="0" key="SettingsEditor" timestamp="1590885232511">
+    <state width="1493" height="210" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1591125505274" />
+    <state x="249" y="0" key="SettingsEditor" timestamp="1591108110368">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="249" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1590885232511" />
+    <state x="249" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1591108110368" />
   </component>
 </project>

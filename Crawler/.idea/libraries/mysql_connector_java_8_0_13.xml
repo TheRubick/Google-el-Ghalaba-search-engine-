@@ -4,6 +4,8 @@
       <root url="jar://$PROJECT_DIR$/../Crawler2/WebContent/WEB-INF/lib/mysql-connector-java-8.0.13.jar!/" />
       <root url="jar://$PROJECT_DIR$/../Crawler2/WebContent/WEB-INF/lib/jsoup-1.13.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/../jar files [utility]/lucene-snowball-3.0.2.jar!/" />
+      <root url="jar://$USER_HOME$/eclipse-workspace/MySQLTest1/Search_Engine/Crawler/WebContent/WEB-INF/lib/jsoup-1.13.1.jar!/" />
+      <root url="jar://$USER_HOME$/eclipse-workspace/MySQLTest1/Search_Engine/Crawler/WebContent/WEB-INF/lib/mysql-connector-java-8.0.13.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
