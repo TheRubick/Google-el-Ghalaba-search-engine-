@@ -18,7 +18,7 @@ import static java.lang.Integer.min;
 
 public class crawler {
 		
-	public static int numOfPages = 500;
+	public static int numOfPages = 500+50;
 	final int webPageLinksThreshold = 25;
 	final String imageLinksDelimiter = "@@::;;@@;";
 	public static List<String> seedSet = new ArrayList<String>();
@@ -346,6 +346,7 @@ public class crawler {
 									} catch (SQLException e) {
 										System.out.println((headingText+paragraphText).length());
 										System.out.println("problem occured on writing in the database");
+										numOfPages++;
 										e.printStackTrace();
 									}
 
