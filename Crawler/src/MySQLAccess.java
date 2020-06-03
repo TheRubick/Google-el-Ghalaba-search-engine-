@@ -132,9 +132,14 @@ public class MySQLAccess {
 	return arr;
   }
   
-  public void delbyUrl(String url) {
+  public void delbyUrl(ArrayList<String> url) {
 	  try {
-	      String s = "delete from word_url where url = '" + url +"';";
+	      String s = "delete from word_url where url IN (";
+	      for (String entry : url) {
+	    		 s = s.concat("'" + entry + "',");
+	      }
+	      s = s.substring(0,s.length()-1);
+	      s = s.concat(");"); 
 	      statement = connect.createStatement();
 	      statement.executeUpdate(s);
 	      
@@ -144,7 +149,7 @@ public class MySQLAccess {
   
 
   public void insertWordUrl(String url, HashMap<String, Double > wordScore) {
-	  	String s = "INSERT IGNORE INTO word_url VALUES " ;
+	  	String s = "INSERT INTO word_url VALUES " ;
   		try {
 	      for (HashMap.Entry<String, Double> entry : wordScore.entrySet()) {
 	    		 s = s.concat("( '" + entry.getKey() +"','" + url +"'," + entry.getValue() +"),");
