@@ -18,8 +18,8 @@ import static java.lang.Integer.min;
 
 public class crawler {
 		
-	public static int numOfPages = 1000;
-	final int webPageLinksThreshold = 100;
+	public static int numOfPages = 500+50;
+	final int webPageLinksThreshold = 25;
 	final String imageLinksDelimiter = "@@::;;@@;";
 	public static List<String> seedSet = new ArrayList<String>();
 	public static List<String> refererSet = new ArrayList<String>();
@@ -73,7 +73,6 @@ public class crawler {
 				if(uniqueLink(databaseLinks,link))
 				{
 					seedSet.add(link);
-					refererSet.add("--"); //here we made the referer by -- to indicate that this link is initialized
 				}
 			}
 			numOfPages -= databaseLinks.size();
@@ -220,6 +219,7 @@ public class crawler {
 								String imageSources = "";
 								String headingText = "";
 								String paragraphText = "";
+								String referLinks = "";
 								List<String> webPageLinks = new ArrayList<String>();
 								for (Element link : links) {
 									if (webPageLinks.size() >= webPageLinksThreshold)
@@ -240,6 +240,7 @@ public class crawler {
 										if (uniqueLink(seedSet, href) && uniqueLink(webPageLinks, href))
 										{
 											webPageLinks.add(href);
+											referLinks += href + " ";
 										}
 									}
 									//check on the uniqueness of this href
@@ -311,13 +312,13 @@ public class crawler {
 
 								}
 								for (Element hElement : headingElements) {
-									headingText += hElement.text();
+									headingText += hElement.text() + " ";
 								}
 								if (headingText.isEmpty())
 									headingText = " ";
 								headingText += "@@::;;@@;h1@@::;;@@;";
 								for (Element pElement : paragraphElements) {
-									paragraphText += pElement.text();
+									paragraphText += pElement.text() + " ";
 								}
 								if (paragraphText.isEmpty())
 									paragraphText = " ";
@@ -329,7 +330,7 @@ public class crawler {
 										pageIter++;
 										takenLinksWriter.append(webPageLinks.get(k)+"\n");
 										seedSet.add(webPageLinks.get(k));
-										refererSet.add(currentWebPageURL);
+										//refererSet.add(currentWebPageURL);
 									}
 									imagesOfSeedSet.add(imageSources);
 									System.out.println("current seedSet size = " + pageIter);
@@ -337,7 +338,7 @@ public class crawler {
 									//System.out.println(imageSources);
 									//System.out.println(headingText + paragraphText);
 									System.out.println(""); // publish date
-									String refererLink = refererSet.get(refererIndex);
+									String refererLink = referLinks;
 									try {
 										String webPageTagsText = headingText + paragraphText;
 										db.writeResultSet(currentWebPageURL, webPageTagsText, imageSources,
@@ -345,6 +346,7 @@ public class crawler {
 									} catch (SQLException e) {
 										System.out.println((headingText+paragraphText).length());
 										System.out.println("problem occured on writing in the database");
+										numOfPages++;
 										e.printStackTrace();
 									}
 

@@ -204,7 +204,7 @@ public class MySQLAccess {
 	      } finally {
 	        //close();
 	      }
-	  preparedStatement = connect.prepareStatement("INSERT INTO crawler_database.crawler_table VALUES (?,?,?,?,?,?,DEFAULT)");
+	  preparedStatement = connect.prepareStatement("INSERT IGNORE INTO crawler_database.crawler_table VALUES (?,?,?,?,?,?,DEFAULT)");
       preparedStatement.setString(1, link);
       preparedStatement.setString(2, text);
       preparedStatement.setString(3, image_sources);
