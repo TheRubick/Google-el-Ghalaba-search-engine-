@@ -19,7 +19,7 @@ public class MySQLAccess {
 
   final private String host = "127.0.0.1";
   final private String user = "root";
-  final private String passwd = "";
+  final private String passwd = "123456789";
   
   public ResultSet readDataBase(String s) throws Exception {
     try {
@@ -146,6 +146,29 @@ public class MySQLAccess {
       preparedStatement.close();
       connect.close();
     }
+
+
+  public void createPopRank() throws  SQLException{
+      Connection connect = null;
+      PreparedStatement preparedStatement = null;
+      try {
+          // This will load the MySQL driver, each DB has its own driver
+          Class.forName("com.mysql.cj.jdbc.Driver");
+
+          // Setup the connection with the DB
+          connect = DriverManager
+                  .getConnection("jdbc:mysql://" + host + "/crawler_database?"
+                          + "user=" + user + "&password=" + passwd );
+      } catch (Exception e) {
+          System.out.println("database error");
+      } finally {
+          close();
+      }
+      statement = connect.createStatement();
+	  statement.executeUpdate("DROP TABLE IF EXISTS POPULARITY_RANK;");
+	  statement.executeUpdate("CREATE TABLE POPULARITY_RANK(LINK VARCHAR(700) NOT NULL PRIMARY KEY, POPULARITY_SCORE DOUBLE NOT NULL);");
+
+  }
   public void saveRank(String values) throws SQLException {
 	  Connection connect = null;
 	  PreparedStatement preparedStatement = null;
@@ -163,10 +186,10 @@ public class MySQLAccess {
 	        close();
 	      }
 	  statement = connect.createStatement();
-	  statement.executeUpdate("DROP TABLE IF EXISTS POPULARITY_RANK;");
-	  statement.executeUpdate("CREATE TABLE POPULARITY_RANK(LINK VARCHAR(256) NOT NULL PRIMARY KEY, POPULARITY_SCORE DOUBLE NOT NULL);");
+//	  statement.executeUpdate("DROP TABLE IF EXISTS POPULARITY_RANK;");
+//	  statement.executeUpdate("CREATE TABLE POPULARITY_RANK(LINK VARCHAR(700) NOT NULL PRIMARY KEY, POPULARITY_SCORE DOUBLE NOT NULL);");
 	  
-	  preparedStatement = connect.prepareStatement("INSERT INTO POPULARITY_RANK(LINK,POPULARITY_SCORE) VALUES "+values);
+	  preparedStatement = connect.prepareStatement("INSERT IGNORE INTO POPULARITY_RANK(LINK,POPULARITY_SCORE) VALUES "+values);
 //      preparedStatement.setString(1, values);
       preparedStatement.executeUpdate();
 //      preparedStatement.close();
