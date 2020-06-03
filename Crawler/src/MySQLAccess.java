@@ -71,9 +71,14 @@ public class MySQLAccess {
 	return arr;
   }
   
-  public void delbyUrl(String url) {
+  public void delbyUrl(ArrayList<String> url) {
 	  try {
-	      String s = "delete from word_url where url = '" + url +"';";
+	      String s = "delete from word_url where url IN (";
+	      for (String entry : url) {
+	    		 s = s.concat("'" + entry + "',");
+	      }
+	      s = s.substring(0,s.length()-1);
+	      s = s.concat(");"); 
 	      statement = connect.createStatement();
 	      statement.executeUpdate(s);
 	      
