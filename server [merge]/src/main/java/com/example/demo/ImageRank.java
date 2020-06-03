@@ -7,7 +7,7 @@ public class ImageRank  {
     private String words;
     private MySQLAccess db;
     private int numImgs;
-    void startRank(ArrayList<String> queryProcessed) throws Exception
+    ServerAPI.Img [] startRank(ArrayList<String> queryProcessed) throws Exception
     {
         db = new MySQLAccess();
         words = "(";
@@ -15,7 +15,7 @@ public class ImageRank  {
             words += "'" + queryProcessed.get(i) + "',";
         }
         words += "'" + queryProcessed.get(queryProcessed.size() - 1) + "')";
-        String query = "SELECT DISTINCT(`image_link`), `title` FROM `Images` WHERE WORD IN " + words;
+        String query = "SELECT DISTINCT(`img_url`), `word` FROM `img_word` WHERE WORD IN " + words;
         ResultSet queryResult = db.readDataBase(query);
 
         queryResult.last();
@@ -30,5 +30,6 @@ public class ImageRank  {
             toFrontEnd[i] = element ;
             i++;
         }
+        return toFrontEnd;
     }
 }

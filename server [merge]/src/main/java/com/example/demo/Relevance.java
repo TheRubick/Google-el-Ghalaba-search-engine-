@@ -37,7 +37,7 @@ public class Relevance {
 	}
 
 	private void setTotalDocs() throws Exception {
-		String query = "SELECT COUNT(DISTINCT(url)) FROM `words_url`";
+		String query = "SELECT COUNT(DISTINCT(url)) FROM `word_url`";
 		ResultSet resultSet = db.readDataBase(query);
 		resultSet.next();
 
@@ -45,19 +45,19 @@ public class Relevance {
 	}
 
 	private void setNumDocs() throws Exception {
-		String query = "SELECT COUNT(DISTINCT(url)) FROM `words_url` where word IN " + words;
+		String query = "SELECT COUNT(DISTINCT(url)) FROM `word_url` where word IN " + words;
 		ResultSet resultSet = db.readDataBase(query);
 		resultSet.next();
 		numDocs = resultSet.getInt(1);
 	}
 
 	private ResultSet queryTermFreq() throws Exception {
-		String query = "SELECT URL,word,score FROM `words_url` where word IN " + words;
+		String query = "SELECT URL,word,score FROM `word_url` where word IN " + words;
 		return db.readDataBase(query);
 	}
 
 	private ResultSet queryDocFreq() throws Exception {
-		String query = "SELECT word,COUNT(DISTINCT(url)) FROM `words_url` where word IN " + words + " GROUP by word";
+		String query = "SELECT word,COUNT(DISTINCT(url)) FROM `word_url` where word IN " + words + " GROUP by word";
 		return db.readDataBase(query);
 	}
 

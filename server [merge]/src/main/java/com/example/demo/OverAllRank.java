@@ -100,14 +100,15 @@ public class OverAllRank{
         }
         ////////////////////////////////////////////////////////////////
         // We get geographic rank
-        query = "SELECT LINK FROM `crawler_table` where Country = '" + Loc + "'";
+        query = "SELECT LINK FROM `crawler_table` where LINK IN "+concernedLinks+" AND location = '" + Loc + "'";
         queryResult = db.readDataBase(query);
 
         //add LocWeight to over all rank
         while (queryResult.next()) {
             String link = queryResult.getString(1);
-            double score = queryResult.getDouble(2);
-            finalScore.put(link, finalScore.get(link)+ LocWeight *score);
+            //double score = queryResult.getDouble(2);
+            System.out.println("Link is "+finalScore.get(link));
+            finalScore.put(link, finalScore.get(link)+ LocWeight);
         }
         ////////////////////////////////////////////////////////////////
         // sort the final score

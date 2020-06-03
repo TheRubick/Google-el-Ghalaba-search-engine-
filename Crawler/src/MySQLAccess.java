@@ -203,11 +203,13 @@ public class MySQLAccess {
 //	  statement.executeUpdate("DROP TABLE IF EXISTS POPULARITY_RANK;");
 //	  statement.executeUpdate("CREATE TABLE POPULARITY_RANK(LINK VARCHAR(700) NOT NULL PRIMARY KEY, POPULARITY_SCORE DOUBLE NOT NULL);");
 
-		preparedStatement = connect.prepareStatement("INSERT IGNORE INTO POPULARITY_RANK(LINK,POPULARITY_SCORE) VALUES "+values);
-//      preparedStatement.setString(1, values);
-		preparedStatement.executeUpdate();
+		System.out.println(values);
+		//preparedStatement = connect.prepareStatement("INSERT IGNORE INTO POPULARITY_RANK(LINK,POPULARITY_SCORE) VALUES "+values);
+ 		//preparedStatement.setString(1, values);
+		values += ";";
+		statement.executeUpdate("INSERT IGNORE INTO POPULARITY_RANK(LINK,POPULARITY_SCORE) VALUES "+values);
 //      preparedStatement.close();
-//      connect.close();
+		connect.close();
 	}
   
   public void saveRankRelevance(String values) throws SQLException {

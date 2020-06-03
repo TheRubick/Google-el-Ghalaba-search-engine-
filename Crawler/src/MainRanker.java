@@ -13,12 +13,12 @@ public class MainRanker {
 	     while(resultSet.next())
 	     {
 	    	 Node node = new Node();
-	    	 node.setId(resultSet.getString(1));
+	    	 node.setId(resultSet.getString(1).replaceAll("[\']",""));
 	    	 ArrayList<String> sites = new ArrayList<String>();
 	    	 String referLink = resultSet.getString(2);
 	    	 for(String w:referLink.split("\\s",0)){
 	    	 	if(w.length() > 3)
-	    		 	sites.add(w);
+	    		 	sites.add(w.replaceAll("[\']",""));
 	    		 }
 	    	 node.setOutDegree(sites);
 	    	 graph.add(node);
