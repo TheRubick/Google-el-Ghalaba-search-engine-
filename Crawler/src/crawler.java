@@ -19,11 +19,10 @@ import static java.lang.Integer.min;
 
 public class crawler {
 		
-	public static int numOfPages = 10000;
-	final int webPageLinksThreshold = 100;
+	public static int numOfPages = 2400;
+	final int webPageLinksThreshold = 50;
 	final String imageLinksDelimiter = "@@::;;@@;";
 	public static List<String> seedSet = new ArrayList<String>();
-	public static List<String> refererSet = new ArrayList<String>();
 	public static List<String> imagesOfSeedSet = new ArrayList<String>();
 	public static int threadNumbers = 15;
 	int pageIter = 0, visitorPointer = 0;
@@ -45,7 +44,6 @@ public class crawler {
 			takenLinksFile.createNewFile();
 			initializeSeed();
 			//initialize the takenLinks with the seedSet
-
 			takenLinksWriter = new FileWriter("takenLinks.txt");
 			for(String link : seedSet)
 				takenLinksWriter.append(link+"\n");
@@ -85,19 +83,7 @@ public class crawler {
 				takenLinksWriter.append(link+"\n");
 			linksFileReader.close();
 		}
-		/*
-		Thread th1 = new Thread (c.new crawlerThread(lockObj,db,threadNumbers));
-		threadNumber++;
-		Thread th2 = new Thread (c.new crawlerThread(lockObj,db,threadNumbers));
-		threadNumber++;
-		Thread th3 = new Thread (c.new crawlerThread(lockObj,db,threadNumbers));
-		threadNumber++;
-		Thread th4 = new Thread (c.new crawlerThread(lockObj,db,threadNumbers));
-		th1.start();
-		th2.start();
-		th3.start();
-		th4.start();
-		*/
+
 		ArrayList<Thread> crawlerThreads = new ArrayList<Thread>();
 		for(int i = 0; i < threadNumbers;i++)
 		{
@@ -217,6 +203,7 @@ public class crawler {
 						String paragraphText = "";
 						String referLinks = "";
 						List<String> webPageLinks = new ArrayList<String>();
+						int referNumLinks = 0;
 						for (Element link : links) {
 							if (webPageLinks.size() >= webPageLinksThreshold)
 								break;
@@ -226,7 +213,11 @@ public class crawler {
 								if (href.startsWith("http") || href.startsWith("https"))
 								{
 									webPageLinks.add(href);
-									referLinks += href + " ";
+									if(referNumLinks < 2)
+									{
+										referLinks += href + " ";
+										referNumLinks++;
+									}
 								}
 								else if(href.startsWith("//")) // in case of missing the protocol
 								{
@@ -234,7 +225,11 @@ public class crawler {
 									if (uniqueLink(seedSet, href) && uniqueLink(webPageLinks, href))
 									{
 										webPageLinks.add(href);
-										referLinks += href + " ";
+										if(referNumLinks < 2)
+										{
+											referLinks += href + " ";
+											referNumLinks++;
+										}
 									}
 								}
 								else if (href.startsWith("/")) // in case of relative URL
@@ -243,10 +238,15 @@ public class crawler {
 									if (uniqueLink(seedSet, href) && uniqueLink(webPageLinks, href))
 									{
 										webPageLinks.add(href);
-										referLinks += href + " ";
+										if(referNumLinks < 2)
+										{
+											referLinks += href + " ";
+											referNumLinks++;
+										}
 									}
 								}
 							}
+
 						}
 
 						int imgSize = Math.min(25,images.size());

@@ -82,11 +82,11 @@ public class ServerAPI {
         QueryProcessor queryProcessor = new QueryProcessor(query);
         ArrayList<String> queryWords = queryProcessor.startProcessing();
         OverAllRank ranker = new OverAllRank();
-        ranker.startRank(queryWords, CountryDomain);
         //TODO :: check ranker work
         //Link[] links= rel.getLinksOrdered();
         //return links;
-
+        Link[] links = ranker.startRank(queryWords, CountryDomain);
+        /*
         final int dataMaxSize = 100;
         Link[] links = new Link[dataMaxSize];
 
@@ -96,7 +96,7 @@ public class ServerAPI {
 
         for (int i = 2; i < dataMaxSize; i++)
             links[i] = new Link(query + (i + 1), "https://facebook.com", "Facebook is an American online social media and social networking service based in Menlo Park,Facebook is an American online social media and social networking service based in Menlo Park,Facebook is an American online social media and social networking service based in Menlo Park California and a flagship service of the namesake company Facebook, Inc.");
-
+        * */
         return links;
 
     }
@@ -127,10 +127,13 @@ public class ServerAPI {
         QueryProcessor queryProcessor = new QueryProcessor(query);
         ArrayList<String> queryWords = queryProcessor.startProcessing();
         ImageRank ranker = new ImageRank();
-        ranker.startRank(queryWords);
         //TODO :: check ranker work
         //Img[] imgs= rel.getImgsOrdered();
         //return imgs;
+
+
+        Img[] imgs = ranker.startRank(queryWords);
+        /*
         final int dataMaxSize = 500;
         Img[] imgs = new Img[dataMaxSize];
         imgs[0] = new Img("img1", "https://i.imgur.com/tGbaZCY.jpg");
@@ -140,7 +143,7 @@ public class ServerAPI {
 
         for (int i = 4; i < dataMaxSize; i++)
             imgs[i] = new Img(query + (i + 1), "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mohamed_Salah_2018.jpg/200px-Mohamed_Salah_2018.jpg");
-
+        */
         return imgs;
     }
 
