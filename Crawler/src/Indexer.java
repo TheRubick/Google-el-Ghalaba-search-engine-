@@ -29,7 +29,7 @@ public class Indexer {
 	    idth.newCrawled = dao.getbylastupdate(tdate);
 	    
 	    ArrayList<Thread> indexerThreads = new ArrayList<Thread>();
-	    int threadsNumber = 2;
+	    int threadsNumber = 8;
 		for(int i = 0; i < threadsNumber;i++)
 		{
 			indexerThreads.add(new Thread (idth));
@@ -62,7 +62,7 @@ public class Indexer {
 		
 		ArrayList<String> [] newCrawled;
 		MySQLAccess dao;
-		int threadsNumber = 2;
+		int threadsNumber = 8;
 		private HashMap<String, Integer> stoppingWords = new HashMap<String, Integer>();
 		
 		private String stemWord(String s) {
@@ -94,6 +94,7 @@ public class Indexer {
 			dao = d;
 		}
 		public void run() {
+
 			int name = Integer.parseInt(Thread.currentThread().getName());
 			int start = (threadsNumber+newCrawled[0].size()-1)/threadsNumber*name;
 			int end = (threadsNumber+newCrawled[0].size()-1)/threadsNumber*(name+1);
@@ -154,7 +155,6 @@ public class Indexer {
 					dao.insertImages(imgs_map);
 		    }
 
-			
 		}
 		
 	}

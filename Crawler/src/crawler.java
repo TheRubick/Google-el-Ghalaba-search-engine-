@@ -4,6 +4,7 @@ import java.net.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,8 +19,8 @@ import static java.lang.Integer.min;
 
 public class crawler {
 		
-	public static int numOfPages = 500+50;
-	final int webPageLinksThreshold = 25;
+	public static int numOfPages = 10000;
+	final int webPageLinksThreshold = 100;
 	final String imageLinksDelimiter = "@@::;;@@;";
 	public static List<String> seedSet = new ArrayList<String>();
 	public static List<String> refererSet = new ArrayList<String>();
@@ -35,6 +36,7 @@ public class crawler {
 		final Object lockObj = new Object();
 		long startTime = System.nanoTime();
 		MySQLAccess db = new MySQLAccess();
+		HashMap<String,Integer> listOfVisitedSites = new HashMap<String ,Integer>();
 		int threadNumber = 0;
 
 		takenLinksFile = new File("takenLinks.txt");
@@ -99,7 +101,7 @@ public class crawler {
 		ArrayList<Thread> crawlerThreads = new ArrayList<Thread>();
 		for(int i = 0; i < threadNumbers;i++)
 		{
-			crawlerThreads.add(new Thread (c.new crawlerThread(lockObj,db,threadNumber)));
+			crawlerThreads.add(new Thread (c.new crawlerThread(lockObj,db,threadNumber,listOfVisitedSites)));
 			crawlerThreads.get(i).start();
 			threadNumber++;
 		}
@@ -137,7 +139,7 @@ public class crawler {
 		seedSet.add("https://edition.cnn.com/world/live-news/coronavirus-pandemic-05-30-20-intl/index.html");
 		seedSet.add("https://www.foxnews.com/");
 		seedSet.add("https://www.tutorialspoint.com/java/index.htm");
-		seedSet.add("https://stackoverflow.com/questions?tab=Votes");
+		seedSet.add("https://stackoverflow.com/");
 		seedSet.add("https://www.w3schools.com/");
 		seedSet.add("https://www.google.com.eg/");
 		seedSet.add("https://wikipedia.org/wiki/Mohamed_Salah");
@@ -146,219 +148,174 @@ public class crawler {
 	
 	
 	class crawlerThread implements Runnable {
-		private Object lock = new Object();
+		private Object lock;
 		private MySQLAccess db;
 		private int threadNumber;
-		public crawlerThread(Object lock,MySQLAccess db,int threadNumbers)
+		private HashMap<String,Integer> listOfVisitedSites;
+		public crawlerThread(Object lock,MySQLAccess db,int threadNumbers, HashMap<String,Integer> listOfVisitedSites)
 		{
 			this.db = db;
 			this.lock = lock;
 			this.threadNumber = threadNumbers;
+			this.listOfVisitedSites = listOfVisitedSites;
 		}
 		public void run () {
-			if(operationType != 2) //not recrawel
-			{
-				System.out.println("thread = "+(this.threadNumber));
-				while (pageIter < numOfPages || visitorPointer < numOfPages) {
+			System.out.println("thread = "+(this.threadNumber));
+			while (pageIter < numOfPages || visitorPointer < numOfPages) {
+				int seedSetSize = seedSet.size();
+				while (this.threadNumber >= seedSetSize)
+				{
+					System.out.println(seedSetSize);
+					seedSetSize = seedSet.size();
+				}
+				String currentWebPageURL = "";
 
-					int seedSetSize = seedSet.size();
-					while (this.threadNumber >= seedSetSize)
-					{
-						System.out.println(seedSetSize);
-						seedSetSize = seedSet.size();
-					}
-					String currentWebPageURL = "";
-					int refererIndex = 0;
-
-
-						synchronized (lock) {
-							try{
-								System.out.println("current seed = " + seedSet.get(visitorPointer));
-								currentWebPageURL = normalizeSiteURL(seedSet.get(visitorPointer));
-								refererIndex = visitorPointer;
-								visitorPointer++;
-							}catch(IllegalArgumentException e){
-
-							}
-						}
-
-						String currentPath = "";
-						String currentHost = "";
-						boolean isValidWebPage;
-						try{
-							currentPath = URI.create(currentWebPageURL).getPath();
-							currentHost = URI.create(currentWebPageURL).getScheme() + "://" +
-									URI.create(currentWebPageURL).getHost();
-							isValidWebPage = checkRobots(currentHost, currentPath);
-						}catch (IllegalArgumentException e)
+				synchronized (lock)
+				{
+					try{
+						System.out.println("current seed = " + seedSet.get(visitorPointer));
+						currentWebPageURL = normalizeSiteURL(seedSet.get(visitorPointer));
+						visitorPointer++;
+						if(listOfVisitedSites.containsKey(currentWebPageURL))
 						{
-							System.out.println("illegal parameters in the URL");
-							synchronized (lock)
-							{
-								numOfPages++;
-							}
 							continue;
 						}
-						//System.out.println(currentPath);
-						//System.out.println(currentHost);
+						listOfVisitedSites.put(currentWebPageURL,1);
+					}catch(IllegalArgumentException e){
+						continue;
+					}
+				}
 
-						try{
+				String currentPath = "";
+				String currentHost = "";
+				boolean isValidWebPage;
+				try{
+					currentPath = URI.create(currentWebPageURL).getPath();
+					currentHost = URI.create(currentWebPageURL).getScheme() + "://" +
+							URI.create(currentWebPageURL).getHost();
+					isValidWebPage = checkRobots(currentHost, currentPath);
+				}
+				catch (IllegalArgumentException e)
+				{
+					System.out.println("illegal parameters in the URL");
+					continue;
+				}
+				try{
+					if (isValidWebPage) {
+						Document doc = Jsoup.connect(currentWebPageURL).get();
+						System.out.println("this is the web page URL "+currentWebPageURL);
+						Elements links = doc.body().getElementsByTag("a");
+						Elements images = doc.body().getElementsByTag("img");
+						String webPageTitle = doc.head().getElementsByTag("title").text();
+						Elements headingElements = doc.body().getElementsByTag("h1");
+						Elements paragraphElements = doc.body().getElementsByTag("p");
 
-							if (isValidWebPage) {
-								Document doc = Jsoup.connect(currentWebPageURL).get();
-								System.out.println("this is the web page URL "+currentWebPageURL);
-								Elements links = doc.body().getElementsByTag("a");
-								Elements images = doc.body().getElementsByTag("img");
-								String webPageTitle = doc.head().getElementsByTag("title").text();
-								Elements headingElements = doc.body().getElementsByTag("h1");
-								Elements paragraphElements = doc.body().getElementsByTag("p");
-								//Elements headOneText = doc.body().getElementsByTag("h1");
-								//Elements headTwoText = doc.body().getElementsByTag("h2");
-
-								String URLLocation = getURLLocation(currentHost);
-								String imageSources = "";
-								String headingText = "";
-								String paragraphText = "";
-								String referLinks = "";
-								List<String> webPageLinks = new ArrayList<String>();
-								for (Element link : links) {
-									if (webPageLinks.size() >= webPageLinksThreshold)
-										break;
-									String href = link.attr("href");
-									if(href.startsWith("//"))
-									{
-										href = "https:" + href;
-										if (uniqueLink(seedSet, href) && uniqueLink(webPageLinks, href))
-										{
-											webPageLinks.add(href);
-										}
-									}
-									else if (href.startsWith("/"))
-									{
-										if (href.indexOf("http") != 0 || href.indexOf("https") != 0)
-											href = currentHost + href;
-										if (uniqueLink(seedSet, href) && uniqueLink(webPageLinks, href))
-										{
-											webPageLinks.add(href);
-											referLinks += href + " ";
-										}
-									}
-									//check on the uniqueness of this href
-									/*
+						String URLLocation = getURLLocation(currentHost);
+						String imageSources = "";
+						String headingText = "";
+						String paragraphText = "";
+						String referLinks = "";
+						List<String> webPageLinks = new ArrayList<String>();
+						for (Element link : links) {
+							if (webPageLinks.size() >= webPageLinksThreshold)
+								break;
+							String href = link.attr("href");
+							if(!href.endsWith(".pdf"))
+							{
+								if (href.startsWith("http") || href.startsWith("https"))
+								{
+									webPageLinks.add(href);
+									referLinks += href + " ";
+								}
+								else if(href.startsWith("//")) // in case of missing the protocol
+								{
+									href = "https:" + href;
 									if (uniqueLink(seedSet, href) && uniqueLink(webPageLinks, href))
 									{
 										webPageLinks.add(href);
-										//check if the web page is found or not
-											//boolean checkExistance = urlExist(href);
-											//if (checkExistance) {
-												//check if this webpage exists or not
-												//seedSet.add(href);
-
-												//System.out.println("href = " + href);
-											//}
+										referLinks += href + " ";
 									}
-
-									 */
-
-
 								}
-								int imgSize = Math.min(25,images.size());
-								for (int i = 0;i < imgSize;i++) {
-									String imgSrc = images.get(i).attr("src");
-									//System.out.println("ImgSrc = " + imgSrc);
-									String caption = images.get(i).attr("alt");
-									if (caption.isEmpty())
-										caption = " ";
-									/*
-									if (imageExist(imgSrc)) {
-										System.out.println("first attempt");
-										imageSources += imgSrc + imageLinksDelimiter + caption + imageLinksDelimiter;
-									} else if (imageExist("https:" + imgSrc)) {
-										System.out.println("second attempt");
-										imageSources += "https:" + imgSrc + imageLinksDelimiter + caption + imageLinksDelimiter;
-									} else if (imageExist(currentHost + imgSrc)) {
-										System.out.println("third attempt");
-										imageSources += currentHost + imgSrc + imageLinksDelimiter + caption + imageLinksDelimiter;
-									}
-
-									 */
-									if(imgSrc.startsWith("https"))
+								else if (href.startsWith("/")) // in case of relative URL
+								{
+									href = currentHost + href;
+									if (uniqueLink(seedSet, href) && uniqueLink(webPageLinks, href))
 									{
-										imageSources += imgSrc + imageLinksDelimiter + caption + imageLinksDelimiter;
+										webPageLinks.add(href);
+										referLinks += href + " ";
 									}
-									//missing https protocol
-									else if(imgSrc.startsWith("//"))
-									{
-										imgSrc = "https:" + imgSrc;
-										imageSources += imgSrc + imageLinksDelimiter + caption + imageLinksDelimiter;
-									}
-									//relative Path
-									else if(imgSrc.startsWith("/"))
-									{
-										imageSources += currentWebPageURL + imgSrc + imageLinksDelimiter + caption + imageLinksDelimiter;
-									}
-
-									/*
-
-									if(!images.get(i).attr("width").isEmpty() && !images.get(i).attr("height").isEmpty())
-									{
-										if(Integer.parseInt(images.get(i).attr("width")) > 50 && Integer.parseInt(images.get(i).attr("height")) > 50)
-											imageSources += imgSrc + imageLinksDelimiter + caption + imageLinksDelimiter;
-									}
-									else {
-										imageSources += imgSrc + imageLinksDelimiter + caption + imageLinksDelimiter;
-									}
-									*/
-
 								}
-								for (Element hElement : headingElements) {
-									headingText += hElement.text() + " ";
-								}
-								if (headingText.isEmpty())
-									headingText = " ";
-								headingText += "@@::;;@@;h1@@::;;@@;";
-								for (Element pElement : paragraphElements) {
-									paragraphText += pElement.text() + " ";
-								}
-								if (paragraphText.isEmpty())
-									paragraphText = " ";
-
-								paragraphText = paragraphText.substring(0,min(paragraphText.length(),50000));
-								paragraphText += "@@::;;@@;p@@::;;@@;";
-								synchronized (lock) {
-									for (int k = 0; k < webPageLinks.size() && pageIter < numOfPages; k++) {
-										pageIter++;
-										takenLinksWriter.append(webPageLinks.get(k)+"\n");
-										seedSet.add(webPageLinks.get(k));
-										//refererSet.add(currentWebPageURL);
-									}
-									imagesOfSeedSet.add(imageSources);
-									System.out.println("current seedSet size = " + pageIter);
-									System.out.println("site host = " + currentWebPageURL);
-									//System.out.println(imageSources);
-									//System.out.println(headingText + paragraphText);
-									System.out.println(""); // publish date
-									String refererLink = referLinks;
-									try {
-										String webPageTagsText = headingText + paragraphText;
-										db.writeResultSet(currentWebPageURL, webPageTagsText, imageSources,
-												webPageTitle, refererLink, URLLocation);
-									} catch (SQLException e) {
-										System.out.println((headingText+paragraphText).length());
-										System.out.println("problem occured on writing in the database");
-										numOfPages++;
-										e.printStackTrace();
-									}
-
-								}
-
 							}
-						}catch (IOException e)
-						{
-							System.out.println("url doesn't exists");
-							numOfPages++;
-							continue;
 						}
+
+						int imgSize = Math.min(25,images.size());
+						for (int i = 0;i < imgSize;i++) {
+							String imgSrc = images.get(i).attr("src");
+							String caption = images.get(i).attr("alt");
+							if (caption.isEmpty())
+								caption = " ";
+
+							if(imgSrc.startsWith("https"))
+							{
+								imageSources += imgSrc + imageLinksDelimiter + caption + imageLinksDelimiter;
+							}
+							else if(imgSrc.startsWith("//"))
+							{
+								imgSrc = "https:" + imgSrc;
+								imageSources += imgSrc + imageLinksDelimiter + caption + imageLinksDelimiter;
+							}
+							else if(imgSrc.startsWith("/"))
+							{
+								imageSources += currentWebPageURL + imgSrc + imageLinksDelimiter + caption + imageLinksDelimiter;
+							}
+
+						}
+
+						for (Element hElement : headingElements) {
+							headingText += hElement.text() + " ";
+						}
+						if (headingText.isEmpty())
+							headingText = " ";
+						headingText += "@@::;;@@;h1@@::;;@@;";
+						for (Element pElement : paragraphElements) {
+							paragraphText += pElement.text() + " ";
+						}
+						if (paragraphText.isEmpty())
+							paragraphText = " ";
+
+						paragraphText = paragraphText.substring(0,min(paragraphText.length(),50000));
+						paragraphText += "@@::;;@@;p@@::;;@@;";
+						synchronized (lock)
+						{
+							for (int k = 0; k < webPageLinks.size() && pageIter < numOfPages; k++) {
+								pageIter++;
+								takenLinksWriter.append(webPageLinks.get(k)+"\n");
+								seedSet.add(webPageLinks.get(k));
+							}
+							imagesOfSeedSet.add(imageSources);
+							System.out.println("current seedSet size = " + pageIter);
+							System.out.println("site host = " + currentWebPageURL);
+							System.out.println(""); // publish date
+							String refererLink = referLinks;
+							try {
+								String webPageTagsText = headingText + paragraphText;
+								db.writeResultSet(currentWebPageURL, webPageTagsText, imageSources,
+										webPageTitle, refererLink, URLLocation);
+							} catch (SQLException e) {
+								System.out.println((headingText+paragraphText).length());
+								System.out.println("problem occured on writing in the database");
+								numOfPages++;
+								e.printStackTrace();
+							}
+
+						}
+
+					}
+				}
+				catch (IOException e)
+				{
+					System.out.println("url doesn't exists");
+					continue;
 				}
 			}
 		
@@ -366,63 +323,6 @@ public class crawler {
 		}
 	}
 	
-	
-	private static boolean urlExist(String href) {
-		boolean exists = true;
-		try {
-			Jsoup.connect(href).timeout(2000).get();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			//System.out.println("Page isn't found"); 
-			exists = false;
-		}
-		return exists;
-	}
-	
-	
-	private static boolean imageExist(String href) throws IOException {
-		boolean exists = true;
-		/*
-		try {
-			Image img = ImageIO.read(new URL(href));
-			if(img != null){
-				// to get rid from the small , thin images
-				if(img.getWidth(null) < 50 || img.getHeight(null) < 50)
-				{
-					exists = false;
-				}
-			}else{
-				//if the url doesn't point to image
-			    System.out.println("NOT IMAGE");
-			    exists = false;
-			}
-		} catch (IOException e) {
-			//e.printStackTrace();
-			//System.out.println("Image isn't found");
-			exists = false;
-		}
-		*/
-		int contentLength;
-		try
-		{
-			URL url = new URL(href);
-			URLConnection conn = url.openConnection();
-			contentLength = conn.getContentLength();
-			System.out.println(contentLength);
-			if(contentLength < 10000)
-				exists = false;
-		}catch ( IOException e)
-		{
-			contentLength = -1;
-			exists = false;
-		}
-
-
-		// now you get the content length
-
-		return exists;
-	}
 
 	private static String normalizeSiteURL(String siteURL)
 	{
@@ -446,14 +346,8 @@ public class crawler {
 	private static boolean uniqueLink(List<String>seedSet,String link)
 	{
 		boolean isUnique = true;
-		//System.out.println("link = "+link);
-		//if(seedSet.size() == 1)
-		//{
-			//System.out.println("Yes = "+seedSet.get(0));
-		//}
 		for(int j = 0;j < seedSet.size();j++)
 		{
-			//System.out.println("seed link = "+seedSet.get(j));
 			if(link.equals(seedSet.get(j)) || (link+"/").equals(seedSet.get(j)))
 				isUnique = false;
 		}
@@ -492,10 +386,6 @@ public class crawler {
 			}
 			else
 				isValid = true;
-
-			//System.out.println("current = "+(currentUserAgent));
-			//System.out.println("next = "+nextUserAgent);
-			//System.out.println(docBody);
 		} catch (IOException e) {
 			System.out.println(currentHost);
 			System.out.println("web page doesn't have robots.txt file");
@@ -509,9 +399,8 @@ public class crawler {
 		String webPageLocation = "--";
 		String currentLocation = currentHost.substring(currentHost.length()-2);
 		int locationsSize = internetCountryDomain.Locations.length;
-		for(int i = 0;i < locationsSize;i++) //el mafrod hena yb2a feh global array
+		for(int i = 0;i < locationsSize;i++)
 		{
-			//System.out.println(i);
 			if(internetCountryDomain.Locations[i].equals((currentLocation)))
 			{
 				webPageLocation = internetCountryDomain.Locations[i];
