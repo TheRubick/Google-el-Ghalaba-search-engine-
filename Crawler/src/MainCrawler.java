@@ -5,13 +5,36 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.*;
 
 public class MainCrawler {
   public static void main(String[] args) throws Exception,SocketException {
 
-      long startTime = System.nanoTime();
-      int code = 0;
+    File myObj;
+    try {
+      myObj = new File("filename.txt");
+      if (myObj.createNewFile()) {
+        System.out.println("File created: " + myObj.getName());
+      } else {
+        System.out.println("File already exists.");
+      }
+
+      if(myObj.delete())
+      {
+        System.out.println("File deleted successfully");
+      }
+      else
+      {
+        System.out.println("Failed to delete the file");
+      }
+    } catch (IOException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }
+
+
 
       /*
       try{
@@ -38,9 +61,7 @@ public class MainCrawler {
       System.out.println(duration*Math.pow(10,-9));
       */
       //Document doc = Jsoup.connect("https://dynaimage.cdn.cnn.com/cnn/digital-images/org/ef10cfad-99be-4dd4-9123-068ef562bd62.jpg").get();
-      Document doc = Jsoup.connect("https://www.google.com/robots.txt").get();
-      Elements links = doc.body().getElementsByTag("a");
-      links.get(0);
+
       //String title = doc.getElementsByTag("title").text();
       //System.out.println(title);
       /*

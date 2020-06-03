@@ -14,8 +14,8 @@ import org.jsoup.select.*;
 
 public class crawler {
 		
-	public int numOfPages = 5100;
-	final int webPageLinksThreshold = 620;
+	public int numOfPages = 1000;
+	final int webPageLinksThreshold = 100;
 	final String imageLinksDelimiter = "@@::;;@@;";
 	public static List<String> seedSet = new ArrayList<String>();
 	public static List<String> refererSet = new ArrayList<String>();
@@ -23,12 +23,14 @@ public class crawler {
 	public static int threadNumbers = 15;
 	int pageIter = 0, visitorPointer = 0;
 	public static int operationType = 0;
-	
-	
+	public static boolean finishedCrawling = false;
+	public static File takenLinksFile;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		if(operationType == 0)
 		{
+			takenLinksFile = new File("takenLinks.txt");
+			takenLinksFile.createNewFile();
 			initializeSeed();
 		}
 		else if(operationType == 1)
@@ -67,6 +69,12 @@ public class crawler {
 			{
 				crawlerThreads.get(i).join();
 			}
+			if(finishedCrawling)
+			{
+				System.out.println("deleting the takenLinksFile");
+				takenLinksFile.delete();
+			}
+
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -127,7 +135,7 @@ public class crawler {
 
 
 						synchronized (lock) {
-
+							finishedCrawling = !(pageIter < numOfPages || visitorPointer < numOfPages);
 							try{
 								System.out.println("current seed = " + seedSet.get(visitorPointer));
 								currentWebPageURL = normalizeSiteURL(seedSet.get(visitorPointer));
