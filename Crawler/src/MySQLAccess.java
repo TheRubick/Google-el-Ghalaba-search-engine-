@@ -160,10 +160,10 @@ public class MySQLAccess {
 
   public void insertImages(HashMap<String, Integer > Imgs) {
 	  try {
-	      String s = "INSERT IGNORE INTO word_url VALUES " ;
+	      String s = "INSERT IGNORE INTO img_word VALUES " ;
 	      for (HashMap.Entry<String, Integer> entry : Imgs.entrySet()) {
 	    	  String[] arr = entry.getKey().split("@@::;;@@;", -2);
-	    		s = s.concat("( '" + arr[0] +"','" + arr[1]+"),");
+	    		s = s.concat("( '" + arr[1] +"','" + arr[0]+"'),");
 	      }
 	      s = s.substring(0,s.length()-1);
 	      s = s.concat(";"); 

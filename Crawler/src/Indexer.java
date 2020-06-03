@@ -42,13 +42,12 @@ public class Indexer {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		System.out.println(java.time.LocalTime.now());
 		Indexer id  = new Indexer();
 	    MySQLAccess dao = new MySQLAccess();
 	    id.loadStoppingWords();
 	    String dateString = "2020-05-25 20:34:41";
 	    Timestamp tdate = java.sql.Timestamp.valueOf(dateString);
-
+		long startTime = System.nanoTime();
 	    ArrayList<String> [] arr = dao.getbylastupdate(tdate);
 
     	HashMap<String, Integer > imgs_map = new HashMap<String, Integer >();
@@ -60,7 +59,7 @@ public class Indexer {
 	    	Double [] scores = {100.0, 30.0};
 	    	String txts = arr[1].get(i), url = arr[0].get(i), imgs = arr[2].get(i);
 
-	    	String[] arrOfStr = txts.split("\\^", -2);
+	    	String[] arrOfStr = txts.split("@@::;;@@;", -2);
 	    	String[] arr2OfStr = imgs.split("@@::;;@@;", -2);
 	    	for(int j = 0; j < arr2OfStr.length-1; j+=2) {
 	    		String[] arrStr = arr2OfStr[j+1].split(" ", -2);
@@ -73,7 +72,8 @@ public class Indexer {
 	    			imgs_map.put(str, 1);
 	    		}
 	    	}
-	    	for(int j = 0; j < arrOfStr.length; j += 2) {
+
+	    	for(int j = 0; j < arrOfStr.length-2; j += 2) {
 	    		String[] arrStr = arrOfStr[j].split(" ", -2);
 	    		for(String r: arrStr) {
 	    			String s = r.replaceAll("[^a-zA-Z]","");
@@ -100,6 +100,8 @@ public class Indexer {
 	    }
 	    dao.insertImages(imgs_map);
 	    dao.close();
-		System.out.println(java.time.LocalTime.now());
+		long endTime = System.nanoTime();
+		long duration = endTime - startTime;
+		System.out.println("duration = "+duration*Math.pow(10,-9)+" seconds");
 	}
 }

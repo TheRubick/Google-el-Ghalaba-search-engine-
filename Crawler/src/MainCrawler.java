@@ -6,37 +6,61 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.*;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.*;
+import java.sql.ResultSet;
+import java.util.Scanner;
 
 public class MainCrawler {
   public static void main(String[] args) throws Exception,SocketException {
 
+
+    MySQLAccess db = new MySQLAccess();
+    ResultSet databaseFetchedLinks = db.readDataBase("SELECT Link FROM `crawler_table`");
+    while (databaseFetchedLinks.next())
+    {
+        String data = databaseFetchedLinks.getString(1);
+        System.out.println(data);
+    }
+    /*
     File myObj;
     try {
-      myObj = new File("filename.txt");
+      myObj = new File("takenLinks.txt");
       if (myObj.createNewFile()) {
         System.out.println("File created: " + myObj.getName());
       } else {
         System.out.println("File already exists.");
       }
+      myObj.delete();
 
-      if(myObj.delete())
-      {
-        System.out.println("File deleted successfully");
+
+      *FileWriter myWriter = new FileWriter("filename.txt");
+      myWriter.append("Files in Java might be tricky, but it is fun enough!\n");
+      myWriter.append("sdfsdfsdf\n");
+      myWriter.close();
+      System.out.println("Successfully wrote to the file.");
+      Scanner myReader = new Scanner(myObj);
+      while (myReader.hasNextLine()) {
+        String data = myReader.nextLine();
+        if(!data.isEmpty())
+          System.out.println(data.length());
       }
-      else
-      {
-        System.out.println("Failed to delete the file");
-      }
+      myReader.close();
+
+
+
     } catch (IOException e) {
       System.out.println("An error occurred.");
       e.printStackTrace();
     }
-
+    */
 
 
       /*
+
+
       try{
 
           URL url = new URL("https://www.tutorialspoint.com/java/index.htm");

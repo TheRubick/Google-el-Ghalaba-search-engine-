@@ -1,9 +1,11 @@
 import java.awt.desktop.SystemSleepEvent;
 import java.io.*;
 import java.net.*;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,7 +16,7 @@ import org.jsoup.select.*;
 
 public class crawler {
 		
-	public int numOfPages = 1000;
+	public static int numOfPages = 1000;
 	final int webPageLinksThreshold = 100;
 	final String imageLinksDelimiter = "@@::;;@@;";
 	public static List<String> seedSet = new ArrayList<String>();
@@ -23,27 +25,63 @@ public class crawler {
 	public static int threadNumbers = 15;
 	int pageIter = 0, visitorPointer = 0;
 	public static int operationType = 0;
-	public static boolean finishedCrawling = false;
 	public static File takenLinksFile;
-
-	public static void main(String[] args) throws IOException {
-		if(operationType == 0)
-		{
-			takenLinksFile = new File("takenLinks.txt");
-			takenLinksFile.createNewFile();
-			initializeSeed();
-		}
-		else if(operationType == 1)
-		{
-			//fetch links from the database then initialize the seed with it
-		}
-
+	public static FileWriter takenLinksWriter;
+	public static void main(String[] args) throws Exception {
 
 		crawler c = new crawler();
 		final Object lockObj = new Object();
 		long startTime = System.nanoTime();
 		MySQLAccess db = new MySQLAccess();
 		int threadNumber = 0;
+
+		takenLinksFile = new File("takenLinks.txt");
+		if(operationType == 0)
+		{
+			takenLinksFile.createNewFile();
+			initializeSeed();
+			//initialize the takenLinks with the seedSet
+
+			takenLinksWriter = new FileWriter("takenLinks.txt");
+			for(String link : seedSet)
+				takenLinksWriter.append(link+"\n");
+
+		}
+		else if(operationType == 1)
+		{
+			//fetch links from the database and the takenLinks.txt then compare between them
+			ArrayList<String> databaseLinks = new ArrayList<String>();
+			ArrayList<String> takenLinks = new ArrayList<String>();
+			//open takenLinks.txt and read the links from it
+			Scanner linksFileReader = new Scanner(new File("takenLinks.txt"));
+			while (linksFileReader.hasNextLine()) {
+
+				String data = linksFileReader.nextLine();
+				if(!data.isEmpty())
+					takenLinks.add(data);
+			}
+			//read the links that has been written to the database
+			ResultSet databaseFetchedLinks = db.readDataBase("SELECT Link FROM `crawler_table`");
+			while (databaseFetchedLinks.next())
+			{
+				databaseLinks.add(databaseFetchedLinks.getString(1));
+			}
+			for(String link : takenLinks)
+			{
+				if(uniqueLink(databaseLinks,link))
+				{
+					seedSet.add(link);
+					refererSet.add("--"); //here we made the referer by -- to indicate that this link is initialized
+				}
+			}
+			numOfPages -= databaseLinks.size();
+			//to delete the previous links after being fetched from the file
+			takenLinksFile.createNewFile();
+			takenLinksWriter = new FileWriter("takenLinks.txt");
+			for(String link : seedSet)
+				takenLinksWriter.append(link+"\n");
+			linksFileReader.close();
+		}
 		/*
 		Thread th1 = new Thread (c.new crawlerThread(lockObj,db,threadNumbers));
 		threadNumber++;
@@ -69,16 +107,22 @@ public class crawler {
 			{
 				crawlerThreads.get(i).join();
 			}
-			if(finishedCrawling)
-			{
-				System.out.println("deleting the takenLinksFile");
-				takenLinksFile.delete();
-			}
+
+
 
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			db.close();
+		}
+		System.out.println("deleting the takenLinksFile and closing the takenLinksWriter");
+		takenLinksWriter.close();
+		if(takenLinksFile.delete())
+		{
+			System.out.println("file has been deleted successfully");
+		}
+		else{
+			System.out.println("error on deleting the takenLinksFile");
 		}
 		db.close();
 		long endTime = System.nanoTime();
@@ -135,7 +179,6 @@ public class crawler {
 
 
 						synchronized (lock) {
-							finishedCrawling = !(pageIter < numOfPages || visitorPointer < numOfPages);
 							try{
 								System.out.println("current seed = " + seedSet.get(visitorPointer));
 								currentWebPageURL = normalizeSiteURL(seedSet.get(visitorPointer));
@@ -278,7 +321,7 @@ public class crawler {
 								}
 								if (headingText.isEmpty())
 									headingText = " ";
-								headingText += "^h1^";
+								headingText += "@@::;;@@;h1@@::;;@@;";
 								for (Element pElement : paragraphElements) {
 									paragraphText += pElement.text();
 								}
@@ -286,10 +329,11 @@ public class crawler {
 									paragraphText = " ";
 								if(paragraphText.length() > 50000)
 									paragraphText = paragraphText.substring(0,50000);
-								paragraphText += "^p^";
+								paragraphText += "@@::;;@@;p@@::;;@@;";
 								synchronized (lock) {
 									for (int k = 0; k < webPageLinks.size() && pageIter < numOfPages; k++) {
 										pageIter++;
+										takenLinksWriter.append(webPageLinks.get(k)+"\n");
 										seedSet.add(webPageLinks.get(k));
 										refererSet.add(currentWebPageURL);
 									}
@@ -414,7 +458,7 @@ public class crawler {
 		for(int j = 0;j < seedSet.size();j++)
 		{
 			//System.out.println("seed link = "+seedSet.get(j));
-			if(link.equals(seedSet.get(j)))
+			if(link.equals(seedSet.get(j)) || (link+"/").equals(seedSet.get(j)))
 				isUnique = false;
 		}
 		return isUnique;
