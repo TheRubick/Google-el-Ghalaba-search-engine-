@@ -24,8 +24,8 @@ public class MainRanker {
 	     }
 		 PageRanker pgrk = new PageRanker(graph);
 		 pgrk.divergeScoreVector(50);
-		 pgrk.saveResult();
-//		 pgrk.printScores();
+		 //pgrk.saveResult();
+		 pgrk.printScores();
 	 }
 	 
 

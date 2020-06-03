@@ -114,7 +114,7 @@ public class PageRanker {
 			});
 			String dString = data.toString();
 			dString = dString.substring(0, dString.length() - 1);
-			db.saveRank(dString);
+			//db.saveRank(dString);
 
 	}
 	public void printScores() {
