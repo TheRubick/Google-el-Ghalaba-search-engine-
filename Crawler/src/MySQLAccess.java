@@ -28,7 +28,6 @@ public class MySQLAccess {
 	  try {
 	      // This will load the MySQL driver, each DB has its own driver
 	      Class.forName("com.mysql.cj.jdbc.Driver");
-	      
 	      // Setup the connection with the DB
 	      connect = DriverManager.getConnection("jdbc:mysql://" + host + "/crawler_database?" + "user=" + user + "&password=" + passwd );
 	      

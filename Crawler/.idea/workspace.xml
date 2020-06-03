@@ -20,13 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ba56a4d4-758d-47c7-ba2a-08889c72add7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Crawler/crawler$crawlerThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Crawler/crawler$crawlerThread.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Crawler/crawler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Crawler/crawler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Indexer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MySQLAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MySQLAccess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/crawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/crawler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/takenLinks.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../Crawler2/MySQLTest1.iml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
