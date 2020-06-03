@@ -5,8 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -19,7 +17,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,16 +26,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.android.volley.Cache;
-import com.android.volley.Network;
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
 import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
@@ -95,17 +91,19 @@ public class MainActivity extends AppCompatActivity {
             new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    //changeSuggestions(adapter);
+                    changeSuggestions(adapter);
+                    //query.showDropDown();
                 }
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
                 }
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-                    changeSuggestions(adapter);
+                    //changeSuggestions(adapter);
+                    query.showDropDown();
+
                 }
             });
     /** **********************************get country code*************************************** */
@@ -221,7 +219,8 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             addDummySuggestions();
-                            Toast.makeText(getApplicationContext(), "This didn't work .. ", Toast.LENGTH_LONG)
+                            Toast.makeText(
+                                    getApplicationContext(), "suggestions didn't work .. ", Toast.LENGTH_LONG)
                                     .show();
                             Log.e("Volley Error", error.toString());
 
@@ -297,10 +296,25 @@ public class MainActivity extends AppCompatActivity {
                     .show();
                 Log.e("Volley Error", error.toString());
 
-                NetworkResponse networkResponse = error.networkResponse;
-                if (networkResponse != null) {
-                  Log.e("Status code", String.valueOf(networkResponse.statusCode));
-                }
+                  if (error instanceof NetworkError) {
+                      Toast.makeText(getApplicationContext(), "Oops. network error!", Toast.LENGTH_LONG)
+                              .show();
+                  } else if (error instanceof ServerError) {
+                      Toast.makeText(getApplicationContext(), "Oops. server error!", Toast.LENGTH_LONG)
+                              .show();
+                  } else if (error instanceof AuthFailureError) {
+                      Toast.makeText(
+                              getApplicationContext(),
+                              "Oops. AuthFailureError error!",
+                              Toast.LENGTH_LONG)
+                              .show();
+                  } else if (error instanceof ParseError) {
+                      Toast.makeText(getApplicationContext(), "Oops. parse error!", Toast.LENGTH_LONG)
+                              .show();
+                  } else if (error instanceof TimeoutError) {
+                      Toast.makeText(getApplicationContext(), "Oops. Timeout error!", Toast.LENGTH_LONG)
+                              .show();
+                  }
                   TestJSON();
               }
             });

@@ -1,9 +1,5 @@
 package com.example.google_el8alaba;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,9 +9,17 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.android.volley.NetworkResponse;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 
@@ -56,7 +60,7 @@ public class ShowTrends extends AppCompatActivity implements AdapterView.OnItemS
         countries =
                 new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.countries_array)));
         codes = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.codes_array)));
-        spinner.setSelection(65); //egypt as default value
+        spinner.setSelection(65); // egypt as default value
         /** *************************setup recycler view to show trends***************************** */
         RecyclerView recyclerView = findViewById(R.id.trends_recyclerview);
         recyclerView.setHasFixedSize(true);
@@ -117,10 +121,25 @@ public class ShowTrends extends AppCompatActivity implements AdapterView.OnItemS
                                 Toast.makeText(getApplicationContext(), "This didn't work .. ", Toast.LENGTH_LONG)
                                         .show();
                                 Log.e("Volley Error", error.toString());
-
-                                NetworkResponse networkResponse = error.networkResponse;
-                                if (networkResponse != null) {
-                                    Log.e("Status code", String.valueOf(networkResponse.statusCode));
+                                error.printStackTrace();
+                                if (error instanceof NetworkError) {
+                                    Toast.makeText(getApplicationContext(), "Oops. network error!", Toast.LENGTH_LONG)
+                                            .show();
+                                } else if (error instanceof ServerError) {
+                                    Toast.makeText(getApplicationContext(), "Oops. server error!", Toast.LENGTH_LONG)
+                                            .show();
+                                } else if (error instanceof AuthFailureError) {
+                                    Toast.makeText(
+                                            getApplicationContext(),
+                                            "Oops. AuthFailureError error!",
+                                            Toast.LENGTH_LONG)
+                                            .show();
+                                } else if (error instanceof ParseError) {
+                                    Toast.makeText(getApplicationContext(), "Oops. parse error!", Toast.LENGTH_LONG)
+                                            .show();
+                                } else if (error instanceof TimeoutError) {
+                                    Toast.makeText(getApplicationContext(), "Oops. Timeout error!", Toast.LENGTH_LONG)
+                                            .show();
                                 }
                                 addFakeData();
                             }
