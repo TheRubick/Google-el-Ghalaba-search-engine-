@@ -51,17 +51,29 @@ public class Indexer {
 
 	    ArrayList<String> [] arr = dao.getbylastupdate(tdate);
 
-	    
+    	HashMap<String, Integer > imgs_map = new HashMap<String, Integer >();
 	    
 	    for(int i = 0; i < arr[0].size(); ++i) {
 	    	HashMap<String, Integer[] > mp = new HashMap<String, Integer[] >();
 	    	HashMap<String, Double > mpscore = new HashMap<String, Double >();
 	    	Double totScore = 0.0, sum = 0.0;
-	    	int [] freq = {0,0};
+	    	Double [] scores = {100.0, 30.0};
 	    	String txts = arr[1].get(i), url = arr[0].get(i), imgs = arr[2].get(i);
-	    	
+
 	    	String[] arrOfStr = txts.split("\\^", -2);
-	    	for(int j = 0; j < 3; j += 2) {
+	    	String[] arr2OfStr = imgs.split("@@::;;@@;", -2);
+	    	for(int j = 0; j < arr2OfStr.length-1; j+=2) {
+	    		String[] arrStr = arr2OfStr[j+1].split(" ", -2);
+	    		for(String r: arrStr) {
+	    			String s = r.replaceAll("[^a-zA-Z]","");
+	    			s = s.toLowerCase();
+	    			if(s.isEmpty() || id.stoppingWords.containsKey(s)) continue;
+	    			s = id.stemWord(s);
+	    			String str = s + "@@::;;@@;" + arr2OfStr[j];
+	    			imgs_map.put(str, 1);
+	    		}
+	    	}
+	    	for(int j = 0; j < arrOfStr.length; j += 2) {
 	    		String[] arrStr = arrOfStr[j].split(" ", -2);
 	    		for(String r: arrStr) {
 	    			String s = r.replaceAll("[^a-zA-Z]","");
@@ -71,26 +83,22 @@ public class Indexer {
 	    			Integer[] it = {0,0,0};
 	    			if(mp.containsKey(s)) 
 	    				it = mp.get(s);
-    				it[j]++;
-    				it[1]++;
-    				freq[j/2]++;
+    				it[j/2]++;
+    				totScore += scores[j/2];
     				mp.put(s, it);
 	    		}
 	    	}
-	    	totScore = freq[1]*2.0;
 	    	dao.delbyUrl(url);
 	    	for (HashMap.Entry<String, Integer[]> entry : mp.entrySet()) {
 	    		Integer [] it = entry.getValue();
-	    		Double score = (it[0]*freq[1])/(freq[0]*totScore) + it[2]/totScore;
-	    		if(freq[0] == 0) score = it[2]*1.0/freq[1];
-	    		if(freq[1] == 0) score = it[0]*1.0/freq[0];
+	    		Double score = (it[0]*scores[0] +it[1]*scores[1])/totScore;
 			    //System.out.println(entry.getKey() + " = " + it[0] + " " + it[1] + " " + it[2] + " " + score);
 			    sum += score;
 			    mpscore.put(entry.getKey(), score);
 			}
 		    dao.insertWordUrl(url, mpscore);
-
 	    }
+	    dao.insertImages(imgs_map);
 	    dao.close();
 		System.out.println(java.time.LocalTime.now());
 	}

@@ -157,6 +157,22 @@ public class MySQLAccess {
 	    } catch (Exception e) {
 	      }
   }
+
+  public void insertImages(HashMap<String, Integer > Imgs) {
+	  try {
+	      String s = "INSERT IGNORE INTO word_url VALUES " ;
+	      for (HashMap.Entry<String, Integer> entry : Imgs.entrySet()) {
+	    	  String[] arr = entry.getKey().split("@@::;;@@;", -2);
+	    		s = s.concat("( '" + arr[0] +"','" + arr[1]+"),");
+	      }
+	      s = s.substring(0,s.length()-1);
+	      s = s.concat(";"); 
+	      statement = connect.createStatement();
+	      statement.executeUpdate(s);
+	      
+	    } catch (Exception e) {
+	      }
+  }
   
   public boolean isEmptyCrawler() throws ClassNotFoundException, SQLException
   {
