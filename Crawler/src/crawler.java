@@ -12,6 +12,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.*;
 
+import static java.lang.Integer.max;
+import static java.lang.Integer.min;
 
 
 public class crawler {
@@ -134,21 +136,13 @@ public class crawler {
 	private static void initializeSeed()
 	{
 		seedSet.add("https://edition.cnn.com/world/live-news/coronavirus-pandemic-05-30-20-intl/index.html");
-		refererSet.add("--");
 		seedSet.add("https://www.foxnews.com/");
-		refererSet.add("--");
 		seedSet.add("https://www.tutorialspoint.com/java/index.htm");
-		refererSet.add("--");
 		seedSet.add("https://stackoverflow.com/questions?tab=Votes");
-		refererSet.add("--");
 		seedSet.add("https://www.w3schools.com/");
-		refererSet.add("--");
 		seedSet.add("https://www.google.com.eg/");
-		refererSet.add("--");
 		seedSet.add("https://wikipedia.org/wiki/Mohamed_Salah");
-		refererSet.add("--");
 		seedSet.add("https://wikipedia.org/wiki/Will_Smith");
-		refererSet.add("--");
 	}
 	
 	
@@ -327,8 +321,8 @@ public class crawler {
 								}
 								if (paragraphText.isEmpty())
 									paragraphText = " ";
-								if(paragraphText.length() > 50000)
-									paragraphText = paragraphText.substring(0,50000);
+
+								paragraphText = paragraphText.substring(0,min(paragraphText.length(),50000));
 								paragraphText += "@@::;;@@;p@@::;;@@;";
 								synchronized (lock) {
 									for (int k = 0; k < webPageLinks.size() && pageIter < numOfPages; k++) {

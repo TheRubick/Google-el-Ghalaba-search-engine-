@@ -50,9 +50,10 @@ public class Indexer {
 		long startTime = System.nanoTime();
 	    ArrayList<String> [] arr = dao.getbylastupdate(tdate);
 
-    	HashMap<String, Integer > imgs_map = new HashMap<String, Integer >();
+
 	    
 	    for(int i = 0; i < arr[0].size(); ++i) {
+			HashMap<String, Integer > imgs_map = new HashMap<String, Integer >();
 	    	HashMap<String, Integer[] > mp = new HashMap<String, Integer[] >();
 	    	HashMap<String, Double > mpscore = new HashMap<String, Double >();
 	    	Double totScore = 0.0, sum = 0.0;
@@ -88,7 +89,7 @@ public class Indexer {
     				mp.put(s, it);
 	    		}
 	    	}
-	    	dao.delbyUrl(url);
+	    	//dao.delbyUrl(url);
 	    	for (HashMap.Entry<String, Integer[]> entry : mp.entrySet()) {
 	    		Integer [] it = entry.getValue();
 	    		Double score = (it[0]*scores[0] +it[1]*scores[1])/totScore;
@@ -96,9 +97,14 @@ public class Indexer {
 			    sum += score;
 			    mpscore.put(entry.getKey(), score);
 			}
-		    dao.insertWordUrl(url, mpscore);
+	    	url = url.replaceAll("[\']","");
+	    	if(!mpscore.isEmpty())
+		    	dao.insertWordUrl(url, mpscore);
+
+	    	if(!(imgs_map.isEmpty()))
+				dao.insertImages(imgs_map);
 	    }
-	    dao.insertImages(imgs_map);
+
 	    dao.close();
 		long endTime = System.nanoTime();
 		long duration = endTime - startTime;

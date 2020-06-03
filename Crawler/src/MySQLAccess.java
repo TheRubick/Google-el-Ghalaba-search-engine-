@@ -144,8 +144,8 @@ public class MySQLAccess {
   
 
   public void insertWordUrl(String url, HashMap<String, Double > wordScore) {
-	  try {
-	      String s = "INSERT INTO word_url VALUES " ;
+	  	String s = "INSERT IGNORE INTO word_url VALUES " ;
+  		try {
 	      for (HashMap.Entry<String, Double> entry : wordScore.entrySet()) {
 	    		 s = s.concat("( '" + entry.getKey() +"','" + url +"'," + entry.getValue() +"),");
 	      }
@@ -155,15 +155,19 @@ public class MySQLAccess {
 	      statement.executeUpdate(s);
 	      
 	    } catch (Exception e) {
+		  System.out.println("error in inserting word URL");
+		  System.out.println(s);
 	      }
   }
 
   public void insertImages(HashMap<String, Integer > Imgs) {
-	  try {
-	      String s = "INSERT IGNORE INTO img_word VALUES " ;
+	  String s = "INSERT IGNORE INTO img_word VALUES " ;
+  		try {
 	      for (HashMap.Entry<String, Integer> entry : Imgs.entrySet()) {
 	    	  String[] arr = entry.getKey().split("@@::;;@@;", -2);
-	    		s = s.concat("( '" + arr[1] +"','" + arr[0]+"'),");
+	    	  arr[1] = arr[1].replaceAll("[\']","");
+	    	  arr[0] = arr[0].replaceAll("[\']","");
+	    	  s = s.concat("( '" + arr[1] +"','" + arr[0]+"'),");
 	      }
 	      s = s.substring(0,s.length()-1);
 	      s = s.concat(";"); 
@@ -171,6 +175,8 @@ public class MySQLAccess {
 	      statement.executeUpdate(s);
 	      
 	    } catch (Exception e) {
+	  	System.out.println("error in inserting image URL");
+	  	System.out.println(s);
 	      }
   }
   
