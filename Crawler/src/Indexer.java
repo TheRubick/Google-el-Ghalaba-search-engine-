@@ -27,6 +27,8 @@ public class Indexer {
 		indexerThread idth = id.new indexerThread(dao);
 		idth.loadStoppingWords();
 	    idth.newCrawled = dao.getbylastupdate(tdate);
+
+	    dao.delbyUrl(idth.newCrawled[0]);
 	    
 	    ArrayList<Thread> indexerThreads = new ArrayList<Thread>();
 	    int threadsNumber = 2;
@@ -98,9 +100,6 @@ public class Indexer {
 			int start = (threadsNumber+newCrawled[0].size()-1)/threadsNumber*name;
 			int end = (threadsNumber+newCrawled[0].size()-1)/threadsNumber*(name+1);
 			if(end > newCrawled[0].size()) end = newCrawled[0].size();
-			for(int i = start; i < end; ++i) {
-		    	dao.delbyUrl(newCrawled[0].get(i));
-		    }
 		    
 		    for(int i = start; i < end; ++i) {
 				HashMap<String, Integer > imgs_map = new HashMap<String, Integer >();
