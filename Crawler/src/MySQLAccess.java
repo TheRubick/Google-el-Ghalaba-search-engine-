@@ -70,59 +70,62 @@ public class MySQLAccess {
 	      }
 	return arr;
   }
-  
-  public void delbyUrl(ArrayList<String> url) {
-	  try {
-	      String s = "delete from word_url where url IN (";
-	      for (String entry : url) {
-	    		 s = s.concat("'" + entry + "',");
-	      }
-	      s = s.substring(0,s.length()-1);
-	      s = s.concat(");"); 
-	      statement = connect.createStatement();
-	      statement.executeUpdate(s);
-	      
-	    } catch (Exception e) {
-	      }
-  }
-  
 
-  public void insertWordUrl(String url, HashMap<String, Double > wordScore) {
-	  	String s = "INSERT INTO word_url VALUES " ;
-  		try {
-	      for (HashMap.Entry<String, Double> entry : wordScore.entrySet()) {
-	    		 s = s.concat("( '" + entry.getKey() +"','" + url +"'," + entry.getValue() +"),");
-	      }
-	      s = s.substring(0,s.length()-1);
-	      s = s.concat(";"); 
-	      statement = connect.createStatement();
-	      statement.executeUpdate(s);
-	      
-	    } catch (Exception e) {
-		  System.out.println("error in inserting word URL");
-		  System.out.println(s);
-	      }
-  }
+	public void delbyUrl(ArrayList<String> url) {
+		try {
+			String s = "delete from word_url where url IN (";
+			StringBuilder sb = new StringBuilder(s);
+			for (String entry : url) {
+				sb.append("'" + entry + "',");
+			}
+			s = sb.substring(0,sb.length()-1);
+			s = s.concat(");");
+			statement = connect.createStatement();
+			statement.executeUpdate(s);
 
-  public void insertImages(HashMap<String, Integer > Imgs) {
-	  String s = "INSERT IGNORE INTO img_word VALUES " ;
-  		try {
-	      for (HashMap.Entry<String, Integer> entry : Imgs.entrySet()) {
-	    	  String[] arr = entry.getKey().split("@@::;;@@;", -2);
-	    	  arr[1] = arr[1].replaceAll("[\']","");
-	    	  arr[0] = arr[0].replaceAll("[\']","");
-	    	  s = s.concat("( '" + arr[1] +"','" + arr[0]+"'),");
-	      }
-	      s = s.substring(0,s.length()-1);
-	      s = s.concat(";"); 
-	      statement = connect.createStatement();
-	      statement.executeUpdate(s);
-	      
-	    } catch (Exception e) {
-	  	System.out.println("error in inserting image URL");
-	  	System.out.println(s);
-	      }
-  }
+		} catch (Exception e) {
+		}
+	}
+
+
+	public void insertWordUrl(String url, HashMap<String, Double > wordScore) {
+		String s = "INSERT INTO word_url VALUES " ;
+		StringBuilder sb = new StringBuilder(s);
+		try {
+			for (HashMap.Entry<String, Double> entry : wordScore.entrySet()) {
+				sb.append("( '" + entry.getKey() +"','" + url +"'," + entry.getValue() +"),");
+			}
+			s = sb.substring(0,sb.length()-1);
+			s = s.concat(";");
+			statement = connect.createStatement();
+			statement.executeUpdate(s);
+
+		} catch (Exception e) {
+			System.out.println("error in inserting word URL");
+			System.out.println(s);
+		}
+	}
+
+	public void insertImages(HashMap<String, Integer > Imgs) {
+		String s = "INSERT IGNORE INTO img_word VALUES " ;
+		StringBuilder sb = new StringBuilder(s);
+		try {
+			for (HashMap.Entry<String, Integer> entry : Imgs.entrySet()) {
+				String[] arr = entry.getKey().split("@@::;;@@;", -2);
+				arr[1] = arr[1].replaceAll("[\']","");
+				arr[0] = arr[0].replaceAll("[\']","");
+				sb.append("( '" + arr[1] +"','" + arr[0]+"'),");
+			}
+			s = sb.substring(0,sb.length()-1);
+			s = s.concat(";");
+			statement = connect.createStatement();
+			statement.executeUpdate(s);
+
+		} catch (Exception e) {
+			System.out.println("error in inserting image URL");
+			System.out.println(s);
+		}
+	}
   
   public boolean isEmptyCrawler() throws ClassNotFoundException, SQLException
   {
@@ -158,32 +161,54 @@ public class MySQLAccess {
       preparedStatement.executeUpdate();
       preparedStatement.close();
     }
-  public void saveRank(String values) throws SQLException {
-	  Connection connect = null;
-	  PreparedStatement preparedStatement = null;
-	  try {
-	      // This will load the MySQL driver, each DB has its own driver
-	      Class.forName("com.mysql.cj.jdbc.Driver");
-	      
-	      // Setup the connection with the DB
-	      connect = DriverManager
-	          .getConnection("jdbc:mysql://" + host + "/Crawler_database?"
-	              + "user=" + user + "&password=" + passwd );
-	    } catch (Exception e) {
-	        System.out.println("database error");
-	      } finally {
-	        close();
-	      }
-	  statement = connect.createStatement();
-	  statement.executeUpdate("DROP TABLE IF EXISTS POPULARITY_RANK;");
-	  statement.executeUpdate("CREATE TABLE POPULARITY_RANK(LINK VARCHAR(256) NOT NULL PRIMARY KEY, POPULARITY_SCORE DOUBLE NOT NULL);");
-	  
-	  preparedStatement = connect.prepareStatement("INSERT INTO POPULARITY_RANK(LINK,POPULARITY_SCORE) VALUES "+values);
+
+	public void createPopRank() throws  SQLException{
+		Connection connect = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			// This will load the MySQL driver, each DB has its own driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			// Setup the connection with the DB
+			connect = DriverManager
+					.getConnection("jdbc:mysql://" + host + "/crawler_database?"
+							+ "user=" + user + "&password=" + passwd );
+		} catch (Exception e) {
+			System.out.println("database error");
+		} finally {
+			close();
+		}
+		statement = connect.createStatement();
+		statement.executeUpdate("DROP TABLE IF EXISTS POPULARITY_RANK;");
+		statement.executeUpdate("CREATE TABLE POPULARITY_RANK(LINK VARCHAR(700) NOT NULL PRIMARY KEY, POPULARITY_SCORE DOUBLE NOT NULL);");
+
+	}
+	public void saveRank(String values) throws SQLException {
+		Connection connect = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			// This will load the MySQL driver, each DB has its own driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			// Setup the connection with the DB
+			connect = DriverManager
+					.getConnection("jdbc:mysql://" + host + "/crawler_database?"
+							+ "user=" + user + "&password=" + passwd );
+		} catch (Exception e) {
+			System.out.println("database error");
+		} finally {
+			close();
+		}
+		statement = connect.createStatement();
+//	  statement.executeUpdate("DROP TABLE IF EXISTS POPULARITY_RANK;");
+//	  statement.executeUpdate("CREATE TABLE POPULARITY_RANK(LINK VARCHAR(700) NOT NULL PRIMARY KEY, POPULARITY_SCORE DOUBLE NOT NULL);");
+
+		preparedStatement = connect.prepareStatement("INSERT IGNORE INTO POPULARITY_RANK(LINK,POPULARITY_SCORE) VALUES "+values);
 //      preparedStatement.setString(1, values);
-      preparedStatement.executeUpdate();
+		preparedStatement.executeUpdate();
 //      preparedStatement.close();
 //      connect.close();
-    }
+	}
   
   public void saveRankRelevance(String values) throws SQLException {
 	  Connection connect = null;

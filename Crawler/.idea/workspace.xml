@@ -20,8 +20,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ba56a4d4-758d-47c7-ba2a-08889c72add7" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Crawler/Indexer$indexerThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Crawler/Indexer$indexerThread.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Crawler/Indexer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Crawler/Indexer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Crawler/MainRanker.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Crawler/MainRanker.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Crawler/MySQLAccess.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Crawler/MySQLAccess.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Crawler/PageRanker.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Crawler/PageRanker.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Crawler/crawler$crawlerThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Crawler/crawler$crawlerThread.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Crawler/crawler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Crawler/crawler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Indexer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MainRanker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MainRanker.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MySQLAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MySQLAccess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PageRanker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PageRanker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/crawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/crawler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Crawler2/MySQLTest1.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server [merge]/src/main/java/com/example/demo/MainRanker.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server [merge]/src/main/java/com/example/demo/Node.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server [merge]/src/main/java/com/example/demo/PageRanker.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +73,7 @@
       <recent name="D:\College\3rd Year\2nd Term\APT\Project\Search_Engine\Crawler\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Indexer">
+  <component name="RunManager" selected="Application.MainRanker">
     <configuration name="Indexer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Indexer" />
       <module name="Crawler" />
@@ -89,9 +104,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.MainRanker" />
         <item itemvalue="Application.Indexer" />
         <item itemvalue="Application.crawler" />
-        <item itemvalue="Application.MainRanker" />
         <item itemvalue="Application.MainCrawler" />
       </list>
     </recent_temporary>
@@ -126,26 +141,26 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="400" height="466" key="DebuggerActiveHint/0.0.1536.824@0.0.1536.824" timestamp="1591159113887" />
-    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1591169396490">
+    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1591185132379">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1591169396490" />
-    <state width="1493" height="196" key="GridCell.Tab.0.bottom" timestamp="1591182375416">
+    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1591185132379" />
+    <state width="1493" height="196" key="GridCell.Tab.0.bottom" timestamp="1591187969169">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="196" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591182375416" />
-    <state width="1493" height="196" key="GridCell.Tab.0.center" timestamp="1591182375416">
+    <state width="1493" height="196" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591187969169" />
+    <state width="1493" height="196" key="GridCell.Tab.0.center" timestamp="1591187969169">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="196" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1591182375416" />
-    <state width="1493" height="196" key="GridCell.Tab.0.left" timestamp="1591182375416">
+    <state width="1493" height="196" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1591187969169" />
+    <state width="1493" height="196" key="GridCell.Tab.0.left" timestamp="1591187969169">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="196" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1591182375416" />
-    <state width="1493" height="196" key="GridCell.Tab.0.right" timestamp="1591182375416">
+    <state width="1493" height="196" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1591187969169" />
+    <state width="1493" height="196" key="GridCell.Tab.0.right" timestamp="1591187969169">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="196" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1591182375416" />
+    <state width="1493" height="196" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1591187969169" />
     <state width="1493" height="261" key="GridCell.Tab.1.bottom" timestamp="1591162749692">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -176,7 +191,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/Indexer.java</url>
-          <line>47</line>
+          <line>46</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>

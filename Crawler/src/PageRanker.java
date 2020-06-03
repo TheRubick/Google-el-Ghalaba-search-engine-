@@ -32,6 +32,7 @@ public class PageRanker {
 		numSites = sites.size();
 		int i=0;
 		siteNodes = new HashMap<String,Integer>();
+
 		for(String site : sites)
 		{
 			siteNodes.put(site, i);
@@ -60,16 +61,16 @@ public class PageRanker {
 		{
 			int outDegreeSize = graph.get(i).getOutDegree().size();
 			String siteName =  graph.get(i).getId();
-			double votePortion;
+			double votePortion ;
 			if(outDegreeSize>0)
 				votePortion =  1.0 / outDegreeSize;
 			else
 				// dangling link
-				votePortion = 0 ;
+				votePortion = 0.0;
 			for(int j=0;j<outDegreeSize;j++)
 			{
 				String referredSiteName = graph.get(i).getOutDegree().get(j);
-				weightMatrix[siteNodes.get(referredSiteName)][siteNodes.get(siteName)] = votePortion * (1-d) + d*(1.0/numSites);
+				weightMatrix[siteNodes.get(referredSiteName)][siteNodes.get(siteName)] = votePortion * (1.0-d) + d*(1.0/numSites);
 			}
 		}
 		
@@ -107,26 +108,45 @@ public class PageRanker {
 	public void saveResult() throws SQLException
 	{
 		MySQLAccess db = new MySQLAccess();
-		StringBuilder data = new StringBuilder();
-		
-		siteNodes.forEach((key, value) -> {
-			data.append("('"+key+"',"+scoreVector[value]+"),");
-			});
-			String dString = data.toString();
-			dString = dString.substring(0, dString.length() - 1);
-			//db.saveRank(dString);
+		int i=0;
+		String data = "";
+		db.createPopRank();
+		for(HashMap.Entry<String,Integer> entry:siteNodes.entrySet()) {
+			if (i == 10000 )
+			{
+				data = data.substring(0, data.length() - 1);
+				db.saveRank(data);
+				i=0;
+				data = "";
+			}
+			data = data.concat("('"+entry.getKey()+"',"+scoreVector[entry.getValue()]+"),");
+			i++;
+		}
+		if(i>0)
+		{
+			data = data.substring(0, data.length() - 1);
+			db.saveRank(data);
+		}
+
+//		siteNodes.forEach((key, value) -> {
+//
+//			});
+//			String dString = data.toString();
+//			dString = dString.substring(0, dString.length() - 1);
+//			db.saveRank(dString);
 
 	}
 	public void printScores() {
-		
-		siteNodes.forEach((key, value) -> {
-		System.out.print("key: "+ key);
-		System.out.println(", Value: "+ value);
-		});
+
+		for(HashMap.Entry<String,Integer> entry:siteNodes.entrySet())
+		{
+			System.out.print("key: "+ entry.getKey());
+			System.out.println(", Value: "+ entry.getValue());
+		}
 		System.out.println("____________________________________________");
 		for(int i =0 ;i<numSites;i++)
 		{
-			System.out.println(scoreVector[i]);	
+			System.out.println(scoreVector[i]);
 		}
 		
 	}

@@ -189,7 +189,8 @@ public class crawler {
 				String currentPath = "";
 				String currentHost = "";
 				boolean isValidWebPage;
-				try{
+				try
+				{
 					currentPath = URI.create(currentWebPageURL).getPath();
 					currentHost = URI.create(currentWebPageURL).getScheme() + "://" +
 							URI.create(currentWebPageURL).getHost();

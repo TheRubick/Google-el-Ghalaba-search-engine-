@@ -43,9 +43,6 @@ public class Indexer {
 			{
 				indexerThreads.get(i).join();
 			}
-
-
-
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -57,9 +54,7 @@ public class Indexer {
 		long duration = endTime - startTime;
 		System.out.println("duration = "+duration*Math.pow(10,-9)+" seconds");
 	}
-	
-	
-	
+
 	class indexerThread implements Runnable {
 		
 		ArrayList<String> [] newCrawled;
