@@ -130,7 +130,7 @@ public class OverAllRank{
         dString += ")";
 
 
-        query = "SELECT TITLE, LINK, SNIPPETS FROM `crawler_table` WHERE LINK IN " +dString;
+        query = "SELECT TITLE, LINK, TITLE FROM `crawler_table` WHERE LINK IN " +dString;
         queryResult = db.readDataBase(query);
 
         // build Link class to send it to the frontend
