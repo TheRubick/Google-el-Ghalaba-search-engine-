@@ -144,7 +144,7 @@ public class MySQLAccess {
   
 
   public void insertWordUrl(String url, HashMap<String, Double > wordScore) {
-	  	String s = "INSERT IGNORE INTO word_url VALUES " ;
+	  	String s = "INSERT INTO word_url VALUES " ;
   		try {
 	      for (HashMap.Entry<String, Double> entry : wordScore.entrySet()) {
 	    		 s = s.concat("( '" + entry.getKey() +"','" + url +"'," + entry.getValue() +"),");
