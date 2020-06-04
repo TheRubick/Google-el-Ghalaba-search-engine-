@@ -27,6 +27,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -218,20 +219,38 @@ public class MainActivity extends AppCompatActivity {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            addDummySuggestions();
-                            Toast.makeText(
-                                    getApplicationContext(), "suggestions didn't work .. ", Toast.LENGTH_LONG)
-                                    .show();
                             Log.e("Volley Error", error.toString());
+                            error.printStackTrace();
 
-                            NetworkResponse networkResponse = error.networkResponse;
-                            if (networkResponse != null) {
-                                Log.e("Status code", String.valueOf(networkResponse.statusCode));
-                            }
+                          if (error instanceof NetworkError) {
+                            Toast.makeText(getApplicationContext(), "suggestions: Oops. network error!", Toast.LENGTH_SHORT)
+                                    .show();
+                          } else if (error instanceof ServerError) {
+                            Toast.makeText(getApplicationContext(), "suggestions: Oops. server error!", Toast.LENGTH_SHORT)
+                                    .show();
+                          } else if (error instanceof AuthFailureError) {
+                            Toast.makeText(
+                                    getApplicationContext(),
+                                    "suggestions: Oops. AuthFailureError error!",
+                                    Toast.LENGTH_SHORT)
+                                    .show();
+                          } else if (error instanceof ParseError) {
+                            Toast.makeText(getApplicationContext(), "suggestions: Oops. parse error!", Toast.LENGTH_SHORT)
+                                    .show();
+                          } else if (error instanceof TimeoutError) {
+                            Toast.makeText(getApplicationContext(), "suggestions: Oops. Timeout error!", Toast.LENGTH_SHORT)
+                                    .show();
+                          }
+                          addDummySuggestions();
                         }
                     });
 
     // Add the request to the RequestQueue.
+    jsonArrayRequest.setRetryPolicy(
+            new DefaultRetryPolicy(
+                    3 * 1000,
+                    3,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
       VolleySingelton.getInstance(this).addToRequestQueue(jsonArrayRequest);
   }
 
@@ -318,7 +337,11 @@ public class MainActivity extends AppCompatActivity {
                   TestJSON();
               }
             });
-
+    jsonArrayRequest.setRetryPolicy(
+        new DefaultRetryPolicy(
+            30 * 1000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     // Add the request to the RequestQueue.
       VolleySingelton.getInstance(this).addToRequestQueue(jsonArrayRequest);
   }
