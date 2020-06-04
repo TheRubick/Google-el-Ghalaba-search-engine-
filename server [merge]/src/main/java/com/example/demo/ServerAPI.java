@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicLong;
 import java.sql.ResultSet;
@@ -79,6 +80,8 @@ public class ServerAPI {
     public Link[] getLinks(
             @RequestParam(value = "query", defaultValue = "World") String query,
             @RequestParam(value = "CountryDomain", defaultValue = "EG") String CountryDomain) throws Exception {
+        MySQLAccess dbManager = new MySQLAccess();
+        dbManager.countQuery(query);
         QueryProcessor queryProcessor = new QueryProcessor(query);
         ArrayList<String> queryWords = queryProcessor.startProcessing();
         OverAllRank ranker = new OverAllRank();
@@ -124,6 +127,8 @@ public class ServerAPI {
     public Img[] getImages(
             @RequestParam(value = "query", defaultValue = "World") String query,
             @RequestParam(value = "CountryDomain", defaultValue = "EG") String CountryDomain) throws Exception {
+        MySQLAccess dbManager = new MySQLAccess();
+        dbManager.countQuery(query);
         QueryProcessor queryProcessor = new QueryProcessor(query);
         ArrayList<String> queryWords = queryProcessor.startProcessing();
         ImageRank ranker = new ImageRank();
@@ -150,14 +155,23 @@ public class ServerAPI {
     /*************************************end point 3*******************************************************/
     @GetMapping("/complete")
     public String[] getSuggestions(
-            @RequestParam(value = "part", defaultValue = " ") String part) {
-        int randomNum = 10;
-        String[] suggestions = new String[randomNum];
+            @RequestParam(value = "part", defaultValue = " ") String part) throws SQLException {
+
+        int maxNum = 10;
+        String[] suggestions = new String[maxNum];
+
         MySQLAccess dbManager = new MySQLAccess();
-        //TODO:: get data from data base
-        for (int i = 0; i < randomNum; i++)
-            suggestions[i] = part + "suggestion " + i;
-        System.out.println(suggestions[1]);
+        ResultSet queryResult = dbManager.getAutoComplete(part);
+        int i =0;
+        while(queryResult.next() && i<maxNum)
+        {
+            suggestions[i]=queryResult.getString(1);
+            i++;
+        }
+//        //TODO:: get data from data base
+//        for (int i = 0; i < randomNum; i++)
+//            suggestions[i] = part + "suggestion " + i;
+//        System.out.println(suggestions[1]);
         return suggestions;
     }
 
@@ -209,8 +223,10 @@ public class ServerAPI {
 
     /*************************************end point 5*******************************************************/
     @PutMapping("/personalized")
-    public void updatePersonalized(@RequestParam(value = "link", defaultValue = " ") String link) {
-        //TODO :: add link to data base or increase its count 
+    public void updatePersonalized(@RequestParam(value = "link", defaultValue = " ") String link) throws SQLException {
+        //TODO :: add link to data base or increase its count
+        MySQLAccess dbManager = new MySQLAccess();
+        dbManager.countLink(link);
         System.out.println("personalized request received");
     }
 }
