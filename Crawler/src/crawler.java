@@ -19,7 +19,7 @@ import static java.lang.Integer.min;
 
 public class crawler {
 		
-	public static int numOfPages = 12000;
+	public static int numOfPages = 14000;
 	final String imageLinksDelimiter = "@@::;;@@;";
 	public static List<String> seedSet = new ArrayList<String>();
 	public static List<String> imagesOfSeedSet = new ArrayList<String>();
@@ -219,11 +219,11 @@ public class crawler {
 								if (href.startsWith("http") || href.startsWith("https"))
 								{
 									webPageLinks.add(href);
-									if(referNumLinks < 2)
-									{
+									//if(referNumLinks < 2)
+									//{
 										referLinks += href + " ";
 										referNumLinks++;
-									}
+									//}
 								}
 								else if(href.startsWith("//")) // in case of missing the protocol
 								{
@@ -231,11 +231,11 @@ public class crawler {
 									if (uniqueLink(seedSet, href) && uniqueLink(webPageLinks, href))
 									{
 										webPageLinks.add(href);
-										if(referNumLinks < 2)
-										{
+										//if(referNumLinks < 2)
+										//{
 											referLinks += href + " ";
 											referNumLinks++;
-										}
+										//}
 									}
 								}
 								else if (href.startsWith("/")) // in case of relative URL
@@ -244,11 +244,11 @@ public class crawler {
 									if (uniqueLink(seedSet, href) && uniqueLink(webPageLinks, href))
 									{
 										webPageLinks.add(href);
-										if(referNumLinks < 2)
-										{
+										//if(referNumLinks < 2)
+										//{
 											referLinks += href + " ";
 											referNumLinks++;
-										}
+										//}
 									}
 								}
 							}

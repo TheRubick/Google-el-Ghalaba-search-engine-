@@ -114,6 +114,7 @@ public class PageRanker {
 		for(HashMap.Entry<String,Integer> entry:siteNodes.entrySet()) {
 			if (i == 10000 )
 			{
+				System.out.println("we are saving");
 				data = data.substring(0, data.length() - 1);
 				db.saveRank(data);
 				i=0;

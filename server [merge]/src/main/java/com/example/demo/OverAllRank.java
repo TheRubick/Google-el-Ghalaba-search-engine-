@@ -61,13 +61,10 @@ public class OverAllRank{
         // get names of concerning links
         StringBuilder concernedLink = new StringBuilder();
         concernedLink.append("(");
-        System.out.println("here is the relevance score");
         relvRank.forEach((key, value) -> {
             finalScore.put(key,relvWeight * relvRank.get(key));
             concernedLink.append("'"+key+"',");
-            System.out.println("key is "+key+" , value = "+relvRank.get(key));
         });
-        System.out.println("------------------------------------------------------------------");
         // used in querying database
         String concernedLinks = concernedLink.toString();
         if(concernedLinks.equals("("))
@@ -81,12 +78,12 @@ public class OverAllRank{
         ////////////////////////////////////////////////////////////////
         // We get popularity rank
 
-        String query = "SELECT LINK,POPULARITY_SCORE/(SELECT MAX(POPULARITY_SCORE) FROM popularity_rank) FROM " +
-                "popularity_rank where LINK IN " + concernedLinks;
+        String query = "SELECT LINK, POPULARITY_SCORE/(SELECT MAX(POPULARITY_SCORE) " +
+                "FROM POPULARITY_RANK WHERE LINK in"+concernedLinks+" ) FROM " +
+                "POPULARITY_RANK WHERE LINK IN " + concernedLinks;
         ResultSet  queryResult = db.readDataBase(query);
 
         // add popularity to over all rank
-        System.out.println("here is the popularity");
         while (queryResult.next()) {
             String link = queryResult.getString(1);
             double score = queryResult.getDouble(2);
@@ -95,8 +92,8 @@ public class OverAllRank{
 
         ////////////////////////////////////////////////////////////////
         // We get personalized rank
-        query = "SELECT LINK, COUNT_CLICKS/ (SELECT SUM(COUNT_CLICKS) FROM SITES_CLICKS) " +
-                "FROM SITES_CLICKS  WHERE LINK IN "+ concernedLinks;
+        query = "SELECT LINK, COUNT_CLICKS/(SELECT sum(COUNT_CLICKS) FROM SITES_CLICKS WHERE LINK in " +
+                concernedLinks + ") FROM SITES_CLICKS WHERE LINK IN "+ concernedLinks;
         queryResult = db.readDataBase(query);
 
         // add personalized rank to over all rank
