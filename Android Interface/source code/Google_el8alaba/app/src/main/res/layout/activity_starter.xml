@@ -36,7 +36,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/trends_btn"
         android:elevation="@android:dimen/thumbnail_height"
-        app:srcCompat="@drawable/trend_arrow_foreground" />
+        app:srcCompat="@drawable/trend_arrow_foreground"
+        android:contentDescription="@string/trends" />
 
     <ImageView
         android:layout_width="0dp"
@@ -47,7 +48,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/search_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/trends_btn"
-        app:layout_constraintTop_toTopOf="@+id/search_btn" />
+        app:layout_constraintTop_toTopOf="@+id/search_btn"
+        android:contentDescription="@string/search" />
 
     <Button
         android:id="@+id/search_btn"
@@ -55,7 +57,6 @@
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/googleGreen"
-        android:drawableTint="@android:color/background_light"
         android:onClick="goToSearch"
         android:text="@string/search"
         android:textColor="@android:color/background_light"
@@ -80,7 +81,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/google2" />
+        app:srcCompat="@drawable/google2"
+        android:contentDescription="@string/our_logo" />
 
     <TextView
         android:id="@+id/sub_title"

@@ -12,5 +12,4 @@
     android:text="@string/egypt"
     android:drawableEnd="@drawable/drop_down"
     android:drawablePadding="9dp"
-    android:drawableTint="@color/googleRed"
     android:background="@android:color/background_light" />

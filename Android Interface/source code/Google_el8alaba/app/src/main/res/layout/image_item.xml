@@ -14,17 +14,20 @@
         android:layout_margin="8dp">
 
         <ImageView
+
             android:id="@+id/imageViewIMG_Res"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="#88888888" />
+            android:src="#88888888"
+            android:contentDescription="@string/search_results_images" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_gravity="bottom"
-            android:src="@drawable/gradient" />
+            android:src="@drawable/gradient"
+            android:contentDescription="@string/gradient" />
 
         <TextView
             android:id="@+id/textViewIMG_Res"

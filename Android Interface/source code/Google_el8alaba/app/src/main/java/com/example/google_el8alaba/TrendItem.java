@@ -21,7 +21,4 @@ public class TrendItem {
         return count;
     }
 
-    public void setCount(String count) {
-        this.count = count;
-    }
 }

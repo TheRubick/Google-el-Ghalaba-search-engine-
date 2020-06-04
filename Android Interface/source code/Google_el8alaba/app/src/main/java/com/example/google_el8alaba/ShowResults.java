@@ -18,8 +18,7 @@ import java.util.ArrayList;
 public class ShowResults extends AppCompatActivity {
   private LinksResultsAdapter adapter;
   private ArrayList<LinkItem> linkItems = new ArrayList<>();
-  private String jsonArray;
-  private TextView counter;
+    private TextView counter;
   private int length;
   private final int pageCapacity = 10;
   private int currentStart = 0;
@@ -38,7 +37,7 @@ public class ShowResults extends AppCompatActivity {
     recyclerView.setAdapter(adapter);
 
     Intent intent = getIntent();
-    jsonArray = intent.getStringExtra("jsonArray");
+      String jsonArray = intent.getStringExtra("jsonArray");
 
     try {
       array = new JSONArray(jsonArray);
