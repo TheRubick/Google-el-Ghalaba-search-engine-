@@ -218,6 +218,48 @@ public class MySQLAccess {
     }
 
 
+    public void countQuery(String query) throws SQLException {
+        Connection connect = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            // This will load the MySQL driver, each DB has its own driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Setup the connection with the DB
+            connect = DriverManager
+                    .getConnection("jdbc:mysql://" + host + "/crawler_database?"
+                            + "user=" + user + "&password=" + passwd );
+        } catch (Exception e) {
+            System.out.println("database error");
+        } finally {
+            close();
+        }
+        statement.executeUpdate("CREATE TABLE IF NOT EXISTS old_queries(query VARCHAR(700) NOT NULL PRIMARY KEY);");
+        preparedStatement = connect.prepareStatement("INSERT IGNORE INTO old_queries (query) VALUES ('"+query+"')");
+        preparedStatement.executeUpdate();
+    }
+
+
+    public ResultSet getAutoComplete(String query) throws SQLException {
+        Connection connect = null;
+        try {
+            // This will load the MySQL driver, each DB has its own driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Setup the connection with the DB
+            connect = DriverManager
+                    .getConnection("jdbc:mysql://" + host + "/crawler_database?"
+                            + "user=" + user + "&password=" + passwd );
+        } catch (Exception e) {
+            System.out.println("database error");
+        } finally {
+            close();
+        }
+        ResultSet resultSet = statement.executeQuery("SELECT `query` FROM `old_queries` WHERE QUERY Like '%"+query+"%'");
+        return resultSet;
+    }
+
+
     public void writePersonName(String countryName,String personName) throws SQLException {
         Connection connect = null;
         PreparedStatement preparedStatement = null;

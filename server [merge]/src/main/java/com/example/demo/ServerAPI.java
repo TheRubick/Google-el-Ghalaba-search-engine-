@@ -80,6 +80,8 @@ public class ServerAPI {
     public Link[] getLinks(
             @RequestParam(value = "query", defaultValue = "World") String query,
             @RequestParam(value = "CountryDomain", defaultValue = "EG") String CountryDomain) throws Exception {
+        MySQLAccess dbManager = new MySQLAccess();
+        dbManager.countQuery(query);
         QueryProcessor queryProcessor = new QueryProcessor(query);
         ArrayList<String> queryWords = queryProcessor.startProcessing();
         OverAllRank ranker = new OverAllRank();
@@ -125,6 +127,8 @@ public class ServerAPI {
     public Img[] getImages(
             @RequestParam(value = "query", defaultValue = "World") String query,
             @RequestParam(value = "CountryDomain", defaultValue = "EG") String CountryDomain) throws Exception {
+        MySQLAccess dbManager = new MySQLAccess();
+        dbManager.countQuery(query);
         QueryProcessor queryProcessor = new QueryProcessor(query);
         ArrayList<String> queryWords = queryProcessor.startProcessing();
         ImageRank ranker = new ImageRank();
@@ -151,14 +155,23 @@ public class ServerAPI {
     /*************************************end point 3*******************************************************/
     @GetMapping("/complete")
     public String[] getSuggestions(
-            @RequestParam(value = "part", defaultValue = " ") String part) {
-        int randomNum = 10;
-        String[] suggestions = new String[randomNum];
+            @RequestParam(value = "part", defaultValue = " ") String part) throws SQLException {
+
+        int maxNum = 10;
+        String[] suggestions = new String[maxNum];
+
         MySQLAccess dbManager = new MySQLAccess();
-        //TODO:: get data from data base
-        for (int i = 0; i < randomNum; i++)
-            suggestions[i] = part + "suggestion " + i;
-        System.out.println(suggestions[1]);
+        ResultSet queryResult = dbManager.getAutoComplete(part);
+        int i =0;
+        while(queryResult.next() && i<maxNum)
+        {
+            suggestions[i]=queryResult.getString(1);
+            i++;
+        }
+//        //TODO:: get data from data base
+//        for (int i = 0; i < randomNum; i++)
+//            suggestions[i] = part + "suggestion " + i;
+//        System.out.println(suggestions[1]);
         return suggestions;
     }
 
