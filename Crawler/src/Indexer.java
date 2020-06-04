@@ -103,7 +103,7 @@ public class Indexer {
 		    	HashMap<String, Double > mpscore = new HashMap<String, Double >();
 
 		    	Double totScore = 0.0, sum = 0.0;
-		    	Double [] scores = {100.0, 30.0};
+		    	Double [] scores = {1000.0, 100.0, 30.0};
 		    	String txts = newCrawled[1].get(i), url = newCrawled[0].get(i), imgs = newCrawled[2].get(i);
 
 		    	String[] arrOfStr = txts.split("@@::;;@@;", -2);
@@ -136,7 +136,7 @@ public class Indexer {
 		    	}
 		    	for (HashMap.Entry<String, Integer[]> entry : mp.entrySet()) {
 		    		Integer [] it = entry.getValue();
-		    		Double score = (it[0]*scores[0] +it[1]*scores[1])/totScore;
+		    		Double score = (it[0]*scores[0] + it[1]*scores[1] + it[2]*scores[2])/totScore;
 				    //System.out.println(entry.getKey() + " = " + it[0] + " " + it[1] + " " + it[2] + " " + score);
 				    sum += score;
 				    mpscore.put(entry.getKey(), score);
