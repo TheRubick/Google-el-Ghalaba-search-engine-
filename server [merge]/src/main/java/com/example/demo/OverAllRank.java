@@ -42,9 +42,9 @@ public class OverAllRank{
     {
         db = new MySQLAccess();
         finalScore = new HashMap<String, Double>();
-        relvWeight = 1.0;
-        popWeight = 0.5;
-        LocWeight = 0.8;
+        relvWeight = 10.0;
+        popWeight = 0.4;
+        LocWeight = 0.15;
         persWeight = 0.2;
         int num = queryProcessed.size();
         words = "(";
@@ -62,7 +62,7 @@ public class OverAllRank{
         StringBuilder concernedLink = new StringBuilder();
         concernedLink.append("(");
         relvRank.forEach((key, value) -> {
-            finalScore.put(key,relvWeight *relvRank.get(key));
+            finalScore.put(key,relvWeight * relvRank.get(key));
             concernedLink.append("'"+key+"',");
         });
         // used in querying database
@@ -77,7 +77,10 @@ public class OverAllRank{
 
         ////////////////////////////////////////////////////////////////
         // We get popularity rank
-        String query = "SELECT LINK,POPULARITY_SCORE FROM `POPULARITY_RANK` where LINK IN " + concernedLinks;
+
+        String query = "SELECT LINK, POPULARITY_SCORE/(SELECT MAX(POPULARITY_SCORE) " +
+                "FROM POPULARITY_RANK WHERE LINK in"+concernedLinks+" ) FROM " +
+                "POPULARITY_RANK WHERE LINK IN " + concernedLinks;
         ResultSet  queryResult = db.readDataBase(query);
 
         // add popularity to over all rank
@@ -86,10 +89,11 @@ public class OverAllRank{
             double score = queryResult.getDouble(2);
             finalScore.put(link, finalScore.get(link) + popWeight*score);
         }
+
         ////////////////////////////////////////////////////////////////
         // We get personalized rank
-        query = "SELECT LINK, COUNT_CLICKS/ (SELECT SUM(COUNT_CLICKS) FROM SITES_CLICKS) " +
-                "FROM SITES_CLICKS  WHERE LINK IN "+ concernedLinks;
+        query = "SELECT LINK, COUNT_CLICKS/(SELECT sum(COUNT_CLICKS) FROM SITES_CLICKS WHERE LINK in " +
+                concernedLinks + ") FROM SITES_CLICKS WHERE LINK IN "+ concernedLinks;
         queryResult = db.readDataBase(query);
 
         // add personalized rank to over all rank
@@ -106,12 +110,11 @@ public class OverAllRank{
         //add LocWeight to over all rank
         while (queryResult.next()) {
             String link = queryResult.getString(1);
-            //double score = queryResult.getDouble(2);
-            System.out.println("Link is "+finalScore.get(link));
             finalScore.put(link, finalScore.get(link)+ LocWeight);
         }
         ////////////////////////////////////////////////////////////////
         // sort the final score
+        //HashMap<Double,String >invertedMap = new HashMap<Double, String>();
 
         finalScore = sortByValue(finalScore);
 
@@ -119,10 +122,11 @@ public class OverAllRank{
 
         // build string to query links,title and snippets of the ranked links
         sortedLinks.append("(");
-        relvRank.forEach((key, value) -> {
+        finalScore.forEach((key, value) -> {
             sortedLinks.append("'"+key+"',");
-            finalScore.get(key);
         });
+
+
         String dString = sortedLinks.toString();
         if(dString.equals("("))
             dString += "null";
@@ -131,16 +135,17 @@ public class OverAllRank{
         dString += ")";
 
 
-        query = "SELECT TITLE, LINK, TITLE FROM `crawler_table` WHERE LINK IN " +dString;
+        query = "SELECT TITLE, LINK, TITLE FROM `crawler_table` WHERE LINK IN " +dString +
+                "ORDER BY FIELD(Link,"+dString.substring(1)+";";
         queryResult = db.readDataBase(query);
 
         // build Link class to send it to the frontend
         ServerAPI.Link[] toFrontEnd = new ServerAPI.Link[numLinks];
         int i=0;
         while (queryResult.next()) {
-            String title = queryResult.getString(1);
+            String title = queryResult.getString(1).replaceAll("@@::;;@@;title@@::;;@@;","");
             String link= queryResult.getString(2);
-            String snippet = queryResult.getString(3);
+            String snippet = queryResult.getString(3).replaceAll("@@::;;@@;title@@::;;@@;","");
             ServerAPI.Link element = new ServerAPI.Link(title, link, snippet);
             toFrontEnd[i] = element;
             i++;

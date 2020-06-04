@@ -91,7 +91,7 @@ public class Relevance {
 		while (df.next()) {
 			String word = df.getString(1);
 			for (int i = 0; i < numDocs; i++) {
-				tfIdf[hashTableWords.get(word)][i] *= (1 + Math.log10((double) (totalDocs) / df.getInt(2)));
+				tfIdf[hashTableWords.get(word)][i] *= (Math.log10((double) (totalDocs) / df.getInt(2)));
 			}
 		}
 

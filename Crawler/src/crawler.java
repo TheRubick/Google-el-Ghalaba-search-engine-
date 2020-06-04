@@ -19,8 +19,7 @@ import static java.lang.Integer.min;
 
 public class crawler {
 		
-	public static int numOfPages = 2400;
-	final int webPageLinksThreshold = 50;
+	public static int numOfPages = 14000;
 	final String imageLinksDelimiter = "@@::;;@@;";
 	public static List<String> seedSet = new ArrayList<String>();
 	public static List<String> imagesOfSeedSet = new ArrayList<String>();
@@ -122,14 +121,15 @@ public class crawler {
 	//initialize the seedSet
 	private static void initializeSeed()
 	{
-		seedSet.add("https://edition.cnn.com/world/live-news/coronavirus-pandemic-05-30-20-intl/index.html");
+		seedSet.add("https://wikipedia.org/wiki/UEFA_Men%27s_Player_of_the_Year_Award");
+		seedSet.add("https://wikipedia.org/wiki/Will_Smith");
+		seedSet.add("https://edition.cnn.com/");
 		seedSet.add("https://www.foxnews.com/");
 		seedSet.add("https://www.tutorialspoint.com/java/index.htm");
 		seedSet.add("https://stackoverflow.com/");
 		seedSet.add("https://www.w3schools.com/");
-		seedSet.add("https://www.google.com.eg/");
-		seedSet.add("https://wikipedia.org/wiki/Mohamed_Salah");
-		seedSet.add("https://wikipedia.org/wiki/Will_Smith");
+		seedSet.add("https://www.independent.co.uk/");
+		seedSet.add("https://www.quora.com/What-are-the-best-Java-tutorials/");
 	}
 	
 	
@@ -203,6 +203,12 @@ public class crawler {
 						String paragraphText = "";
 						String referLinks = "";
 						List<String> webPageLinks = new ArrayList<String>();
+
+						int webPageLinksThreshold = 50;
+
+						//giving more weight for wikipedia links
+						if(currentWebPageURL.indexOf("wikipedia.org") != -1)
+							webPageLinksThreshold = 150;
 						int referNumLinks = 0;
 						for (Element link : links) {
 							if (webPageLinks.size() >= webPageLinksThreshold)
@@ -213,11 +219,11 @@ public class crawler {
 								if (href.startsWith("http") || href.startsWith("https"))
 								{
 									webPageLinks.add(href);
-									if(referNumLinks < 2)
-									{
+									//if(referNumLinks < 2)
+									//{
 										referLinks += href + " ";
 										referNumLinks++;
-									}
+									//}
 								}
 								else if(href.startsWith("//")) // in case of missing the protocol
 								{
@@ -225,11 +231,11 @@ public class crawler {
 									if (uniqueLink(seedSet, href) && uniqueLink(webPageLinks, href))
 									{
 										webPageLinks.add(href);
-										if(referNumLinks < 2)
-										{
+										//if(referNumLinks < 2)
+										//{
 											referLinks += href + " ";
 											referNumLinks++;
-										}
+										//}
 									}
 								}
 								else if (href.startsWith("/")) // in case of relative URL
@@ -238,11 +244,11 @@ public class crawler {
 									if (uniqueLink(seedSet, href) && uniqueLink(webPageLinks, href))
 									{
 										webPageLinks.add(href);
-										if(referNumLinks < 2)
-										{
+										//if(referNumLinks < 2)
+										//{
 											referLinks += href + " ";
 											referNumLinks++;
-										}
+										//}
 									}
 								}
 							}
@@ -286,6 +292,15 @@ public class crawler {
 
 						paragraphText = paragraphText.substring(0,min(paragraphText.length(),50000));
 						paragraphText += "@@::;;@@;p@@::;;@@;";
+
+						if(webPageTitle.isEmpty())
+							webPageTitle = " ";
+						webPageTitle += "@@::;;@@;title@@::;;@@;";
+
+
+						if(currentWebPageURL.indexOf("wikipedia.org") == -1)
+							Thread.sleep(100);
+
 						synchronized (lock)
 						{
 							for (int k = 0; k < webPageLinks.size() && pageIter < numOfPages; k++) {
@@ -299,9 +314,11 @@ public class crawler {
 							System.out.println(""); // publish date
 							String refererLink = referLinks;
 							try {
-								String webPageTagsText = headingText + paragraphText;
+								String webPageTagsText = webPageTitle + headingText + paragraphText;
 								db.writeResultSet(currentWebPageURL, webPageTagsText, imageSources,
 										webPageTitle, refererLink, URLLocation);
+								System.out.println("visitor = "+visitorPointer);
+
 							} catch (SQLException e) {
 								System.out.println((headingText+paragraphText).length());
 								System.out.println("problem occured on writing in the database");
@@ -313,7 +330,7 @@ public class crawler {
 
 					}
 				}
-				catch (IOException e)
+				catch (IOException | InterruptedException e)
 				{
 					System.out.println("url doesn't exists");
 					continue;
