@@ -77,7 +77,8 @@ public class OverAllRank{
 
         ////////////////////////////////////////////////////////////////
         // We get popularity rank
-        String query = "SELECT LINK,POPULARITY_SCORE FROM `POPULARITY_RANK` where LINK IN " + concernedLinks;
+        String query = "SELECT LINK,POPULARITY_SCORE/(SELECT MAX(POPULARITY_SCORE) FROM popularity_rank) FROM " +
+                "popularity_rank where LINK IN " + concernedLinks;
         ResultSet  queryResult = db.readDataBase(query);
 
         // add popularity to over all rank

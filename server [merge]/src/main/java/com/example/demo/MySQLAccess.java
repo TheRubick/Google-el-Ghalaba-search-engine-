@@ -196,6 +196,28 @@ public class MySQLAccess {
 //      connect.close();
     }
 
+    public void countLink(String link) throws SQLException {
+        Connection connect = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            // This will load the MySQL driver, each DB has its own driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Setup the connection with the DB
+            connect = DriverManager
+                    .getConnection("jdbc:mysql://" + host + "/crawler_database?"
+                            + "user=" + user + "&password=" + passwd );
+        } catch (Exception e) {
+            System.out.println("database error");
+        } finally {
+            close();
+        }
+        statement.executeUpdate("CREATE TABLE IF NOT EXISTS SITES_CLICKS(LINK VARCHAR(700) NOT NULL PRIMARY KEY, COUNT_CLICKS INT NOT NULL);");
+        preparedStatement = connect.prepareStatement("INSERT INTO SITES_CLICKS (LINK,COUNT_CLICKS) VALUES ('"+link+"',0) ON DUPLICATE KEY UPDATE COUNT_CLICKS = COUNT_CLICKS +1 ");
+        preparedStatement.executeUpdate();
+    }
+
+
     public void writePersonName(String countryName,String personName) throws SQLException {
         Connection connect = null;
         PreparedStatement preparedStatement = null;

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicLong;
 import java.sql.ResultSet;
@@ -209,8 +210,10 @@ public class ServerAPI {
 
     /*************************************end point 5*******************************************************/
     @PutMapping("/personalized")
-    public void updatePersonalized(@RequestParam(value = "link", defaultValue = " ") String link) {
-        //TODO :: add link to data base or increase its count 
+    public void updatePersonalized(@RequestParam(value = "link", defaultValue = " ") String link) throws SQLException {
+        //TODO :: add link to data base or increase its count
+        MySQLAccess dbManager = new MySQLAccess();
+        dbManager.countLink(link);
         System.out.println("personalized request received");
     }
 }
