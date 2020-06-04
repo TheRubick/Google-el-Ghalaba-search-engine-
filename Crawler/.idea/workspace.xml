@@ -21,10 +21,10 @@
   <component name="ChangeListManager">
     <list default="true" id="ba56a4d4-758d-47c7-ba2a-08889c72add7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Indexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Indexer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/crawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/crawler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Crawler2/MySQLTest1.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server [merge]/src/main/java/com/example/demo/MySQLAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server [merge]/src/main/java/com/example/demo/MySQLAccess.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server [merge]/src/main/java/com/example/demo/OverAllRank.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server [merge]/src/main/java/com/example/demo/OverAllRank.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server [merge]/src/main/java/com/example/demo/Relevance.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server [merge]/src/main/java/com/example/demo/Relevance.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

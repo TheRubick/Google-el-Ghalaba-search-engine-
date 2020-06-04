@@ -19,7 +19,7 @@ public class MySQLAccess {
 
   final private String host = "127.0.0.1";
   final private String user = "root";
-  final private String passwd = "123456789";
+  final private String passwd = "";
   
   public ResultSet readDataBase(String s) throws Exception {
     try {
@@ -234,6 +234,7 @@ public class MySQLAccess {
         } finally {
             close();
         }
+        statement = connect.createStatement();
         statement.executeUpdate("CREATE TABLE IF NOT EXISTS old_queries(query VARCHAR(700) NOT NULL PRIMARY KEY);");
         preparedStatement = connect.prepareStatement("INSERT IGNORE INTO old_queries (query) VALUES ('"+query+"')");
         preparedStatement.executeUpdate();
