@@ -64,12 +64,12 @@ java MainRanker.class
 ## #Results :
 |WEB|IMAGES |
 |--|--|
-|![web result 1](images/imgresult1.png)  |![image result 1](images/imgresult1.png)  |
-|![web result 2](images/imgresult2.png)  |![image result 2](images/imgresult2.png)  |
+|![web result 1](images/webresults1.jpg)  |![image result 1](images/imgresult1.jpg)  |
+|![web result 2](images/webresults2.jpg)  |![image result 2](images/imgresult2.jpg)  |
 
 # 2-Trends
 #### just choose a country to show the trends at
 ![choose Country](images/chooseCountry.jpg)
 
 #### Top 10 trends < People > of the given country are displayed
-![trends results](images/imgresult1.png)
+![trends results](images/webresults1.jpg)
