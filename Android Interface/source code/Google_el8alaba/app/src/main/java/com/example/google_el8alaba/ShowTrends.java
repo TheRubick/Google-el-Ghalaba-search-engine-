@@ -105,6 +105,7 @@ public class ShowTrends extends AppCompatActivity implements AdapterView.OnItemS
                   for (int i = 0; i < length; i++) {
                     trendsData[i] = response.getJSONObject(i);
                     String name = trendsData[i].getString("name");
+                    if(name.equals("N/A")) break;
                     String count = trendsData[i].getString("count");
                     trendItems.add(new TrendItem(name, count));
                   }

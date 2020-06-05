@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class ShowImgsResults extends AppCompatActivity {
   private ImageResultsAdapter adapter;
   private ArrayList<ImageItem> imgItems = new ArrayList<>();
-    private TextView counter;
+  private TextView counter;
   private int length;
   private final int pageCapacity = 10;
   private int currentStart = 0;

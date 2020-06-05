@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                     changeSuggestions(adapter);
-                    //query.showDropDown();
+                    query.showDropDown();
                 }
 
                 @Override
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void afterTextChanged(Editable editable) {
                     //changeSuggestions(adapter);
-                    query.showDropDown();
+                    //query.showDropDown();
 
                 }
             });
@@ -191,59 +191,72 @@ public class MainActivity extends AppCompatActivity {
   private void changeSuggestions(final ArrayAdapter<String> adapter) {
     String url = getUrl(AutoCompleteRoute);
     JsonArrayRequest jsonArrayRequest =
-            new JsonArrayRequest(
-                    Request.Method.GET,
-                    url,
-                    null,
-                    new Response.Listener<JSONArray>() {
-                        @Override
-                        public void onResponse(JSONArray response) {
-                            adapter.clear();
+        new JsonArrayRequest(
+            Request.Method.GET,
+            url,
+            null,
+            new Response.Listener<JSONArray>() {
+              @Override
+              public void onResponse(JSONArray response) {
+                adapter.clear();
 
-                            int loopLength = Math.min(AutoCompleteMaxSuggestions, response.length());
-                            for (int i = 0; i < loopLength; i++) {
-                                try {
-                                    // mydata[i] = response.getString(i);
-                                    adapter.insert(response.getString(i), i);
-                                    Log.d("Suggestions : ", response.getString(i));
-                                    query.showDropDown();
+                int loopLength = Math.min(AutoCompleteMaxSuggestions, response.length());
 
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                // adapter.addAll(mydata);
-                                adapter.notifyDataSetChanged();
-                            }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.e("Volley Error", error.toString());
-                            error.printStackTrace();
+                try {
+                  for (int i = 0; i < loopLength; i++) {
+                    if(response.getString(i) == null) break;
+                    adapter.insert(response.getString(i), i);
+                    Log.d("Suggestions : ", response.getString(i));
+                  }
+                  query.showDropDown();
 
-                          if (error instanceof NetworkError) {
-                            Toast.makeText(getApplicationContext(), "suggestions: Oops. network error!", Toast.LENGTH_SHORT)
-                                    .show();
-                          } else if (error instanceof ServerError) {
-                            Toast.makeText(getApplicationContext(), "suggestions: Oops. server error!", Toast.LENGTH_SHORT)
-                                    .show();
-                          } else if (error instanceof AuthFailureError) {
-                            Toast.makeText(
-                                    getApplicationContext(),
-                                    "suggestions: Oops. AuthFailureError error!",
-                                    Toast.LENGTH_SHORT)
-                                    .show();
-                          } else if (error instanceof ParseError) {
-                            Toast.makeText(getApplicationContext(), "suggestions: Oops. parse error!", Toast.LENGTH_SHORT)
-                                    .show();
-                          } else if (error instanceof TimeoutError) {
-                            Toast.makeText(getApplicationContext(), "suggestions: Oops. Timeout error!", Toast.LENGTH_SHORT)
-                                    .show();
-                          }
-                          addDummySuggestions();
-                        }
-                    });
+                } catch (JSONException e) {
+                  e.printStackTrace();
+                }
+                // adapter.addAll(mydata);
+                adapter.notifyDataSetChanged();
+              }
+            },
+            new Response.ErrorListener() {
+              @Override
+              public void onErrorResponse(VolleyError error) {
+                Log.e("Volley Error", error.toString());
+                error.printStackTrace();
+
+                if (error instanceof NetworkError) {
+                  Toast.makeText(
+                          getApplicationContext(),
+                          "suggestions: Oops. network error!",
+                          Toast.LENGTH_SHORT)
+                      .show();
+                } else if (error instanceof ServerError) {
+                  Toast.makeText(
+                          getApplicationContext(),
+                          "suggestions: Oops. server error!",
+                          Toast.LENGTH_SHORT)
+                      .show();
+                } else if (error instanceof AuthFailureError) {
+                  Toast.makeText(
+                          getApplicationContext(),
+                          "suggestions: Oops. AuthFailureError error!",
+                          Toast.LENGTH_SHORT)
+                      .show();
+                } else if (error instanceof ParseError) {
+                  Toast.makeText(
+                          getApplicationContext(),
+                          "suggestions: Oops. parse error!",
+                          Toast.LENGTH_SHORT)
+                      .show();
+                } else if (error instanceof TimeoutError) {
+                  Toast.makeText(
+                          getApplicationContext(),
+                          "suggestions: Oops. Timeout error!",
+                          Toast.LENGTH_SHORT)
+                      .show();
+                }
+                addDummySuggestions();
+              }
+            });
 
     // Add the request to the RequestQueue.
     jsonArrayRequest.setRetryPolicy(

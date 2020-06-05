@@ -18,9 +18,9 @@ import java.util.ArrayList;
 public class ShowResults extends AppCompatActivity {
   private LinksResultsAdapter adapter;
   private ArrayList<LinkItem> linkItems = new ArrayList<>();
-    private TextView counter;
+  private TextView counter;
   private int length;
-  private final int pageCapacity = 10;
+  private final int pageCapacity = 15;
   private int currentStart = 0;
   private int currentEnd = length - 1;
   private JSONArray array;
@@ -50,6 +50,7 @@ public class ShowResults extends AppCompatActivity {
     showDataBetweenIndex12(currentStart, currentEnd); // initially
   }
 
+  /** show next "pageCapacity" links */
   public void nextLinks(View view) {
     // TODO:: put in recycler view next 10 links
     currentStart = Math.min(currentStart + pageCapacity, length - 1);
@@ -57,6 +58,7 @@ public class ShowResults extends AppCompatActivity {
     showDataBetweenIndex12(currentStart, currentEnd);
   }
 
+  /** show next "pageCapacity" links */
   public void backLinks(View view) {
     // TODO:: put in recycler view past 10 links
     currentStart = Math.max(currentStart - pageCapacity, 0);
@@ -64,6 +66,12 @@ public class ShowResults extends AppCompatActivity {
     showDataBetweenIndex12(currentStart, currentEnd);
   }
 
+  /**
+   * show data from json file between index "from" -> "to"
+   *
+   * @param from : starting index of showing
+   * @param to : end index to show = to-1
+   */
   private void showDataBetweenIndex12(int from, int to) {
     try {
         String counterText = "Displaying from result \n " + from + " to " + to + " out of " + length;
