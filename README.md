@@ -43,7 +43,7 @@ java MainRanker.class
 ![run android studio](images/Android%20Studio%20run.png)
 
 
-## using Application
+## #Using Application :
 ![starter](images/starter.jpg)
 
 #### edit your server address to send requests to with the one you have :
@@ -72,4 +72,4 @@ java MainRanker.class
 ![choose Country](images/chooseCountry.jpg)
 
 #### Top 10 trends < People > of the given country are displayed
-![trends results](images/webresults1.jpg)
+![trends results](images/trendsResults.jpg)
