@@ -73,3 +73,12 @@ java MainRanker.class
 
 #### Top 10 trends < People > of the given country are displayed
 ![trends results](images/trendsResults.jpg)
+
+## Team members
+[Mohamad ayman](https://github.com/TheRubick)        
+
+[Mostafa Waleed](https://github.com/sha3er97)       
+
+[Omar Desoky](https://github.com/OmarDesoky)        
+
+[Kareem Osama](https://github.com/KareemOsamaSobeih) 
