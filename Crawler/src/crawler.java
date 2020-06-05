@@ -1,4 +1,3 @@
-import java.awt.desktop.SystemSleepEvent;
 import java.io.*;
 import java.net.*;
 import java.sql.ResultSet;
@@ -13,41 +12,65 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.*;
 
-import static java.lang.Integer.max;
 import static java.lang.Integer.min;
 
 
 public class crawler {
-		
+
+	/*
+	num of pages to be crawler, it should be greater than the demanded web pages to be crawled.
+	due many cases like duplicate URL,invalid URL,noise in the internet,etc..
+	*/
 	public static int numOfPages = 14000;
-	final String imageLinksDelimiter = "@@::;;@@;";
+	//tags delimiter to be used on concatenating different tags together
+	final String tagsDelimiter = "@@::;;@@;";
+	//seedSet that would hold the URLs craweled.d
 	public static List<String> seedSet = new ArrayList<String>();
-	public static List<String> imagesOfSeedSet = new ArrayList<String>();
+	//number of the threads to be used in the crawling process
 	public static int threadNumbers = 15;
+	/*
+	pageIter "Iteration" is the number of pages that have been fetched
+	visitorPointer to indicate the current web page being crawled
+	*/
 	int pageIter = 0, visitorPointer = 0;
+	//operation type to indicate the process : 0 for new crawl ,1 to crawl after being interrupted
 	public static int operationType = 0;
+	//File to store the links in the seedSet
 	public static File takenLinksFile;
+	//File writer to be used on writing the links of the seedSet in the file mentioned above
 	public static FileWriter takenLinksWriter;
 	public static void main(String[] args) throws Exception {
 
+		//initialize new crawler object
 		crawler c = new crawler();
+		//initialize lock to be used by the threads
 		final Object lockObj = new Object();
+		//variable to store the beginning of the crawler
 		long startTime = System.nanoTime();
+		//database object to access the database
 		MySQLAccess db = new MySQLAccess();
+		//HashMap to hole the visited sites to make sure for preventing the duplication of sites
 		HashMap<String,Integer> listOfVisitedSites = new HashMap<String ,Integer>();
+		//threadNumber is assigned to each thread
 		int threadNumber = 0;
 
+		//create takenLinks file
 		takenLinksFile = new File("takenLinks.txt");
+		//new crawl operation
 		if(operationType == 0)
 		{
+			//create new file
 			takenLinksFile.createNewFile();
+			//initialize the seed set
 			initializeSeed();
 			//initialize the takenLinks with the seedSet
 			takenLinksWriter = new FileWriter("takenLinks.txt");
+			//write the initialized seed set in the file
 			for(String link : seedSet)
 				takenLinksWriter.append(link+"\n");
 
 		}
+		//recrawel after being interrupted
 		else if(operationType == 1)
 		{
 			//fetch links from the database and the takenLinks.txt then compare between them
@@ -56,7 +79,6 @@ public class crawler {
 			//open takenLinks.txt and read the links from it
 			Scanner linksFileReader = new Scanner(new File("takenLinks.txt"));
 			while (linksFileReader.hasNextLine()) {
-
 				String data = linksFileReader.nextLine();
 				if(!data.isEmpty())
 					takenLinks.add(data);
@@ -67,6 +89,7 @@ public class crawler {
 			{
 				databaseLinks.add(databaseFetchedLinks.getString(1));
 			}
+			//add the different links to the seed set
 			for(String link : takenLinks)
 			{
 				if(uniqueLink(databaseLinks,link))
@@ -74,6 +97,7 @@ public class crawler {
 					seedSet.add(link);
 				}
 			}
+			//numOfPages should be decreased by the number of links have been fetched from the database
 			numOfPages -= databaseLinks.size();
 			//to delete the previous links after being fetched from the file
 			takenLinksFile.createNewFile();
@@ -83,6 +107,7 @@ public class crawler {
 			linksFileReader.close();
 		}
 
+		//create the crawler threads and initiate them
 		ArrayList<Thread> crawlerThreads = new ArrayList<Thread>();
 		for(int i = 0; i < threadNumbers;i++)
 		{
@@ -95,9 +120,6 @@ public class crawler {
 			{
 				crawlerThreads.get(i).join();
 			}
-
-
-
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -114,6 +136,7 @@ public class crawler {
 		}
 		db.close();
 		long endTime = System.nanoTime();
+		//calculating the duration taken by the crawler
 		long duration = endTime - startTime;
 		System.out.println("duration of the crawler = "+duration*Math.pow(10,-9)+" seconds");
 	}
@@ -134,6 +157,13 @@ public class crawler {
 	
 	
 	class crawlerThread implements Runnable {
+		/*
+		here each thread would hold
+			the db object from the crawler
+			number
+			listOfVisitedSites
+			lock for synchronization
+		*/
 		private Object lock;
 		private MySQLAccess db;
 		private int threadNumber;
@@ -147,21 +177,35 @@ public class crawler {
 		}
 		public void run () {
 			System.out.println("thread = "+(this.threadNumber));
+			/*
+				if pageIter has became >= the required number of pages and the visitorPointer has visited all
+				the web pages then stop crawling
+			*/
 			while (pageIter < numOfPages || visitorPointer < numOfPages) {
+
+				/*
+					this while loop to make the thread sleep if the seedSetSize is small and the other threads
+					could be satisfied for the crawling process
+				*/
 				int seedSetSize = seedSet.size();
 				while (this.threadNumber >= seedSetSize)
 				{
 					System.out.println(seedSetSize);
 					seedSetSize = seedSet.size();
 				}
-				String currentWebPageURL = "";
 
+				/*
+					in this part we normalize the currentWebPageURL
+				*/
+				String currentWebPageURL = "";
 				synchronized (lock)
 				{
 					try{
 						System.out.println("current seed = " + seedSet.get(visitorPointer));
 						currentWebPageURL = normalizeSiteURL(seedSet.get(visitorPointer));
+						//increment the visitorPointer to make other threads fetch the following URLs
 						visitorPointer++;
+						//if the current URL is duplicate then continue the while loop
 						if(listOfVisitedSites.containsKey(currentWebPageURL))
 						{
 							continue;
@@ -172,6 +216,7 @@ public class crawler {
 					}
 				}
 
+				//in this part we make check on the robots.txt so we need to get the current host and path
 				String currentPath = "";
 				String currentHost = "";
 				boolean isValidWebPage;
@@ -188,42 +233,47 @@ public class crawler {
 					continue;
 				}
 				try{
+					//if it is valid from the robots.txt
 					if (isValidWebPage) {
 						Document doc = Jsoup.connect(currentWebPageURL).get();
 						System.out.println("this is the web page URL "+currentWebPageURL);
+						//fetch the "a","title","h1","p" tags and the image source attributes
 						Elements links = doc.body().getElementsByTag("a");
 						Elements images = doc.body().getElementsByTag("img");
 						String webPageTitle = doc.head().getElementsByTag("title").text();
 						Elements headingElements = doc.body().getElementsByTag("h1");
 						Elements paragraphElements = doc.body().getElementsByTag("p");
 
+						//get the location of the current web page
 						String URLLocation = getURLLocation(currentHost);
+						//the objects are fetched from crawling through this web page
 						String imageSources = "";
 						String headingText = "";
 						String paragraphText = "";
 						String referLinks = "";
+						//this list would be hold all the links fetched from the web page
 						List<String> webPageLinks = new ArrayList<String>();
 
+						//threshold for the crawling depth
 						int webPageLinksThreshold = 50;
 
 						//giving more weight for wikipedia links
 						if(currentWebPageURL.indexOf("wikipedia.org") != -1)
 							webPageLinksThreshold = 150;
-						int referNumLinks = 0;
+
+						//loop on all the links
 						for (Element link : links) {
+							//if it reached the threshold therefore it should stop iterating
 							if (webPageLinks.size() >= webPageLinksThreshold)
 								break;
 							String href = link.attr("href");
+							//check if this href "link" isn't PDF
 							if(!href.endsWith(".pdf"))
 							{
 								if (href.startsWith("http") || href.startsWith("https"))
 								{
 									webPageLinks.add(href);
-									//if(referNumLinks < 2)
-									//{
-										referLinks += href + " ";
-										referNumLinks++;
-									//}
+									referLinks += href + " ";
 								}
 								else if(href.startsWith("//")) // in case of missing the protocol
 								{
@@ -231,11 +281,7 @@ public class crawler {
 									if (uniqueLink(seedSet, href) && uniqueLink(webPageLinks, href))
 									{
 										webPageLinks.add(href);
-										//if(referNumLinks < 2)
-										//{
-											referLinks += href + " ";
-											referNumLinks++;
-										//}
+										referLinks += href + " ";
 									}
 								}
 								else if (href.startsWith("/")) // in case of relative URL
@@ -244,45 +290,45 @@ public class crawler {
 									if (uniqueLink(seedSet, href) && uniqueLink(webPageLinks, href))
 									{
 										webPageLinks.add(href);
-										//if(referNumLinks < 2)
-										//{
-											referLinks += href + " ";
-											referNumLinks++;
-										//}
+										referLinks += href + " ";
 									}
 								}
 							}
 
 						}
 
-						int imgSize = Math.min(25,images.size());
+						int imgSize = Math.min(25,images.size()); //getting max 25 images from the web page
 						for (int i = 0;i < imgSize;i++) {
+							//get the src of the image
 							String imgSrc = images.get(i).attr("src");
+							//get the caption of this image
 							String caption = images.get(i).attr("alt");
 							if (caption.isEmpty())
 								caption = " ";
 
 							if(imgSrc.startsWith("https"))
 							{
-								imageSources += imgSrc + imageLinksDelimiter + caption + imageLinksDelimiter;
+								imageSources += imgSrc + tagsDelimiter + caption + tagsDelimiter;
 							}
-							else if(imgSrc.startsWith("//"))
+							else if(imgSrc.startsWith("//")) // in case of missing the protocol
 							{
 								imgSrc = "https:" + imgSrc;
-								imageSources += imgSrc + imageLinksDelimiter + caption + imageLinksDelimiter;
+								imageSources += imgSrc + tagsDelimiter + caption + tagsDelimiter;
 							}
-							else if(imgSrc.startsWith("/"))
+							else if(imgSrc.startsWith("/")) // in case of relative URL
 							{
-								imageSources += currentWebPageURL + imgSrc + imageLinksDelimiter + caption + imageLinksDelimiter;
+								imageSources += currentWebPageURL + imgSrc + tagsDelimiter + caption + tagsDelimiter;
 							}
 
 						}
 
+						//getting the all the heading tags' text
 						for (Element hElement : headingElements) {
 							headingText += hElement.text() + " ";
 						}
 						if (headingText.isEmpty())
 							headingText = " ";
+						//adding the delimiter at the end
 						headingText += "@@::;;@@;h1@@::;;@@;";
 						for (Element pElement : paragraphElements) {
 							paragraphText += pElement.text() + " ";
@@ -290,14 +336,17 @@ public class crawler {
 						if (paragraphText.isEmpty())
 							paragraphText = " ";
 
+						//thresholding the paragraph text
 						paragraphText = paragraphText.substring(0,min(paragraphText.length(),50000));
+						//adding the delimiter at the end
 						paragraphText += "@@::;;@@;p@@::;;@@;";
 
 						if(webPageTitle.isEmpty())
 							webPageTitle = " ";
+						//adding the delimiter at the end
 						webPageTitle += "@@::;;@@;title@@::;;@@;";
 
-
+						//this is also to prioritizing the wikipedia
 						if(currentWebPageURL.indexOf("wikipedia.org") == -1)
 							Thread.sleep(100);
 
@@ -305,24 +354,21 @@ public class crawler {
 						{
 							for (int k = 0; k < webPageLinks.size() && pageIter < numOfPages; k++) {
 								pageIter++;
-								takenLinksWriter.append(webPageLinks.get(k)+"\n");
+								takenLinksWriter.append(webPageLinks.get(k) + "\n");
 								seedSet.add(webPageLinks.get(k));
 							}
-							imagesOfSeedSet.add(imageSources);
 							System.out.println("current seedSet size = " + pageIter);
 							System.out.println("site host = " + currentWebPageURL);
-							System.out.println(""); // publish date
-							String refererLink = referLinks;
 							try {
+								//elements of the web Page is the title then the heading then the paragraph
 								String webPageTagsText = webPageTitle + headingText + paragraphText;
 								db.writeResultSet(currentWebPageURL, webPageTagsText, imageSources,
-										webPageTitle, refererLink, URLLocation);
+										webPageTitle, referLinks, URLLocation);
 								System.out.println("visitor = "+visitorPointer);
 
 							} catch (SQLException e) {
 								System.out.println((headingText+paragraphText).length());
 								System.out.println("problem occured on writing in the database");
-								numOfPages++;
 								e.printStackTrace();
 							}
 

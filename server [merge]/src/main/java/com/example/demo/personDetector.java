@@ -19,11 +19,11 @@ public class personDetector {
     public static void main(String [] args) throws IOException, SQLException {
         System.out.println("hello");
         ArrayList<String>dummy = new ArrayList<String>();
-        dummy.add("smith");
+        //dummy.add("Abdullah");
         //dummy.add("Ahmed");
-        dummy.add("smith");
-        dummy.add("+");
-        dummy.add("Mike");
+        //dummy.add("smith");
+        //dummy.add(" ");
+        dummy.add("Ssdsdsd");
 
         personDetector obj = new personDetector(dummy,"EG");
     }
@@ -32,10 +32,6 @@ public class personDetector {
         String sentence = "";
         for(String word : inputText)
         {
-            //to normalize the word
-            word = word.toLowerCase();
-            //make the first letter of the word uppercase capital
-            word = word.substring(0,1).toUpperCase() + word.substring(1);
             sentence += word + " ";
         }
 
@@ -59,7 +55,6 @@ public class personDetector {
 
         //create database object to write in the trends table
         MySQLAccess dbManager = new MySQLAccess();
-        int iter = 0;
         //Printing the spans of the names in the sentence
         for(Span s: nameSpans)
         {
@@ -71,8 +66,10 @@ public class personDetector {
                 personName += tokens[s.getStart()+i] + " ";
 
             System.out.println("person name is "+personName);
+
             //writing in the database
             dbManager.writePersonName(countryName,personName);
+
         }
 
 

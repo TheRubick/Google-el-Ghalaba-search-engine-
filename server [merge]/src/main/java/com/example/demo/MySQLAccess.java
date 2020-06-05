@@ -212,6 +212,7 @@ public class MySQLAccess {
         } finally {
             close();
         }
+        statement = connect.createStatement();
         statement.executeUpdate("CREATE TABLE IF NOT EXISTS SITES_CLICKS(LINK VARCHAR(700) NOT NULL PRIMARY KEY, COUNT_CLICKS INT NOT NULL);");
         preparedStatement = connect.prepareStatement("INSERT INTO SITES_CLICKS (LINK,COUNT_CLICKS) VALUES ('"+link+"',0) ON DUPLICATE KEY UPDATE COUNT_CLICKS = COUNT_CLICKS +1 ");
         preparedStatement.executeUpdate();
@@ -256,6 +257,8 @@ public class MySQLAccess {
         } finally {
             close();
         }
+        System.out.println("SELECT `query` FROM `old_queries` WHERE QUERY Like '%"+query+"%'");
+        statement = connect.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT `query` FROM `old_queries` WHERE QUERY Like '%"+query+"%'");
         return resultSet;
     }

@@ -135,7 +135,6 @@ public class MySQLAccess {
       return !(resultSet.absolute(1));
   }
   public void writeResultSet(String link , String text , String image_sources, String title, String refererLink, String URLLocation) throws SQLException {
-	  //Connection connect = null;
 	  PreparedStatement preparedStatement = null;
 	  try {
 	      // This will load the MySQL driver, each DB has its own driver
@@ -148,8 +147,6 @@ public class MySQLAccess {
 	    } catch (Exception e) {
 	  		e.printStackTrace();
 	        System.out.println("database error");
-	      } finally {
-	        //close();
 	      }
 	  preparedStatement = connect.prepareStatement("INSERT IGNORE INTO crawler_database.crawler_table VALUES (?,?,?,?,?,?,DEFAULT)");
       preparedStatement.setString(1, link);

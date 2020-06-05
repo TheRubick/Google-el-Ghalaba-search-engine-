@@ -84,6 +84,10 @@ public class ServerAPI {
         dbManager.countQuery(query);
         QueryProcessor queryProcessor = new QueryProcessor(query);
         ArrayList<String> queryWords = queryProcessor.startProcessing();
+        //System.out.println("printing the words");
+        //for(String word : queryWords)
+            //System.out.println(word);
+        personDetector personDetectorObj = new personDetector(queryWords,CountryDomain);
         OverAllRank ranker = new OverAllRank();
         //TODO :: check ranker work
         //Link[] links= rel.getLinksOrdered();
@@ -131,6 +135,7 @@ public class ServerAPI {
         dbManager.countQuery(query);
         QueryProcessor queryProcessor = new QueryProcessor(query);
         ArrayList<String> queryWords = queryProcessor.startProcessing();
+        personDetector personDetectorObj = new personDetector(queryWords,CountryDomain);
         ImageRank ranker = new ImageRank();
         //TODO :: check ranker work
         //Img[] imgs= rel.getImgsOrdered();
@@ -201,13 +206,13 @@ public class ServerAPI {
         Trend[] trends = new Trend[trendsCount];
         MySQLAccess dbManager = new MySQLAccess();
         ResultSet trendsData = null;
+        String query = "SELECT person_name,count(person_name) as person_occurrence from trends_table WHERE " +
+                "country = \""+CountryDomain+"\""+
+            "GROUP by person_name order by person_occurrence DESC";
         try {
-            trendsData = dbManager.readDataBase(
-                    "SELECT person_name,count(person_name) as person_occurrence from trends_table WHERE country = \"+" +
-                            CountryDomain + "+\" "
-                            + "GROUP by person_name order by person_name DESC"
-            );
-            for (int row = 1; row <= trendsCount + 1; row++) {
+            trendsData = dbManager.readDataBase(query);
+
+            for (int row = 1; row <= trendsCount; row++) {
                 if (trendsData.absolute(row)) {
                     trends[row - 1] = new Trend(trendsData.getString(1), trendsData.getInt(2));
                 } else

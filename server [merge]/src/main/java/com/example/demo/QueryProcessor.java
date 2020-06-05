@@ -21,7 +21,7 @@ public class QueryProcessor {
     }
 
     public ArrayList<String> startProcessing() throws IOException {
-        parts = new ArrayList<>(Arrays.asList(query.split("\\+")));
+        parts = new ArrayList<>(Arrays.asList(query.split(" ")));
         printQueryWordsCount();
         removeWhiteSpaces();
         lowerCaseWords();
