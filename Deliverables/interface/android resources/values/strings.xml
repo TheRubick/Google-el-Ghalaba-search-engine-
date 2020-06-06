@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Google El Ghalaba</string>
+    <string name="search_by_voice">search by voice</string>
+    <string name="hint">Search Google el Ghalaba</string>
+    <string name="search_results_images">Search Results (IMAGES) : </string>
+    <string name="search_results_links">Search Results (WEB Links) : </string>
+    <string name="voice_btn_hold_text">Release to Stop</string>
+    <string name="radio_web_text">Web Links</string>
+    <string name="radio_imgs_text">Images</string>
+    <string name="addition">El Ghalaba</string>
+    <string name="image_result">image_result</string>
+    <string name="nextBtn">Next ..</string>
+    <string name="backBtn">Back ..</string>
+    <string name="mostafa_ip">192.168.43.96:8080</string>
+    <string name="host_ip">host_ip</string>
+    <string name="search">Search</string>
+    <string name="trends">Trends</string>
+    <string name="select_country">Select Country :</string>
+    <string name="egypt">Egypt</string>
+    <string name="random_num">5</string>
+    <string name="title">Title</string>
+    <string name="display_result">Displaying from results \n 0 to 0 out of 0</string>
+    <string name="our_logo">our logo</string>
+    <string name="gradient">gradient</string>
+    <string name="title_example">Wikipedia</string>
+    <string name="link_example">https://wikipedia.com</string>
+    <string name="snippet_example">Google LLC is an American multinational technology company that specializes in Internet-related services and products, which include online advertising technologies, a search engine, cloud computing, software, and hardware. It is considered one of the Big Four technology companies alongside Amazon, Apple, and Facebook</string>
+</resources>
