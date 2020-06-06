@@ -84,26 +84,9 @@ public class ServerAPI {
         dbManager.countQuery(query);
         QueryProcessor queryProcessor = new QueryProcessor(query);
         ArrayList<String> queryWords = queryProcessor.startProcessing();
-        //System.out.println("printing the words");
-        //for(String word : queryWords)
-            //System.out.println(word);
         personDetector personDetectorObj = new personDetector(queryWords,CountryDomain);
         OverAllRank ranker = new OverAllRank();
-        //TODO :: check ranker work
-        //Link[] links= rel.getLinksOrdered();
-        //return links;
         Link[] links = ranker.startRank(queryWords, CountryDomain);
-        /*
-        final int dataMaxSize = 100;
-        Link[] links = new Link[dataMaxSize];
-
-        links[0] = new Link("wikipedia", "https://wikipedia.com",
-                "Wikipedia is hosted by the Wikimedia Foundation, a non-profit organization that also hosts a range of other projects.");
-        links[1] = new Link("google", "https://google.com", "Google LLC is an American multinational technology company that specializes in Internet-related services and products, which include online advertising technologies, a search engine, cloud computing, software, and hardware. It is considered one of the Big Four technology companies alongside Amazon, Apple, and Facebook");
-
-        for (int i = 2; i < dataMaxSize; i++)
-            links[i] = new Link(query + (i + 1), "https://facebook.com", "Facebook is an American online social media and social networking service based in Menlo Park,Facebook is an American online social media and social networking service based in Menlo Park,Facebook is an American online social media and social networking service based in Menlo Park California and a flagship service of the namesake company Facebook, Inc.");
-        * */
         return links;
 
     }
@@ -137,23 +120,7 @@ public class ServerAPI {
         ArrayList<String> queryWords = queryProcessor.startProcessing();
         personDetector personDetectorObj = new personDetector(queryWords,CountryDomain);
         ImageRank ranker = new ImageRank();
-        //TODO :: check ranker work
-        //Img[] imgs= rel.getImgsOrdered();
-        //return imgs;
-
-
         Img[] imgs = ranker.startRank(queryWords);
-        /*
-        final int dataMaxSize = 500;
-        Img[] imgs = new Img[dataMaxSize];
-        imgs[0] = new Img("img1", "https://i.imgur.com/tGbaZCY.jpg");
-        imgs[1] = new Img("img2", "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mohamed_Salah_2018.jpg/200px-Mohamed_Salah_2018.jpg");
-        imgs[2] = new Img("img3", "https://i.imgur.com/k0aIIHx.png");
-        imgs[3] = new Img("img4", "https://i.imgur.com/F9dYGWA.png");
-
-        for (int i = 4; i < dataMaxSize; i++)
-            imgs[i] = new Img(query + (i + 1), "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mohamed_Salah_2018.jpg/200px-Mohamed_Salah_2018.jpg");
-        */
         return imgs;
     }
 
@@ -173,10 +140,6 @@ public class ServerAPI {
             suggestions[i]=queryResult.getString(1);
             i++;
         }
-//        //TODO:: get data from data base
-//        for (int i = 0; i < randomNum; i++)
-//            suggestions[i] = part + "suggestion " + i;
-//        System.out.println(suggestions[1]);
         return suggestions;
     }
 
