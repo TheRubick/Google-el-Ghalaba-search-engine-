@@ -21,7 +21,7 @@ public class Indexer {
 	public static void main(String[] args) throws Exception {
 		Indexer id  = new Indexer();
 	    MySQLAccess dao = new MySQLAccess();
-	    String dateString = "2020-05-25 20:34:41";
+	    String dateString = config.lastIndexingDate;
 	    Timestamp tdate = java.sql.Timestamp.valueOf(dateString);
 		long startTime = System.nanoTime();
 		indexerThread idth = id.new indexerThread(dao);
@@ -44,7 +44,6 @@ public class Indexer {
 				indexerThreads.get(i).join();
 			}
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

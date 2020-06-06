@@ -12,6 +12,13 @@
 ## Getting started
 1- creating search engine data base (MySQL)
 
+- make sure to put the right data in the config.java class that contains:
+	a) host: let it 127.0.0.1 (local host)
+	b) user: the database user
+	c) passwd: the log in password of the database
+	d) stoppingWordsPath: the path of the file containing stopping words
+	e) lastIndexingDate: the last date when the indexer run (the date that the indexer will index all data pushed after it in crawler_table).
+
 - run **crawler** by command line :
 
 ```
