@@ -49,7 +49,7 @@ import static com.example.google_el8alaba.Starter.serverIP;
 
 public class MainActivity extends AppCompatActivity {
   boolean mic_approved = false;
-  public static final boolean TEST_MODE = false;
+  long startTime;
   public static final int REQUEST_MICROPHONE = 200;
   private SpeechRecognizer sr;
   AutoCompleteTextView query;
@@ -280,6 +280,7 @@ public class MainActivity extends AppCompatActivity {
     else type[0] = "Web";
     String url = type[0].equals("Web") ? getUrl(SearchLinksRoute) : getUrl(SearchImagesRoute);
     /** *******************************get search results to display***************************** */
+      startTime = System.nanoTime();
       sendRealRequest(url);
   }
 
@@ -301,7 +302,8 @@ public class MainActivity extends AppCompatActivity {
    * @param url : url to send the request to .. contains the route and parameters
    */
   private void sendRealRequest(String url) {
-    JsonArrayRequest jsonArrayRequest =
+      final long finalStartTime = startTime;
+      JsonArrayRequest jsonArrayRequest =
         new JsonArrayRequest(
             Request.Method.GET,
             url,
@@ -310,6 +312,8 @@ public class MainActivity extends AppCompatActivity {
               @Override
               public void onResponse(JSONArray response) {
                 // To dismiss the dialog
+                long endTime = System.nanoTime();
+                Log.d("request time : ", String.valueOf((endTime- finalStartTime)*Math.pow(10,-9)));
                 progress.dismiss();
                 Intent passResult;
                 if (type[0].equals("Web"))
